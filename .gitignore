@@ -2,3 +2,6 @@
 /Client/Logs
 /Client/obj
 /Client/UserSettings
+/Client/Temp
+/Client/Client.sln
+/Client/*.csproj
