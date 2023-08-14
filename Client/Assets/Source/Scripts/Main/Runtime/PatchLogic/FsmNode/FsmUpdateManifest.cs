@@ -1,38 +1,37 @@
-using System;
+﻿using System.Collections;
+using UniFramework.Singleton;
 using UnityEngine;
 using YooAsset;
 using ZEngine.Utility.State;
 
-
 /// <summary>
-    /// 更新资源清单
-    /// </summary>
-    public sealed class FsmUpdateManifest : StateBase
-    {
-        private StateMachine _machine;
+/// 更新资源清单
+/// </summary>
+public class FsmUpdateManifest : StateBase
+{
+	public override void OnEnter()
+	{
+		PatchEventDefine.PatchStatesChange.SendEventMessage("更新资源清单！");
+		UniSingleton.StartCoroutine(UpdateManifest());
+	}
+	
+	private IEnumerator UpdateManifest()
+	{
+		yield return new WaitForSecondsRealtime(0.5f);
 
+		bool savePackageVersion = true;
+		var package = YooAssets.GetPackage("DefaultPackage");
+		var operation = package.UpdatePackageManifestAsync(PatchManager.Instance.PackageVersion, savePackageVersion);
+		yield return operation;
 
-        public override void OnEnter()
-        {
-            PatchManager.Listener.OnPatchStatesChange("更新资源清单！");
-            UpdateManifest().Forget();
-        }
-        
-        private async UniTaskVoid UpdateManifest()
-        {
-            await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
-            var package = YooAssets.GetAssetsPackage("DefaultPackage");
-            var operation = package.UpdatePackageManifestAsync(PatchManager.PackageVersion);
-            await operation.ToUniTask();
-
-            if(operation.Status == EOperationStatus.Succeed)
-            {
-                Machine.SwitchState<FsmCreateDownloader>();
-            }
-            else
-            {
-                Debug.LogWarning(operation.Error);
-                PatchManager.Listener.OnPatchManifestUpdateFailed();
-            }
-        }
-    }
+		if(operation.Status == EOperationStatus.Succeed)
+		{
+			Machine.SwitchState<FsmCreateDownloader>();
+		}
+		else
+		{
+			Debug.LogWarning(operation.Error);
+			PatchEventDefine.PatchManifestUpdateFailed.SendEventMessage();
+		}
+	}
+}

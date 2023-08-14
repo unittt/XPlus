@@ -1,12 +1,17 @@
-using System;
-using System.Collections.Generic;
 using HT.Framework;
+using DG.Tweening;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UniFramework.Event;
 
-
-public class PatchWindow : MonoBehaviour, IPatchListener
+public class PatchWindow : HTBehaviour
 {
+    //启用自动化
+    protected override bool IsAutomate => true;
+    
 	/// <summary>
 	/// 对话框封装类
 	/// </summary>
@@ -15,9 +20,15 @@ public class PatchWindow : MonoBehaviour, IPatchListener
 		private GameObject _cloneObject;
 		private Text _content;
 		private Button _btnOK;
-		private Action _clickOK;
+		private System.Action _clickOK;
 
-		public bool ActiveSelf => _cloneObject.activeSelf;
+		public bool ActiveSelf
+		{
+			get
+			{
+				return _cloneObject.activeSelf;
+			}
+		}
 
 		public void Create(GameObject cloneObject)
 		{
@@ -26,7 +37,6 @@ public class PatchWindow : MonoBehaviour, IPatchListener
 			_btnOK = cloneObject.transform.Find("btn_ok").GetComponent<Button>();
 			_btnOK.onClick.AddListener(OnClickYes);
 		}
-
 		public void Show(string content, System.Action clickOK)
 		{
 			_content.text = content;
@@ -34,14 +44,12 @@ public class PatchWindow : MonoBehaviour, IPatchListener
 			_cloneObject.SetActive(true);
 			_cloneObject.transform.SetAsLastSibling();
 		}
-
 		public void Hide()
 		{
 			_content.text = string.Empty;
 			_clickOK = null;
 			_cloneObject.SetActive(false);
 		}
-
 		private void OnClickYes()
 		{
 			_clickOK?.Invoke();
@@ -49,6 +57,8 @@ public class PatchWindow : MonoBehaviour, IPatchListener
 		}
 	}
 
+
+	private readonly EventGroup _eventGroup = new EventGroup();
 	private readonly List<MessageBox> _msgBoxList = new List<MessageBox>();
 
 	// UGUI相关
@@ -56,95 +66,96 @@ public class PatchWindow : MonoBehaviour, IPatchListener
 	private Slider _slider;
 	private Text _tips;
 
-	private void Awake()
+
+	void Awake()
 	{
 		_slider = transform.Find("UIWindow/Slider").GetComponent<Slider>();
 		_tips = transform.Find("UIWindow/Slider/txt_tips").GetComponent<Text>();
 		_tips.text = "Initializing the game world !";
 		_messageBoxObj = transform.Find("UIWindow/MessgeBox").gameObject;
 		_messageBoxObj.SetActive(false);
-		PatchManager.SetListener(this);
 
+		_eventGroup.AddListener<PatchEventDefine.InitializeFailed>(OnHandleEventMessage);
+		_eventGroup.AddListener<PatchEventDefine.PatchStatesChange>(OnHandleEventMessage);
+		_eventGroup.AddListener<PatchEventDefine.FoundUpdateFiles>(OnHandleEventMessage);
+		_eventGroup.AddListener<PatchEventDefine.DownloadProgressUpdate>(OnHandleEventMessage);
+		_eventGroup.AddListener<PatchEventDefine.PackageVersionUpdateFailed>(OnHandleEventMessage);
+		_eventGroup.AddListener<PatchEventDefine.PatchManifestUpdateFailed>(OnHandleEventMessage);
+		_eventGroup.AddListener<PatchEventDefine.WebFileDownloadFailed>(OnHandleEventMessage);
 	}
-
-	private void Start()
+	void OnDestroy()
 	{
-		Main.m_Procedure.AnyProcedureSwitchEvent += ProcedureSwitchEvent;
-	}
-
-	private void ProcedureSwitchEvent(ProcedureBase arg1, ProcedureBase arg2)
-	{
-		Main.m_Procedure.AnyProcedureSwitchEvent -= ProcedureSwitchEvent;
-		GameObject.Destroy(gameObject);
+		_eventGroup.RemoveAllListener();
 	}
 
 	/// <summary>
-	/// 当初始化失败
+	/// 接收事件
 	/// </summary>
-	public void OnInitializeFailed()
+	private void OnHandleEventMessage(IEventMessage message)
 	{
-		ShowMessageBox($"Failed to initialize package !", PatchManager.UserTryInitialize);
+		if (message is PatchEventDefine.InitializeFailed)
+		{
+			System.Action callback = () =>
+			{
+				UserEventDefine.UserTryInitialize.SendEventMessage();
+			};
+			ShowMessageBox($"Failed to initialize package !", callback);
+		}
+		else if (message is PatchEventDefine.PatchStatesChange)
+		{
+			var msg = message as PatchEventDefine.PatchStatesChange;
+			_tips.text = msg.Tips;
+		}
+		else if (message is PatchEventDefine.FoundUpdateFiles)
+		{
+			var msg = message as PatchEventDefine.FoundUpdateFiles;
+			System.Action callback = () =>
+			{
+				UserEventDefine.UserBeginDownloadWebFiles.SendEventMessage();
+			};
+			float sizeMB = msg.TotalSizeBytes / 1048576f;
+			sizeMB = Mathf.Clamp(sizeMB, 0.1f, float.MaxValue);
+			string totalSizeMB = sizeMB.ToString("f1");
+			ShowMessageBox($"Found update patch files, Total count {msg.TotalCount} Total szie {totalSizeMB}MB", callback);
+		}
+		else if (message is PatchEventDefine.DownloadProgressUpdate)
+		{
+			var msg = message as PatchEventDefine.DownloadProgressUpdate;
+			_slider.value = (float)msg.CurrentDownloadCount / msg.TotalDownloadCount;
+			string currentSizeMB = (msg.CurrentDownloadSizeBytes / 1048576f).ToString("f1");
+			string totalSizeMB = (msg.TotalDownloadSizeBytes / 1048576f).ToString("f1");
+			_tips.text = $"{msg.CurrentDownloadCount}/{msg.TotalDownloadCount} {currentSizeMB}MB/{totalSizeMB}MB";
+		}
+		else if (message is PatchEventDefine.PackageVersionUpdateFailed)
+		{
+			System.Action callback = () =>
+			{
+				UserEventDefine.UserTryUpdatePackageVersion.SendEventMessage();
+			};
+			ShowMessageBox($"Failed to update static version, please check the network status.", callback);
+		}
+		else if (message is PatchEventDefine.PatchManifestUpdateFailed)
+		{
+			System.Action callback = () =>
+			{
+				UserEventDefine.UserTryUpdatePatchManifest.SendEventMessage();
+			};
+			ShowMessageBox($"Failed to update patch manifest, please check the network status.", callback);
+		}
+		else if (message is PatchEventDefine.WebFileDownloadFailed)
+		{
+			var msg = message as PatchEventDefine.WebFileDownloadFailed;
+			System.Action callback = () =>
+			{
+				UserEventDefine.UserTryDownloadWebFiles.SendEventMessage();
+			};
+			ShowMessageBox($"Failed to download file : {msg.FileName}", callback);
+		}
+		else
+		{
+			throw new System.NotImplementedException($"{message.GetType()}");
+		}
 	}
-
-	/// <summary>
-	/// 当补丁流程步骤改变
-	/// </summary>
-	public void OnPatchStatesChange(string tips)
-	{
-		_tips.text = tips;
-	}
-
-	/// <summary>
-	/// 当发现更新文件
-	/// </summary>
-	public void OnFoundUpdateFiles(int totalCount, long totalSizeBytes)
-	{
-		var sizeMB = totalSizeBytes / 1048576f;
-		sizeMB = Mathf.Clamp(sizeMB, 0.1f, float.MaxValue);
-		var totalSizeMB = sizeMB.ToString("f1");
-		ShowMessageBox($"Found update patch files, Total count {totalCount.ToString()} Total size {totalSizeMB}MB",
-			PatchManager.UserBeginDownloadWebFiles);
-	}
-
-	/// <summary>
-	/// 当下载进度更新
-	/// </summary>
-	public void OnDownloadProgressUpdate(int totalDownloadCount, int currentDownloadCount,
-		long totalDownloadSizeBytes, long currentDownloadSizeBytes)
-	{
-		_slider.value = (float)currentDownloadCount / totalDownloadCount;
-		var currentSizeMB = (currentDownloadSizeBytes / 1048576f).ToString("f1");
-		var totalSizeMB = (totalDownloadSizeBytes / 1048576f).ToString("f1");
-		_tips.text =
-			$"{currentDownloadCount.ToString()}/{totalDownloadCount.ToString()} {currentSizeMB}MB/{totalSizeMB}MB";
-	}
-
-	/// <summary>
-	/// 资源版本号更新失败
-	/// </summary>
-	public void OnPackageVersionUpdateFailed()
-	{
-		ShowMessageBox($"Failed to update static version, please check the network status.",
-			PatchManager.UserTryUpdatePackageVersion);
-	}
-
-	/// <summary>
-	/// 补丁清单更新失败
-	/// </summary>
-	public void OnPatchManifestUpdateFailed()
-	{
-		ShowMessageBox($"Failed to update patch manifest, please check the network status.",
-			PatchManager.UserTryUpdatePatchManifest);
-	}
-
-	/// <summary>
-	/// 网络文件下载失败
-	/// </summary>
-	public void OnWebFileDownloadFailed(string fileName, string error)
-	{
-		ShowMessageBox($"Failed to download file : {fileName}", PatchManager.UserTryDownloadWebFiles);
-	}
-
 
 	/// <summary>
 	/// 显示对话框
@@ -153,18 +164,21 @@ public class PatchWindow : MonoBehaviour, IPatchListener
 	{
 		// 尝试获取一个可用的对话框
 		MessageBox msgBox = null;
-		foreach (var item in _msgBoxList)
+		for (int i = 0; i < _msgBoxList.Count; i++)
 		{
-			if (item.ActiveSelf) continue;
-			msgBox = item;
-			break;
+			var item = _msgBoxList[i];
+			if (item.ActiveSelf == false)
+			{
+				msgBox = item;
+				break;
+			}
 		}
 
 		// 如果没有可用的对话框，则创建一个新的对话框
 		if (msgBox == null)
 		{
 			msgBox = new MessageBox();
-			var cloneObject = Instantiate(_messageBoxObj, _messageBoxObj.transform.parent);
+			var cloneObject = GameObject.Instantiate(_messageBoxObj, _messageBoxObj.transform.parent);
 			msgBox.Create(cloneObject);
 			_msgBoxList.Add(msgBox);
 		}

@@ -1,83 +1,89 @@
-using System;
+﻿using System;
 using System.IO;
-using HT.Framework;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UniFramework.Machine;
+using UniFramework.Singleton;
 using YooAsset;
 using ZEngine.Utility.State;
-
 
 /// <summary>
 /// 初始化资源包
 /// </summary>
-internal sealed class FsmInitialize : StateBase
+internal class FsmInitialize : StateBase
 {
-	
-	public  override void OnEnter()
+	public override void OnEnter()
 	{
-		PatchManager.Listener.OnPatchStatesChange("初始化资源包！");
-		InitPackage().Forget();
+		PatchEventDefine.PatchStatesChange.SendEventMessage("初始化资源包！");
+		UniSingleton.StartCoroutine(InitPackage());
 	}
 	
-	private async UniTaskVoid InitPackage()
+	private IEnumerator InitPackage()
 	{
-		await UniTask.Delay(TimeSpan.FromSeconds(1));
+		yield return new WaitForSeconds(1f);
+
+		var playMode = PatchManager.Instance.PlayMode;
 
 		// 创建默认的资源包
-		const string packageName = "DefaultPackage";
-		var package = YooAssets.TryGetAssetsPackage(packageName);
+		string packageName = "DefaultPackage";
+		var package = YooAssets.TryGetPackage(packageName);
 		if (package == null)
 		{
-			package = YooAssets.CreateAssetsPackage(packageName);
-			YooAssets.SetDefaultAssetsPackage(package);
+			package = YooAssets.CreatePackage(packageName);
+			YooAssets.SetDefaultPackage(package);
 		}
 
 		// 编辑器下的模拟模式
 		InitializationOperation initializationOperation = null;
-		switch (Main.m_Resource.LoadMode)
+		if (playMode == EPlayMode.EditorSimulateMode)
 		{
-			case EPlayMode.EditorSimulateMode:
-			{
-				var createParameters = new EditorSimulateModeParameters
-				{
-					SimulatePatchManifestPath = EditorSimulateModeHelper.SimulateBuild(packageName)
-				};
-				initializationOperation = package.InitializeAsync(createParameters);
-				break;
-			}
-			// 单机运行模式
-			case EPlayMode.OfflinePlayMode:
-			{
-				var createParameters = new OfflinePlayModeParameters
-				{
-					DecryptionServices = new GameDecryptionServices()
-				};
-				initializationOperation = package.InitializeAsync(createParameters);
-				break;
-			}
-			// 联机运行模式
-			case EPlayMode.HostPlayMode:
-			{
-				var createParameters = new HostPlayModeParameters
-				{
-					DecryptionServices = new GameDecryptionServices(),
-					QueryServices = new GameQueryServices(),
-					DefaultHostServer = GetHostServerURL(),
-					FallbackHostServer = GetHostServerURL()
-				};
-				initializationOperation = package.InitializeAsync(createParameters);
-				break;
-			}
+			var createParameters = new EditorSimulateModeParameters();
+			createParameters.SimulateManifestFilePath = EditorSimulateModeHelper.SimulateBuild(packageName);
+			initializationOperation = package.InitializeAsync(createParameters);
 		}
 
-		await initializationOperation.ToUniTask();
-		if (package.InitializeStatus == EOperationStatus.Succeed)
+		// 单机运行模式
+		if (playMode == EPlayMode.OfflinePlayMode)
 		{
-			_machine.ChangeState<FsmUpdateVersion>();
+			var createParameters = new OfflinePlayModeParameters();
+			createParameters.DecryptionServices = new GameDecryptionServices();
+			initializationOperation = package.InitializeAsync(createParameters);
+		}
+
+		// 联机运行模式
+		if (playMode == EPlayMode.HostPlayMode)
+		{
+			string defaultHostServer = GetHostServerURL();
+			string fallbackHostServer = GetHostServerURL();
+			var createParameters = new HostPlayModeParameters();
+			createParameters.DecryptionServices = new GameDecryptionServices();
+			createParameters.QueryServices = new GameQueryServices();
+			createParameters.RemoteServices = new RemoteServices(defaultHostServer, fallbackHostServer);
+			initializationOperation = package.InitializeAsync(createParameters);
+		}
+
+		// WebGL运行模式
+		if(playMode == EPlayMode.WebPlayMode)
+		{
+			string defaultHostServer = GetHostServerURL();
+			string fallbackHostServer = GetHostServerURL();
+			var createParameters = new WebPlayModeParameters();
+			createParameters.DecryptionServices = new GameDecryptionServices();
+			createParameters.QueryServices = new GameQueryServices();
+			createParameters.RemoteServices = new RemoteServices(defaultHostServer, fallbackHostServer);
+			initializationOperation = package.InitializeAsync(createParameters);
+		}
+
+		yield return initializationOperation;
+		if (initializationOperation.Status == EOperationStatus.Succeed)
+		{
+			Machine.SwitchState<FsmUpdateVersion>();
 		}
 		else
 		{
 			Debug.LogWarning($"{initializationOperation.Error}");
-			PatchManager.Listener.OnInitializeFailed();
+			PatchEventDefine.InitializeFailed.SendEventMessage();
 		}
 	}
 
@@ -87,40 +93,51 @@ internal sealed class FsmInitialize : StateBase
 	private string GetHostServerURL()
 	{
 		//string hostServerIP = "http://10.0.2.2"; //安卓模拟器地址
-		const string hostServerIP = "http://127.0.0.1";
-		const string gameVersion = "v1.0";
+		string hostServerIP = "http://127.0.0.1";
+		string appVersion = "v1.0";
 
 #if UNITY_EDITOR
 		if (UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.Android)
-			return $"{hostServerIP}/CDN/Android/{gameVersion}";
+			return $"{hostServerIP}/CDN/Android/{appVersion}";
 		else if (UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.iOS)
-			return $"{hostServerIP}/CDN/IPhone/{gameVersion}";
+			return $"{hostServerIP}/CDN/IPhone/{appVersion}";
 		else if (UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.WebGL)
-			return $"{hostServerIP}/CDN/WebGL/{gameVersion}";
+			return $"{hostServerIP}/CDN/WebGL/{appVersion}";
 		else
-			return $"{hostServerIP}/CDN/PC/{gameVersion}";
+			return $"{hostServerIP}/CDN/PC/{appVersion}";
 #else
 		if (Application.platform == RuntimePlatform.Android)
-			return $"{hostServerIP}/CDN/Android/{gameVersion}";
+			return $"{hostServerIP}/CDN/Android/{appVersion}";
 		else if (Application.platform == RuntimePlatform.IPhonePlayer)
-			return $"{hostServerIP}/CDN/IPhone/{gameVersion}";
+			return $"{hostServerIP}/CDN/IPhone/{appVersion}";
 		else if (Application.platform == RuntimePlatform.WebGLPlayer)
-			return $"{hostServerIP}/CDN/WebGL/{gameVersion}";
+			return $"{hostServerIP}/CDN/WebGL/{appVersion}";
 		else
-			return $"{hostServerIP}/CDN/PC/{gameVersion}";
+			return $"{hostServerIP}/CDN/PC/{appVersion}";
 #endif
 	}
 
+
 	/// <summary>
-	/// 内置文件查询服务类
+	/// 远端资源地址查询服务类
 	/// </summary>
-	private class GameQueryServices : IQueryServices
+	private class RemoteServices : IRemoteServices
 	{
-		public bool QueryStreamingAssets(string fileName)
+		private readonly string _defaultHostServer;
+		private readonly string _fallbackHostServer;
+
+		public RemoteServices(string defaultHostServer, string fallbackHostServer)
 		{
-			// 注意：使用了BetterStreamingAssets插件，使用前需要初始化该插件！
-			var buildingFolderName = YooAssets.GetStreamingAssetBuildinFolderName();
-			return BetterStreamingAssets.FileExists($"{buildingFolderName}/{fileName}");
+			_defaultHostServer = defaultHostServer;
+			_fallbackHostServer = fallbackHostServer;
+		}
+		string IRemoteServices.GetRemoteMainURL(string fileName)
+		{
+			return $"{_defaultHostServer}/{fileName}";
+		}
+		string IRemoteServices.GetRemoteFallbackURL(string fileName)
+		{
+			return $"{_fallbackHostServer}/{fileName}";
 		}
 	}
 
@@ -139,9 +156,9 @@ internal sealed class FsmInitialize : StateBase
 			throw new NotImplementedException();
 		}
 
-		public FileStream LoadFromStream(DecryptFileInfo fileInfo)
+		public Stream LoadFromStream(DecryptFileInfo fileInfo)
 		{
-			var bundleStream = new BundleStream(fileInfo.FilePath, FileMode.Open);
+			BundleStream bundleStream = new BundleStream(fileInfo.FilePath, FileMode.Open, FileAccess.Read, FileShare.Read);
 			return bundleStream;
 		}
 

@@ -1,39 +1,34 @@
+﻿using System.Collections;
+using UniFramework.Singleton;
 using YooAsset;
 using ZEngine.Utility.State;
 
-
 /// <summary>
-    /// 下载更新文件
-    /// </summary>
-    internal sealed class FsmDownloadFiles : StateBase
-    {
+/// 下载更新文件
+/// </summary>
+public class FsmDownloadFiles : StateBase
+{
+	public override void OnEnter()
+	{
+		PatchEventDefine.PatchStatesChange.SendEventMessage("开始下载补丁文件！");
+		UniSingleton.StartCoroutine(BeginDownload());
+	}
 
-        public void OnInit()
-        {
-            throw new System.NotImplementedException();
-        }
+	
+	private IEnumerator BeginDownload()
+	{
+		var downloader = PatchManager.Instance.Downloader;
 
-        public  override  void OnEnter()
-        {
-            PatchManager.Listener.OnPatchStatesChange("开始下载补丁文件！");
-            BeginDownload().Forget();
-        }
-        
-        private async UniTaskVoid BeginDownload()
-        {
-            var downloader = PatchManager.Downloader;
-            PatchManager.Listener.OnPatchStatesChange("开始下载补丁文件！");
-            // 注册下载回调
-            downloader.OnDownloadErrorCallback =  PatchManager.Listener.OnWebFileDownloadFailed;
-            downloader.OnDownloadProgressCallback =  PatchManager.Listener.OnDownloadProgressUpdate;
-            downloader.BeginDownload();
-            await downloader.ToUniTask();
+		// 注册下载回调
+		downloader.OnDownloadErrorCallback = PatchEventDefine.WebFileDownloadFailed.SendEventMessage;
+		downloader.OnDownloadProgressCallback = PatchEventDefine.DownloadProgressUpdate.SendEventMessage;
+		downloader.BeginDownload();
+		yield return downloader;
 
-            // 检测下载结果
-            if (downloader.Status != EOperationStatus.Succeed)
-            {
-                return;
-            }
-            Machine.SwitchState<FsmPatchDone>();
-        }
-    }
+		// 检测下载结果
+		if (downloader.Status != EOperationStatus.Succeed)
+			yield break;
+
+		Machine.SwitchState<FsmPatchDone>();
+	}
+}

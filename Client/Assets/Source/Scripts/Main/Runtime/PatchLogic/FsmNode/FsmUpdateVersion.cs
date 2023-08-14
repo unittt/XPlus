@@ -1,38 +1,38 @@
-using System;
+﻿using System.Collections;
+using UniFramework.Singleton;
 using UnityEngine;
 using YooAsset;
 using ZEngine.Utility.State;
 
-
 /// <summary>
-	/// 更新资源版本号
-	/// </summary>
-	internal class FsmUpdateVersion : StateBase
+/// 更新资源版本号
+/// </summary>
+internal class FsmUpdateVersion : StateBase
+{
+	public override void OnEnter()
 	{
-		private StateMachine _machine;
+		PatchEventDefine.PatchStatesChange.SendEventMessage("获取最新的资源版本 !");
+		UniSingleton.StartCoroutine(GetStaticVersion());
+	}
+	
+	private IEnumerator GetStaticVersion()
+	{
+		yield return new WaitForSecondsRealtime(0.5f);
 
-		public override void OnEnter()
+		var package = YooAssets.GetPackage("DefaultPackage");
+		var operation = package.UpdatePackageVersionAsync();
+		yield return operation;
+
+		if (operation.Status == EOperationStatus.Succeed)
 		{
-			PatchManager.Listener.OnPatchStatesChange("获取最新的资源版本 !");
-			GetStaticVersion().Forget();
+			PatchManager.Instance.PackageVersion = operation.PackageVersion;
+			Debug.Log($"远端最新版本为: {operation.PackageVersion}");
+			Machine.SwitchState<FsmUpdateManifest>();
 		}
-		
-		private async UniTaskVoid GetStaticVersion()
+		else
 		{
-			await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
-			var package = YooAssets.GetAssetsPackage("DefaultPackage");
-			var operation = package.UpdatePackageVersionAsync();
-			await operation.ToUniTask();
-
-			if (operation.Status == EOperationStatus.Succeed)
-			{
-				PatchManager.PackageVersion = operation.PackageVersion;
-				Machine.SwitchState<FsmUpdateManifest>();
-			}
-			else
-			{
-				Debug.LogWarning(operation.Error);
-				PatchManager.Listener.OnPackageVersionUpdateFailed();
-			}
+			Debug.LogWarning(operation.Error);
+			PatchEventDefine.PackageVersionUpdateFailed.SendEventMessage();
 		}
 	}
+}
