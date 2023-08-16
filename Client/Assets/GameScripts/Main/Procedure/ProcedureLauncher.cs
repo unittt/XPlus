@@ -20,14 +20,7 @@ public sealed class ProcedureLauncher : ProcedureBase
         //设置语言环境
         System.Globalization.CultureInfo.DefaultThreadCurrentCulture = new System.Globalization.CultureInfo("en-US");
     }
-    /// <summary>
-    /// 进入流程
-    /// </summary>
-    /// <param name="lastProcedure">上一个离开的流程</param>
-    public override void OnEnter(ProcedureBase lastProcedure)
-    {
-        
-    }
+
     /// <summary>
     /// 流程帧刷新
     /// </summary>
