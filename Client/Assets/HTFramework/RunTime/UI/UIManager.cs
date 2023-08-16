@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace HT.Framework
@@ -118,27 +119,27 @@ namespace HT.Framework
         /// </summary>
         /// <typeparam name="T">UI逻辑类</typeparam>
         /// <returns>加载协程</returns>
-        public Coroutine PreloadingUI<T>() where T : UILogicBase
+        public async  UniTask<T> PreloadingUI<T>() where T : UILogicBase
         {
-            return PreloadingUI(typeof(T));
+            return (await PreloadingUI(typeof(T))).Cast<T>();
         }
         /// <summary>
         /// 预加载UI
         /// </summary>
         /// <param name="type">UI逻辑类</param>
         /// <returns>加载协程</returns>
-        public Coroutine PreloadingUI(Type type)
+        public async UniTask<UILogicBase> PreloadingUI(Type type)
         {
             if (type.IsAbstract)
                 return null;
 
             if (type.IsSubclassOf(typeof(UILogicResident)))
             {
-                return _helper.PreloadingResidentUI(type);
+                return await _helper.PreloadingResidentUI(type);
             }
             else if (type.IsSubclassOf(typeof(UILogicTemporary)))
             {
-                return _helper.PreloadingTemporaryUI(type);
+                return await _helper.PreloadingTemporaryUI(type);
             }
             return null;
         }
@@ -148,9 +149,9 @@ namespace HT.Framework
         /// <typeparam name="T">UI逻辑类</typeparam>
         /// <param name="args">可选参数</param>
         /// <returns>加载协程</returns>
-        public Coroutine OpenUI<T>(params object[] args) where T : UILogicBase
+        public async UniTask<T> OpenUI<T>(params object[] args) where T : UILogicBase
         {
-            return OpenUI(typeof(T), args);
+            return (await OpenUI(typeof(T), args)).Cast<T>();
         }
         /// <summary>
         /// 打开UI
@@ -158,18 +159,18 @@ namespace HT.Framework
         /// <param name="type">UI逻辑类</param>
         /// <param name="args">可选参数</param>
         /// <returns>加载协程</returns>
-        public Coroutine OpenUI(Type type, params object[] args)
+        public async UniTask<UILogicBase> OpenUI(Type type, params object[] args)
         {
             if (type.IsAbstract)
                 return null;
 
             if (type.IsSubclassOf(typeof(UILogicResident)))
             {
-                return _helper.OpenResidentUI(type, args);
+                return await _helper.OpenResidentUI(type, args);
             }
             else if (type.IsSubclassOf(typeof(UILogicTemporary)))
             {
-                return _helper.OpenTemporaryUI(type, args);
+                return await _helper.OpenTemporaryUI(type, args);
             }
             return null;
         }

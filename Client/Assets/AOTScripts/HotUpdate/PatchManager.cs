@@ -6,7 +6,7 @@ using YooAsset;
 
 
 
-public class PatchManager : SingletonInstance<PatchManager>, ISingleton
+public sealed class PatchManager : SingletonInstance<PatchManager>, ISingleton
 {
 	/// <summary>
 	/// 运行模式

@@ -1,5 +1,4 @@
-﻿using AssetBundleBrowser;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
 using UnityEditor.Callbacks;
@@ -139,7 +138,7 @@ namespace HT.Framework
             {
                 if (GUI.Button(new Rect(position.width - 422, position.height - 31, 123, 18), "Build AssetBundles"))
                 {
-                    AssetBundleBrowserMain.ShowWindow();
+                    // AssetBundleBrowserMain.ShowWindow();
                 }
             }
             if (GUI.Button(new Rect(position.width - 294, position.height - 31, 52, 18), "Check"))
@@ -193,11 +192,12 @@ namespace HT.Framework
             Main main = FindObjectOfType<Main>();
             if (main != null)
             {
-                ResourceManager resource = main.GetComponentByChild<ResourceManager>("Resource");
-                if (resource != null && resource.Mode == ResourceLoadMode.AssetBundle)
-                {
-                    _isShowBuildABButton = true;
-                }
+                _isShowBuildABButton = true;
+                // ResourceManager resource = main.GetComponentByChild<ResourceManager>("Resource");
+                // if (resource != null && resource.Mode == ResourceLoadMode.AssetBundle)
+                // {
+                //     _isShowBuildABButton = true;
+                // }
             }
         }
         private void Check()

@@ -20,7 +20,8 @@
 
         public ResourceInfoBase(string assetBundleName, string assetPath, string resourcePath)
         {
-            AssetBundleName = string.IsNullOrEmpty(assetBundleName) ? assetBundleName : assetBundleName.ToLower();
+            // AssetBundleName = string.IsNullOrEmpty(assetBundleName) ? assetBundleName : assetBundleName.ToLower();
+            AssetBundleName = assetBundleName;
             AssetPath = assetPath;
             ResourcePath = resourcePath;
         }
@@ -30,14 +31,14 @@
         /// </summary>
         internal string GetResourceFullPath()
         {
-            return $"ResourcesPath: Resources/{ResourcePath}";
+            return "ResourcesPath: Resources/" + ResourcePath;
         }
         /// <summary>
         /// 获取资源的AssetBundle全路径
         /// </summary>
         internal string GetAssetBundleFullPath(string assetBundleRootPath)
         {
-            return $"AssetBundlePath: {assetBundleRootPath}{AssetBundleName}  AssetPath:{AssetPath}";
+            return string.Format("AssetBundlePath: {0}{1}  AssetPath:{2}", assetBundleRootPath, AssetBundleName, AssetPath);
         }
     }
 }

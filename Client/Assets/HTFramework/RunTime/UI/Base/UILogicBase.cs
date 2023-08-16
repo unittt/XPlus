@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace HT.Framework
@@ -15,33 +16,18 @@ namespace HT.Framework
         /// <summary>
         /// UI是否打开
         /// </summary>
-        public bool IsOpened
-        {
-            get
-            {
-                return UIEntity ? UIEntity.activeSelf : false;
-            }
-        }
+        public bool IsOpened => UIEntity && UIEntity.activeSelf;
+
         /// <summary>
         /// UI实体是否已创建
         /// </summary>
-        public bool IsCreated
-        {
-            get
-            {
-                return UIEntity;
-            }
-        }
+        public bool IsCreated => UIEntity;
+
         /// <summary>
         /// 是否支持数据驱动
         /// </summary>
-        public bool IsSupportedDataDriver
-        {
-            get
-            {
-                return this is IDataDriver;
-            }
-        }
+        public bool IsSupportedDataDriver => this is IDataDriver;
+
         /// <summary>
         /// 是否启用自动化，这将造成反射的性能消耗
         /// </summary>
@@ -52,12 +38,12 @@ namespace HT.Framework
         /// </summary>
         public virtual void OnInit()
         {
-            int injectCount = 0;
-            int bindCount = 0;
+            var injectCount = 0;
+            var bindCount = 0;
 
             if (IsAutomate)
             {
-                FieldInfo[] fieldInfos = AutomaticTask.GetAutomaticFields(GetType());
+                var fieldInfos = AutomaticTask.GetAutomaticFields(GetType());
                 injectCount = AutomaticTask.ApplyInject(this, fieldInfos);
 
                 if (IsSupportedDataDriver)
@@ -93,7 +79,7 @@ namespace HT.Framework
             
         }
         /// <summary>
-        /// UI逻辑更新
+        /// UI逻辑刷新
         /// </summary>
         public virtual void OnUpdate()
         {
@@ -104,7 +90,7 @@ namespace HT.Framework
         /// </summary>
         protected void Open()
         {
-            Main.m_UI.OpenUI(GetType());
+             Main.m_UI.OpenUI(GetType()).Forget();
         }
         /// <summary>
         /// 关闭自己
@@ -131,7 +117,7 @@ namespace HT.Framework
             {
                 if (injectCount <= 0 && bindCount <= 0)
                 {
-                    string content = $"【{GetType().FullName}】启用了自动化任务，但不存在任何依赖注入字段[Inject]，和数据绑定字段[DataBind]，请考虑关闭自动化任务（IsAutomate = false）！";
+                    string content = string.Format("【{0}】启用了自动化任务，但不存在任何依赖注入字段[Inject]，和数据绑定字段[DataBind]，请考虑关闭自动化任务（IsAutomate = false）！", GetType().FullName);
                     SafetyChecker.DoSafetyWarning(content);
                     return false;
                 }
@@ -140,7 +126,7 @@ namespace HT.Framework
                 {
                     if (bindCount <= 0)
                     {
-                        string content = $"【{GetType().FullName}】实现了数据驱动接口（IDataDriver），但不存在任何数据绑定字段[DataBind]，请考虑移除数据驱动接口！";
+                        string content = string.Format("【{0}】实现了数据驱动接口（IDataDriver），但不存在任何数据绑定字段[DataBind]，请考虑移除数据驱动接口！", GetType().FullName);
                         SafetyChecker.DoSafetyWarning(content);
                         return false;
                     }

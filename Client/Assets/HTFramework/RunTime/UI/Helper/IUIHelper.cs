@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace HT.Framework
@@ -57,27 +58,27 @@ namespace HT.Framework
         /// </summary>
         /// <param name="type">常驻UI逻辑类</param>
         /// <returns>加载协程</returns>
-        Coroutine PreloadingResidentUI(Type type);
+        UniTask<UILogicResident> PreloadingResidentUI(Type type);
         /// <summary>
         /// 预加载非常驻UI
         /// </summary>
         /// <param name="type">非常驻UI逻辑类</param>
         /// <returns>加载协程</returns>
-        Coroutine PreloadingTemporaryUI(Type type);
+        UniTask<UILogicTemporary> PreloadingTemporaryUI(Type type);
         /// <summary>
         /// 打开常驻UI
         /// </summary>
         /// <param name="type">常驻UI逻辑类</param>
         /// <param name="args">可选参数</param>
         /// <returns>加载协程</returns>
-        Coroutine OpenResidentUI(Type type, params object[] args);
+        UniTask<UILogicResident> OpenResidentUI(Type type, params object[] args);
         /// <summary>
         /// 打开非常驻UI
         /// </summary>
         /// <param name="type">非常驻UI逻辑类</param>
         /// <param name="args">可选参数</param>
         /// <returns>加载协程</returns>
-        Coroutine OpenTemporaryUI(Type type, params object[] args);
+        UniTask<UILogicTemporary> OpenTemporaryUI(Type type, params object[] args);
         /// <summary>
         /// 获取已经打开的UI
         /// </summary>

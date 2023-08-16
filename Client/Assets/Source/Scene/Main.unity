@@ -178,17 +178,57 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 114017263505648020, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
+      propertyPath: Mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114017263505648020, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
+      propertyPath: HelperType
+      value: HT.Framework.YooAssetResourceHelper
+      objectReference: {fileID: 0}
+    - target: {fileID: 114017263505648020, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
+      propertyPath: PackageName
+      value: DefaultPackage
+      objectReference: {fileID: 0}
     - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: DefaultProcedure
-      value: InitialProcedure
+      value: ProcedureLauncher
       objectReference: {fileID: 0}
     - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: ActivatedProcedures.Array.size
-      value: 1
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: ActivatedProcedures.Array.data[0]
-      value: InitialProcedure
+      value: ProcedureLauncher
+      objectReference: {fileID: 0}
+    - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
+      propertyPath: ActivatedProcedures.Array.data[1]
+      value: ProcedureCheckVersion
+      objectReference: {fileID: 0}
+    - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
+      propertyPath: ActivatedProcedures.Array.data[2]
+      value: ProcedureLoadAssembly
+      objectReference: {fileID: 0}
+    - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
+      propertyPath: ActivatedProcedures.Array.data[3]
+      value: ProcedureSplash
+      objectReference: {fileID: 0}
+    - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
+      propertyPath: ActivatedProcedures.Array.data[4]
+      value: ProcedureUpdateResources
+      objectReference: {fileID: 0}
+    - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
+      propertyPath: ActivatedProcedures.Array.data[5]
+      value: ProcedureUpdateResources
+      objectReference: {fileID: 0}
+    - target: {fileID: 4292849675555829366, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
+      propertyPath: IsEnableDebugger
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6572922829815916484, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
+      propertyPath: IsEnableHotfix
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}

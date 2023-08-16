@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace HT.Framework
@@ -88,7 +89,7 @@ namespace HT.Framework
             }
             else
             {
-                Log.Warning($"获取世界UI域的根节点失败：不存在名为 {domainName} 的世界UI域！");
+                Log.Warning("获取世界UI域的根节点失败：不存在名为 " + domainName + " 的世界UI域！");
                 return null;
             }
         }
@@ -196,7 +197,7 @@ namespace HT.Framework
                 }
                 else
                 {
-                    throw new HTFrameworkException(HTFrameworkModule.UI, $"创建UI逻辑对象失败：UI逻辑类 {types[i].Name} 丢失 UIResourceAttribute 标记！");
+                    throw new HTFrameworkException(HTFrameworkModule.UI, "创建UI逻辑对象失败：UI逻辑类 " + types[i].Name + " 丢失 UIResourceAttribute 标记！");
                 }
             }
         }
@@ -287,41 +288,39 @@ namespace HT.Framework
         /// </summary>
         /// <param name="type">常驻UI逻辑类</param>
         /// <returns>加载协程</returns>
-        public Coroutine PreloadingResidentUI(Type type)
+        public async UniTask<UILogicResident> PreloadingResidentUI(Type type)
         {
-            UIResourceAttribute attribute = type.GetCustomAttribute<UIResourceAttribute>();
-            if (attribute != null)
+            var attribute = type.GetCustomAttribute<UIResourceAttribute>();
+            if (attribute == null) return null;
+            switch (attribute.EntityType)
             {
-                switch (attribute.EntityType)
-                {
-                    case UIType.Overlay:
-                        if (OverlayUIs.ContainsKey(type))
-                        {
-                            return CreateUIEntity(attribute, type.FullName, OverlayUIs[type], _overlayResidentPanel);
-                        }
-                        else
-                        {
-                            throw new HTFrameworkException(HTFrameworkModule.UI, $"预加载UI失败：UI对象 {type.Name} 并未存在！");
-                        }
-                    case UIType.Camera:
-                        if (CameraUIs.ContainsKey(type))
-                        {
-                            return CreateUIEntity(attribute, type.FullName, CameraUIs[type], _cameraResidentPanel);
-                        }
-                        else
-                        {
-                            throw new HTFrameworkException(HTFrameworkModule.UI, $"预加载UI失败：UI对象 {type.Name} 并未存在！");
-                        }
-                    case UIType.World:
-                        if (WorldUIs.ContainsKey(attribute.WorldUIDomainName))
-                        {
-                            return WorldUIs[attribute.WorldUIDomainName].PreloadingResidentUI(type, _defineUIAndEntitys.ContainsKey(type.FullName) ? _defineUIAndEntitys[type.FullName] : null);
-                        }
-                        else
-                        {
-                            throw new HTFrameworkException(HTFrameworkModule.UI, $"预加载UI失败：UI对象 {type.Name} 的域 {attribute.WorldUIDomainName} 并未存在！");
-                        }
-                }
+                case UIType.Overlay:
+                    if (OverlayUIs.ContainsKey(type))
+                    {
+                        return (await CreateUIEntity(attribute, type.FullName, OverlayUIs[type], _overlayResidentPanel)).Cast<UILogicResident>();
+                    }
+                    else
+                    {
+                        throw new HTFrameworkException(HTFrameworkModule.UI, string.Format("预加载UI失败：UI对象 {0} 并未存在！", type.Name));
+                    }
+                case UIType.Camera:
+                    if (CameraUIs.ContainsKey(type))
+                    {
+                        return (await CreateUIEntity(attribute, type.FullName, CameraUIs[type], _cameraResidentPanel)).Cast<UILogicResident>();
+                    }
+                    else
+                    {
+                        throw new HTFrameworkException(HTFrameworkModule.UI, string.Format("预加载UI失败：UI对象 {0} 并未存在！", type.Name));
+                    }
+                case UIType.World:
+                    if (WorldUIs.ContainsKey(attribute.WorldUIDomainName))
+                    {
+                        return await WorldUIs[attribute.WorldUIDomainName].PreloadingResidentUI(type, _defineUIAndEntitys.ContainsKey(type.FullName) ? _defineUIAndEntitys[type.FullName] : null);
+                    }
+                    else
+                    {
+                        throw new HTFrameworkException(HTFrameworkModule.UI, string.Format("预加载UI失败：UI对象 {0} 的域 {1} 并未存在！", type.Name, attribute.WorldUIDomainName));
+                    }
             }
             return null;
         }
@@ -330,7 +329,7 @@ namespace HT.Framework
         /// </summary>
         /// <param name="type">非常驻UI逻辑类</param>
         /// <returns>加载协程</returns>
-        public Coroutine PreloadingTemporaryUI(Type type)
+        public  async UniTask<UILogicTemporary> PreloadingTemporaryUI(Type type)
         {
             UIResourceAttribute attribute = type.GetCustomAttribute<UIResourceAttribute>();
             if (attribute != null)
@@ -340,75 +339,77 @@ namespace HT.Framework
                     case UIType.Overlay:
                         if (OverlayUIs.ContainsKey(type))
                         {
-                            return CreateUIEntity(attribute, type.FullName, OverlayUIs[type], _overlayTemporaryPanel);
+                            // return CreateUIEntity(attribute, type.FullName, OverlayUIs[type], _overlayTemporaryPanel);
+                            return (await CreateUIEntity(attribute, type.FullName, OverlayUIs[type], _overlayTemporaryPanel)).Cast<UILogicTemporary>();
                         }
                         else
                         {
-                            throw new HTFrameworkException(HTFrameworkModule.UI, $"预加载UI失败：UI对象 {type.Name} 并未存在！");
+                            throw new HTFrameworkException(HTFrameworkModule.UI, string.Format("预加载UI失败：UI对象 {0} 并未存在！", type.Name));
                         }
                     case UIType.Camera:
                         if (CameraUIs.ContainsKey(type))
                         {
-                            return CreateUIEntity(attribute, type.FullName, CameraUIs[type], _cameraTemporaryPanel);
+                            return (await CreateUIEntity(attribute, type.FullName, CameraUIs[type], _cameraTemporaryPanel)).Cast<UILogicTemporary>();
                         }
                         else
                         {
-                            throw new HTFrameworkException(HTFrameworkModule.UI, $"预加载UI失败：UI对象 {type.Name} 并未存在！");
+                            throw new HTFrameworkException(HTFrameworkModule.UI, string.Format("预加载UI失败：UI对象 {0} 并未存在！", type.Name));
                         }
                     case UIType.World:
                         if (WorldUIs.ContainsKey(attribute.WorldUIDomainName))
                         {
-                            return WorldUIs[attribute.WorldUIDomainName].PreloadingTemporaryUI(type, _defineUIAndEntitys.ContainsKey(type.FullName) ? _defineUIAndEntitys[type.FullName] : null);
+                            return await WorldUIs[attribute.WorldUIDomainName].PreloadingTemporaryUI(type, _defineUIAndEntitys.ContainsKey(type.FullName) ? _defineUIAndEntitys[type.FullName] : null);
                         }
                         else
                         {
-                            throw new HTFrameworkException(HTFrameworkModule.UI, $"预加载UI失败：UI对象 {type.Name} 的域 {attribute.WorldUIDomainName} 并未存在！");
+                            throw new HTFrameworkException(HTFrameworkModule.UI, string.Format("预加载UI失败：UI对象 {0} 的域 {1} 并未存在！", type.Name, attribute.WorldUIDomainName));
                         }
                 }
             }
             return null;
         }
+       
+        // ReSharper disable Unity.PerformanceAnalysis
         /// <summary>
         /// 打开常驻UI
         /// </summary>
         /// <param name="type">常驻UI逻辑类</param>
         /// <param name="args">可选参数</param>
         /// <returns>加载协程</returns>
-        public Coroutine OpenResidentUI(Type type, params object[] args)
+        public async UniTask<UILogicResident> OpenResidentUI(Type type, params object[] args)
         {
-            UIResourceAttribute attribute = type.GetCustomAttribute<UIResourceAttribute>();
-            if (attribute != null)
+            var attribute = type.GetCustomAttribute<UIResourceAttribute>();
+            if (attribute == null) return null;
+            
+            switch (attribute.EntityType)
             {
-                switch (attribute.EntityType)
-                {
-                    case UIType.Overlay:
-                        if (OverlayUIs.ContainsKey(type))
-                        {
-                            return CreateOpenUIEntity(attribute, type.FullName, OverlayUIs[type], _overlayResidentPanel, args);
-                        }
-                        else
-                        {
-                            throw new HTFrameworkException(HTFrameworkModule.UI, $"打开UI失败：UI对象 {type.Name} 并未存在！");
-                        }
-                    case UIType.Camera:
-                        if (CameraUIs.ContainsKey(type))
-                        {
-                            return CreateOpenUIEntity(attribute, type.FullName, CameraUIs[type], _cameraResidentPanel, args);
-                        }
-                        else
-                        {
-                            throw new HTFrameworkException(HTFrameworkModule.UI, $"打开UI失败：UI对象 {type.Name} 并未存在！");
-                        }
-                    case UIType.World:
-                        if (WorldUIs.ContainsKey(attribute.WorldUIDomainName))
-                        {
-                            return WorldUIs[attribute.WorldUIDomainName].OpenResidentUI(type, _defineUIAndEntitys.ContainsKey(type.FullName) ? _defineUIAndEntitys[type.FullName] : null, args);
-                        }
-                        else
-                        {
-                            throw new HTFrameworkException(HTFrameworkModule.UI, $"打开UI失败：UI对象 {type.Name} 的域 {attribute.WorldUIDomainName} 并未存在！");
-                        }
-                }
+                case UIType.Overlay:
+                    if (OverlayUIs.ContainsKey(type))
+                    {
+                        return (await CreateOpenUIEntity(attribute, type.FullName, OverlayUIs[type], _overlayResidentPanel, args)).Cast<UILogicResident>();
+                    }
+                    else
+                    {
+                        throw new HTFrameworkException(HTFrameworkModule.UI, string.Format("打开UI失败：UI对象 {0} 并未存在！", type.Name));
+                    }
+                case UIType.Camera:
+                    if (CameraUIs.ContainsKey(type))
+                    {
+                        return (await CreateOpenUIEntity(attribute, type.FullName, CameraUIs[type], _cameraResidentPanel, args)).Cast<UILogicResident>();
+                    }
+                    else
+                    {
+                        throw new HTFrameworkException(HTFrameworkModule.UI, string.Format("打开UI失败：UI对象 {0} 并未存在！", type.Name));
+                    }
+                case UIType.World:
+                    if (WorldUIs.ContainsKey(attribute.WorldUIDomainName))
+                    {
+                        return await WorldUIs[attribute.WorldUIDomainName].OpenResidentUI(type, _defineUIAndEntitys.ContainsKey(type.FullName) ? _defineUIAndEntitys[type.FullName] : null, args);
+                    }
+                    else
+                    {
+                        throw new HTFrameworkException(HTFrameworkModule.UI, string.Format("打开UI失败：UI对象 {0} 的域 {1} 并未存在！", type.Name, attribute.WorldUIDomainName));
+                    }
             }
             return null;
         }
@@ -418,9 +419,9 @@ namespace HT.Framework
         /// <param name="type">非常驻UI逻辑类</param>
         /// <param name="args">可选参数</param>
         /// <returns>加载协程</returns>
-        public Coroutine OpenTemporaryUI(Type type, params object[] args)
+        public async UniTask<UILogicTemporary> OpenTemporaryUI (Type type, params object[] args)
         {
-            UIResourceAttribute attribute = type.GetCustomAttribute<UIResourceAttribute>();
+            var attribute = type.GetCustomAttribute<UIResourceAttribute>();
             if (attribute != null)
             {
                 switch (attribute.EntityType)
@@ -437,12 +438,11 @@ namespace HT.Framework
                                 _currentOverlayTemporaryUI = null;
                             }
                             _currentOverlayTemporaryUI = OverlayUIs[type] as UILogicTemporary;
-
-                            return CreateOpenUIEntity(attribute, type.FullName, OverlayUIs[type], _overlayTemporaryPanel, args);
+                            return (await CreateOpenUIEntity(attribute, type.FullName, OverlayUIs[type], _overlayTemporaryPanel, args)).Cast<UILogicTemporary>();
                         }
                         else
                         {
-                            throw new HTFrameworkException(HTFrameworkModule.UI, $"打开UI失败：UI对象 {type.Name} 并未存在！");
+                            throw new HTFrameworkException(HTFrameworkModule.UI, string.Format("打开UI失败：UI对象 {0} 并未存在！", type.Name));
                         }
                     case UIType.Camera:
                         if (CameraUIs.ContainsKey(type))
@@ -457,20 +457,20 @@ namespace HT.Framework
                             }
                             _currentCameraTemporaryUI = CameraUIs[type] as UILogicTemporary;
 
-                            return CreateOpenUIEntity(attribute, type.FullName, CameraUIs[type], _cameraTemporaryPanel, args);
+                            return (await CreateOpenUIEntity(attribute, type.FullName, CameraUIs[type], _cameraTemporaryPanel, args)).Cast<UILogicTemporary>();
                         }
                         else
                         {
-                            throw new HTFrameworkException(HTFrameworkModule.UI, $"打开UI失败：UI对象 {type.Name} 并未存在！");
+                            throw new HTFrameworkException(HTFrameworkModule.UI, string.Format("打开UI失败：UI对象 {0} 并未存在！", type.Name));
                         }
                     case UIType.World:
                         if (WorldUIs.ContainsKey(attribute.WorldUIDomainName))
                         {
-                            return WorldUIs[attribute.WorldUIDomainName].OpenTemporaryUI(type, _defineUIAndEntitys.ContainsKey(type.FullName) ? _defineUIAndEntitys[type.FullName] : null, args);
+                            return await WorldUIs[attribute.WorldUIDomainName].OpenTemporaryUI(type, _defineUIAndEntitys.ContainsKey(type.FullName) ? _defineUIAndEntitys[type.FullName] : null, args);
                         }
                         else
                         {
-                            throw new HTFrameworkException(HTFrameworkModule.UI, $"打开UI失败：UI对象 {type.Name} 的域 {attribute.WorldUIDomainName} 并未存在！");
+                            throw new HTFrameworkException(HTFrameworkModule.UI, string.Format("打开UI失败：UI对象 {0} 的域 {1} 并未存在！", type.Name, attribute.WorldUIDomainName));
                         }
                 }
             }
@@ -687,7 +687,7 @@ namespace HT.Framework
         /// <param name="uILogic">UI逻辑类对象</param>
         /// <param name="uIParent">UI的父级</param>
         /// <returns>加载协程</returns>
-        private Coroutine CreateUIEntity(UIResourceAttribute uIResource, string uITypeName, UILogicBase uILogic, Transform uIParent)
+        private async UniTask<UILogicBase> CreateUIEntity(UIResourceAttribute uIResource, string uITypeName, UILogicBase uILogic, Transform uIParent)
         {
             if (uILogic.IsCreated)
                 return null;
@@ -697,15 +697,13 @@ namespace HT.Framework
                 uILogic.UIEntity = Main.Clone(_defineUIAndEntitys[uITypeName], uIParent);
                 uILogic.UIEntity.SetActive(false);
                 uILogic.OnInit();
-                return null;
+                return uILogic;
             }
             else
             {
-                return Main.m_Resource.LoadPrefab(new PrefabInfo(uIResource), uIParent, null, (obj) =>
-                {
-                    uILogic.UIEntity = obj;
-                    uILogic.OnInit();
-                }, true);
+                uILogic.UIEntity = await Main.m_Resource.LoadPrefab(new PrefabInfo(uIResource), uIParent, null,true);
+                uILogic.OnInit();
+                return uILogic;
             }
         }
         /// <summary>
@@ -717,41 +715,34 @@ namespace HT.Framework
         /// <param name="uIParent">UI的父级</param>
         /// <param name="args">UI打开的参数</param>
         /// <returns>加载协程</returns>
-        private Coroutine CreateOpenUIEntity(UIResourceAttribute uIResource, string uITypeName, UILogicBase uILogic, Transform uIParent, params object[] args)
+        private async UniTask<UILogicBase> CreateOpenUIEntity(UIResourceAttribute uIResource, string uITypeName, UILogicBase uILogic, Transform uIParent, params object[] args)
         {
-            if (uILogic.IsOpened)
-                return null;
-
+            if (uILogic.IsOpened) return uILogic;
+            
             if (!uILogic.IsCreated)
             {
                 if (_defineUIAndEntitys.ContainsKey(uITypeName) && _defineUIAndEntitys[uITypeName] != null)
                 {
                     uILogic.UIEntity = Main.Clone(_defineUIAndEntitys[uITypeName], uIParent);
-                    uILogic.UIEntity.SetActive(true);
-                    uILogic.OnInit();
-                    uILogic.OnOpen(args);
-                    PlaceTopUIEntity(uILogic as UILogicResident);
-                    return null;
                 }
                 else
                 {
-                    return Main.m_Resource.LoadPrefab(new PrefabInfo(uIResource), uIParent, null, (obj) =>
-                    {
-                        uILogic.UIEntity = obj;
-                        uILogic.UIEntity.SetActive(true);
-                        uILogic.OnInit();
-                        uILogic.OnOpen(args);
-                        PlaceTopUIEntity(uILogic as UILogicResident);
-                    }, true);
+                    uILogic.UIEntity = await Main.m_Resource.LoadPrefab(new PrefabInfo(uIResource), uIParent, null,true);
                 }
+                
+                uILogic.UIEntity.SetActive(true);
+                uILogic.OnInit();
+                uILogic.OnOpen(args);
+                PlaceTopUIEntity(uILogic as UILogicResident);
             }
             else
             {
                 uILogic.UIEntity.SetActive(true);
                 uILogic.OnOpen(args);
                 PlaceTopUIEntity(uILogic as UILogicResident);
-                return null;
             }
+
+            return uILogic;
         }
         /// <summary>
         /// 置顶常驻UI实体
