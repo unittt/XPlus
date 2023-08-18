@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -16,22 +17,49 @@ namespace HT.Framework
         /// <summary>
         /// 当前的资源加载模式
         /// </summary>
-        EPlayMode LoadMode { get; }
+        EPlayMode PlayMode { get; }
         /// <summary>
         /// 所有AssetBundle资源包清单的名称
         /// </summary>
         string PackageName { get; }
+
+        /// <summary>
+        /// 当前最新的包裹版本
+        /// </summary>
+        string PackageVersion { get; }
+
         /// <summary>
         /// 已加载的所有场景【场景名称、场景】
         /// </summary>
         Dictionary<string, Scene> Scenes { get; }
         
         /// <summary>
-        /// 设置加载器
+        /// 初始化package
         /// </summary>
-        /// <param name="loadMode">加载模式</param>
-        /// <param name="manifestName">AB包清单名称</param>
-        void SetLoader(EPlayMode loadMode, string manifestName);
+        InitializationOperation InitPackage(string hostServerURL, string fallbackHostServerURL);
+
+
+        /// <summary>
+        /// 异步更新最新包的版本。
+        /// </summary>
+        /// <param name="appendTimeTicks">请求URL是否需要带时间戳。</param>
+        /// <param name="timeout">超时时间。</param>
+        /// <returns>请求远端包裹的最新版本操作句柄。</returns>
+        UniTask<UpdatePackageVersionOperation> UpdatePackageVersionAsync(bool appendTimeTicks, int timeout);
+        
+        /// <summary>
+        /// 向网络端请求并更新清单
+        /// </summary>
+        /// <param name="packageVersion">更新的包裹版本</param>
+        /// <param name="autoSaveVersion">更新成功后自动保存版本号，作为下次初始化的版本。</param>
+        /// <param name="timeout">超时时间（默认值：60秒）</param>
+        UniTask<UpdatePackageManifestOperation>  UpdatePackageManifestAsync(bool autoSaveVersion, int timeout);
+        
+        /// <summary>
+        ///  创建资源下载器，用于下载当前资源版本所有的资源包文件。
+        /// </summary>
+        /// <returns></returns>
+        ResourceDownloaderOperation CreateResourceDownloader();
         
         /// <summary>
         /// 加载资源（异步）

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -13,11 +14,21 @@ namespace HT.Framework
     /// </summary>
     public sealed class YooAssetResourceHelper : IResourceHelper
     {
+        public bool EnableForix;
+        public long Milliseconds;
+        public EVerifyLevel VerifyLevel;
+   
+        
         private bool _isLoading = false;    //单线下载中
         private WaitUntil _loadWait;    //单线下载等待;
         private readonly Dictionary<Object, IDisposable> _obj_2_handles = new();
-        public EPlayMode LoadMode { get; private set; }
+        public EPlayMode PlayMode { get; private set; }
         public string PackageName { get; private set; }
+        public string PackageVersion { get; private set; }
+
+
+        private int downloadingMaxNumber;
+        private int failedTryAgain;
 
         /// <summary>
         /// 已加载的所有场景【场景名称、场景】
@@ -33,8 +44,8 @@ namespace HT.Framework
         {
             // 初始化资源系统
             YooAssets.Initialize();
-            // YooAssets.SetOperationSystemMaxTimeSlice(Milliseconds);
-            // YooAssets.SetCacheSystemCachedFileVerifyLevel(VerifyLevel);
+             YooAssets.SetOperationSystemMaxTimeSlice(Milliseconds);
+            YooAssets.SetCacheSystemCachedFileVerifyLevel(VerifyLevel);
             
             // 创建默认的资源包
             var package = YooAssets.TryGetPackage(PackageName) ?? YooAssets.CreatePackage(PackageName);
@@ -81,23 +92,124 @@ namespace HT.Framework
 
         }
         
-        public void SetLoader(EPlayMode loadMode, string packageName)
+        public InitializationOperation InitPackage(string hostServerURL, string fallbackHostServerURL)
         {
-            LoadMode = loadMode;
-            PackageName = packageName;
+
+            if (string.IsNullOrEmpty(hostServerURL))
+            {
+               //设置默认的url
+            }
+
+            if (string.IsNullOrEmpty(fallbackHostServerURL))
+            {
+                //设置默认的url
+            }
             
             // 创建默认的资源包
-            var package = YooAssets.TryGetPackage(packageName) ?? YooAssets.CreatePackage(PackageName);
+            var package = YooAssets.TryGetPackage(PackageName) ?? YooAssets.CreatePackage(PackageName);
             // 设置该资源包为默认的资源包，可以使用YooAssets相关加载接口加载该资源包内容。
             YooAssets.SetDefaultPackage(package);
             
-            _loadWait = new WaitUntil(() => !_isLoading);
+            InitializationOperation initializationOperation = null;
+            if (PlayMode == EPlayMode.EditorSimulateMode)
+            {
+                var createParameters = new EditorSimulateModeParameters();
+                createParameters.SimulateManifestFilePath = EditorSimulateModeHelper.SimulateBuild(PackageName);
+                initializationOperation = package.InitializeAsync(createParameters);
+            }
+            
+            // 单机运行模式
+            if (PlayMode == EPlayMode.OfflinePlayMode)
+            {
+                var createParameters = new OfflinePlayModeParameters();
+                createParameters.DecryptionServices = new GameDecryptionServices();
+                initializationOperation = package.InitializeAsync(createParameters);
+            }
+            
+            // 联机运行模式
+            if (PlayMode == EPlayMode.HostPlayMode)
+            {
+                var createParameters = new HostPlayModeParameters();
+                createParameters.DecryptionServices = new GameDecryptionServices();
+                createParameters.QueryServices = new GameQueryServices();
+                createParameters.RemoteServices = new RemoteServices(hostServerURL, fallbackHostServerURL);
+                initializationOperation = package.InitializeAsync(createParameters);
+            }
+            
+            // WebGL运行模式
+            if(PlayMode == EPlayMode.WebPlayMode)
+            {
+                var createParameters = new WebPlayModeParameters();
+                createParameters.DecryptionServices = new GameDecryptionServices();
+                createParameters.QueryServices = new GameQueryServices();
+                createParameters.RemoteServices = new RemoteServices(hostServerURL, fallbackHostServerURL);
+                initializationOperation = package.InitializeAsync(createParameters);
+            }
+
+            return initializationOperation;
+        }
+
+        /// <summary>
+        /// 异步更新最新包的版本。
+        /// </summary>
+        /// <param name="appendTimeTicks">请求URL是否需要带时间戳。</param>
+        /// <param name="timeout">超时时间。</param>
+        /// <returns>请求远端包裹的最新版本操作句柄。</returns>
+        public async UniTask<UpdatePackageVersionOperation> UpdatePackageVersionAsync(bool appendTimeTicks, int timeout)
+        {
+            var package = YooAssets.GetPackage(PackageName);
+            var updatePackageVersionOperation = package.UpdatePackageVersionAsync(appendTimeTicks, timeout);
+            await updatePackageVersionOperation.ToUniTask();
+            if (updatePackageVersionOperation.Status == EOperationStatus.Succeed)
+            {
+                PackageVersion = updatePackageVersionOperation.PackageVersion;
+            }
+            return updatePackageVersionOperation;
+        }
+
+        /// <summary>
+        /// 向网络端请求并更新清单
+        /// </summary>
+        /// <param name="packageVersion">更新的包裹版本</param>
+        /// <param name="autoSaveVersion">更新成功后自动保存版本号，作为下次初始化的版本。</param>
+        /// <param name="timeout">超时时间（默认值：60秒）</param>
+        public async UniTask<UpdatePackageManifestOperation> UpdatePackageManifestAsync(bool autoSaveVersion, int timeout)
+        {
+            var package = YooAssets.GetPackage(PackageName);
+            var updatePackageManifest =  package.UpdatePackageManifestAsync(PackageVersion,autoSaveVersion, timeout);
+            await updatePackageManifest.ToUniTask();
+            if (updatePackageManifest.Status != EOperationStatus.Succeed) return updatePackageManifest;
+            if (autoSaveVersion)
+            {
+                updatePackageManifest.SavePackageVersion();
+            }
+
+            return updatePackageManifest;
+        }
+
+        
+        public ResourceDownloaderOperation CreateResourceDownloader()
+        {
+            var package = YooAssets.GetPackage(PackageName);
+            var downloader = package.CreateResourceDownloader(downloadingMaxNumber, failedTryAgain);
+            return downloader;
+        }
+        
+        /// <summary>
+        /// 获取Pakage
+        /// </summary>
+        /// <param name="packageName"></param>
+        /// <returns></returns>
+        public ResourcePackage TryGetPackage(string packageName)
+        {
+            return YooAssets.TryGetPackage(packageName);
         }
         
         private void AddAssetOperationHandle(Object obj,IDisposable handle)
         {
             _obj_2_handles.TryAdd(obj, handle);
         }
+
 
         /// <summary>
         /// 加载资源（异步）
@@ -164,7 +276,7 @@ namespace HT.Framework
             var endTime = Time.realtimeSinceStartup;
             string.Format("异步加载资源{0}[{1}模式]：\r\n{2}\r\n等待耗时：{3}秒  加载耗时：{4}秒"
                 , obj ? "成功" : "失败"
-                , LoadMode.ToString()
+                , PlayMode.ToString()
                 , info.AssetPath
                 , (waitTime - beginTime).ToString()
                 , (endTime - waitTime).ToString()).Info();
@@ -211,7 +323,7 @@ namespace HT.Framework
             Scenes.Add(info.AssetPath, handle.SceneObject);
             var endTime = Time.realtimeSinceStartup;
             string.Format("异步加载场景完成[{0}模式]：{1}\r\n等待耗时：{2}秒  加载耗时：{3}秒"
-                ,LoadMode.ToString()
+                ,PlayMode.ToString()
                 , info.AssetPath
                 , (waitTime - beginTime).ToString()
                 , (endTime - waitTime).ToString()).Info();
@@ -254,7 +366,7 @@ namespace HT.Framework
             var endTime = Time.realtimeSinceStartup;
             string.Format("异步加载资源{0}[{1}模式]：\r\n{2}{3}\r\n等待耗时：{4}秒  加载耗时：{5}秒"
                 , obj ? "成功" : "失败"
-                ,LoadMode.ToString()
+                ,PlayMode.ToString()
                 , string.Format("{location}/{name}")
                 , (waitTime - beginTime).ToString()
                 , (endTime - waitTime).ToString()).Info();
@@ -294,7 +406,7 @@ namespace HT.Framework
             var endTime = Time.realtimeSinceStartup;
             string.Format("异步加载资源{0}[{1}模式]：\r\n{2}\r\n等待耗时：{3}秒  加载耗时：{4}秒"
                 , handle.IsValid ? "成功" : "失败"
-                , LoadMode.ToString()
+                , PlayMode.ToString()
                 , info.AssetPath
                 , (waitTime - beginTime).ToString()
                 , (endTime - waitTime).ToString()).Info();
@@ -335,7 +447,7 @@ namespace HT.Framework
             var endTime = Time.realtimeSinceStartup;
             string.Format("异步加载资源{0}[{1}模式]：\r\n{2}\r\n等待耗时：{3}秒  加载耗时：{4}秒"
                 , handle.IsValid ? "成功" : "失败"
-                , LoadMode.ToString()
+                , PlayMode.ToString()
                 , info.AssetPath
                 , (waitTime - beginTime).ToString()
                 , (endTime - waitTime).ToString()).Info();
