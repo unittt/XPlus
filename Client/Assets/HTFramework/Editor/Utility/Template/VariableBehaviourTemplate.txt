@@ -1,0 +1,20 @@
+using HT.Framework;
+using UnityEngine;
+
+[DisallowMultipleComponent]
+public partial class #SCRIPTNAME# :  VariableBehaviour
+{
+    #region parameter
+    #endregion
+    
+    protected override void Awake()
+    {
+        base.Awake();
+        #region Awake
+        #endregion
+		
+		OnAwake();
+    }
+	
+	 partial void OnAwake();
+}

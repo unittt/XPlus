@@ -154,10 +154,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Container:
     variables:
-    - name: 
-      objectValue: {fileID: 0}
+    - name: asdas
+      objectValue: {fileID: 617651011}
       dataValue: 
-      variableType: 8
+      variableType: 2
+    - name: Ab
+      objectValue: {fileID: 0}
+      dataValue: 5rWL6K+V5ZWK
+      variableType: 6
 --- !u!4 &402174217
 Transform:
   m_ObjectHideFlags: 0
@@ -282,3 +286,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
+--- !u!4 &617651011 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8881137663403773, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
+  m_PrefabInstance: {fileID: 617651010}
+  m_PrefabAsset: {fileID: 0}
