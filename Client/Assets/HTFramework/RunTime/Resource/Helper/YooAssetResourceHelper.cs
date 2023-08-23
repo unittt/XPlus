@@ -23,7 +23,7 @@ namespace HT.Framework
         private WaitUntil _loadWait;    //单线下载等待;
         private readonly Dictionary<Object, IDisposable> _obj_2_handles = new();
         public EPlayMode PlayMode { get; private set; }
-        public string PackageName { get; private set; }
+        public string PackageName => Main.m_Resource.PackageName;
         public string PackageVersion { get; private set; }
 
 

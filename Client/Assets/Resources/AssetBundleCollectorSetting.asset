@@ -18,4 +18,12 @@ MonoBehaviour:
   IncludeAssetGUID: 0
   UniqueBundleName: 0
   ShowEditorAlias: 0
-  Packages: []
+  Packages:
+  - PackageName: DefaultPackage
+    PackageDesc: 
+    Groups:
+    - GroupName: Default Group
+      GroupDesc: 
+      AssetTags: 
+      ActiveRuleName: EnableGroup
+      Collectors: []
