@@ -5,16 +5,14 @@ using UnityEngine;
 public partial class NewVariableBehaviour :  VariableBehaviour
 {
     #region parameter
- public UnityEngine.Transform asdas;
- public System.String Ab;
+ public System.Boolean dsads { get; private set; }
 #endregion
     
     protected override void Awake()
     {
         base.Awake();
         #region Awake
-            asdas = Container.Get<UnityEngine.Transform>("asdas");
-            Ab = Container.Get<System.String>("Ab");
+            dsads = Container.Get<System.Boolean>("dsads");
 #endregion
 		
 		OnAwake();

@@ -1,12 +1,13 @@
-using System;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEditor.Callbacks;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 namespace HT.Framework
 {
+    
     [CustomEditor(typeof(VariableBehaviour))]
     public sealed class VariableBehaviourEditor : HTFEditor<VariableBehaviour>
     {
@@ -20,37 +21,56 @@ namespace HT.Framework
         [DidReloadScripts]
         private static void BindScriptsToObj()
         {
+          
+            
             var className = EditorPrefs.GetString("VariableScriptName","");
             if (string.IsNullOrEmpty(className)) return;
             var type = ReflectionToolkit.GetTypeInRunTimeAssemblies(className);
             
-            // HierarchyProperty property = new HierarchyProperty(assetPath);
-
-            var variableBehaviours = FindObjectsByType<VariableBehaviour>(FindObjectsSortMode.None);
             var instanceID = EditorPrefs.GetInt("VariableObjInstanceID",0);
-            VariableBehaviour vbbb = null;
-            foreach (var vb in variableBehaviours)
+            // var vbGo = FindGameObjectWithInstanceID(instanceID);
+
+
+            var vbGo = EditorUtility.InstanceIDToObject(instanceID).Cast<GameObject>();
+            var vb = vbGo.GetComponent<VariableBehaviour>();
+            var newVB = vbGo.AddComponent(type).Cast<VariableBehaviour>();
+            newVB.Container = vb.Container;
+            
+            DestroyImmediate(vb);
+            
+           
+            //判断是否为预制体
+            if ( PrefabUtility.IsPartOfPrefabInstance(vbGo))
             {
-                if (vb.gameObject.GetInstanceID() != instanceID) continue;
-                vbbb = vb;
-                break;
+                //如果是预制体
+                PrefabUtility.ApplyPrefabInstance(vbGo, InteractionMode.AutomatedAction);
             }
 
-            if (vbbb != null)
+            var xxxx = PrefabStageUtility.GetCurrentPrefabStage();
+            if (xxxx)
             {
-                vbbb.gameObject.AddComponent(type);
+                Log.Info("不为空:" + xxxx.prefabContentsRoot.name);
             }
-            
-            // EditorApplication.HierarchyWindowItemCallback.
-            // Selection.activeInstanceID = property.GetInstanceIDIfImported();
-     
-            
-            // Selection.activeTransform;
-            // if (_obj == null)
+            // else
             // {
-            //     Log.Info("对象为空");
+            //     Log.Info("为空啊" );
             // }
-            // var c = _obj.AddComponent(type);
+        }
+        
+        
+        private static GameObject FindGameObjectWithInstanceID(int instanceID)
+        {
+            // var hierarchyProperty = new HierarchyProperty(HierarchyType.GameObjects);
+            //
+            // while (hierarchyProperty.Next(null))
+            // {
+            //     if (hierarchyProperty.instanceID == instanceID)
+            //     {
+            //         return hierarchyProperty.pptrValue as GameObject;
+            //     }
+            // }
+
+            return null;
         }
         
         protected override void OnInspectorDefaultGUI()
@@ -75,7 +95,8 @@ namespace HT.Framework
             sb.Append("\r\n");
             foreach (var variable in Target.Container.Variables)
             {
-                sb.Append($" public {variable.ValueType} {variable.Name};");
+                // sb.Append($" public {variable.ValueType} {variable.Name}  ");
+                sb.Append($" public {variable.ValueType} {variable.Name} {{ get; private set; }}");
                 sb.Append("\r\n");
             }
             //参数
