@@ -21,17 +21,15 @@ namespace HT.Framework
         [DidReloadScripts]
         private static void BindScriptsToObj()
         {
-          
-            
+
             var className = EditorPrefs.GetString("VariableScriptName","");
             if (string.IsNullOrEmpty(className)) return;
             var type = ReflectionToolkit.GetTypeInRunTimeAssemblies(className);
             
             var instanceID = EditorPrefs.GetInt("VariableObjInstanceID",0);
-            // var vbGo = FindGameObjectWithInstanceID(instanceID);
-
 
             var vbGo = EditorUtility.InstanceIDToObject(instanceID).Cast<GameObject>();
+            
             var vb = vbGo.GetComponent<VariableBehaviour>();
             var newVB = vbGo.AddComponent(type).Cast<VariableBehaviour>();
             newVB.Container = vb.Container;
@@ -39,39 +37,21 @@ namespace HT.Framework
             DestroyImmediate(vb);
             
            
-            //判断是否为预制体
+            //如果在Hierarchy视图中 判断是否为预制体
             if ( PrefabUtility.IsPartOfPrefabInstance(vbGo))
             {
                 //如果是预制体
                 PrefabUtility.ApplyPrefabInstance(vbGo, InteractionMode.AutomatedAction);
             }
-
-            var xxxx = PrefabStageUtility.GetCurrentPrefabStage();
-            if (xxxx)
+            
+            //如果在编辑预制体视图中
+            var prefabStage = PrefabStageUtility.GetCurrentPrefabStage();
+            if (prefabStage)
             {
-                Log.Info("不为空:" + xxxx.prefabContentsRoot.name);
+                EditorUtility.SetDirty(vbGo);
             }
-            // else
-            // {
-            //     Log.Info("为空啊" );
-            // }
         }
         
-        
-        private static GameObject FindGameObjectWithInstanceID(int instanceID)
-        {
-            // var hierarchyProperty = new HierarchyProperty(HierarchyType.GameObjects);
-            //
-            // while (hierarchyProperty.Next(null))
-            // {
-            //     if (hierarchyProperty.instanceID == instanceID)
-            //     {
-            //         return hierarchyProperty.pptrValue as GameObject;
-            //     }
-            // }
-
-            return null;
-        }
         
         protected override void OnInspectorDefaultGUI()
         {
