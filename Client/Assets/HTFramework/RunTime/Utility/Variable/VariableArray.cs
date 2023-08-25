@@ -7,7 +7,7 @@ namespace HT.Framework
     [System.Serializable]
     public class VariableArray
     {
-        [SerializeField] private List<Variable> variables;
+        [SerializeField] private List<Variable> variables = new();
 
         public ReadOnlyCollection<Variable> Variables => variables.AsReadOnly();
 

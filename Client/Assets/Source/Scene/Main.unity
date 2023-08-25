@@ -134,6 +134,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: HTFramework
       objectReference: {fileID: 0}
+    - target: {fileID: 1679441640883288, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4532264058016742, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: m_RootOrder
       value: 0

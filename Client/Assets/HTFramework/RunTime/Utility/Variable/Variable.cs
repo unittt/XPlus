@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿using System.Text.RegularExpressions;
+using UnityEngine;
 
 namespace HT.Framework
 {
+    
     [System.Serializable]
     public enum VariableType
     {
@@ -21,6 +23,8 @@ namespace HT.Framework
     [System.Serializable]
     public class Variable
     {
+        private const string PATTERN = @"^[a-zA-Z_@][a-zA-Z0-9_@]{0,19}$"; 
+        
         [SerializeField]
         protected string name = "";
 
@@ -157,6 +161,29 @@ namespace HT.Framework
                     return this.objectValue;
                 default:
                     throw new System.NotSupportedException();
+            }
+        }
+
+        /// <summary>
+        /// 检测变量是否合规
+        /// </summary>
+        public bool IsValidVariable
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(Name))
+                {
+                    return false;
+                }
+
+                if (!Regex.IsMatch(Name, PATTERN))
+                {
+                    return false;
+                }
+
+                if (ValueType.IsValueType || VariableType == VariableType.String) return true;
+                var v = GetValue();
+                return v != null && v.GetHashCode() != 0;
             }
         }
     }
