@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEditor;
@@ -8,14 +9,18 @@ using UnityEngine;
 namespace HT.Framework
 {
     
-    [CustomEditor(typeof(VariableBehaviour))]
-    public sealed class VariableBehaviourEditor : HTFEditor<VariableBehaviour>
+    [CustomEditor(typeof(VariableBehaviour),true)]
+    public class VariableBehaviourEditor : HTFEditor<VariableBehaviour>
     {
         protected override bool IsEnableRuntimeData => false;
 
         protected override void OnDefaultEnable()
         {
             base.OnDefaultEnable();
+
+           
+            var b =  Target.GetType().IsSubclassOf(typeof(VariableBehaviour));
+           Log.Info("是否继承：" + b);
         }
 
         [DidReloadScripts]
@@ -24,6 +29,9 @@ namespace HT.Framework
 
             var className = EditorPrefs.GetString("VariableScriptName","");
             if (string.IsNullOrEmpty(className)) return;
+            
+            EditorPrefs.SetString("VariableScriptName","");
+            
             var type = ReflectionToolkit.GetTypeInRunTimeAssemblies(className);
             
             var instanceID = EditorPrefs.GetInt("VariableObjInstanceID",0);
