@@ -8,393 +8,451 @@
     "PackageVersion": "Simulate",
     "AssetList": [
         {
-            "Address": "engines_enemy",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/Effect/Engines/engines_enemy.prefab",
+            "Address": "Main",
+            "AssetPath": "Assets/GameRes/Scene/Main.unity",
             "AssetGUID": "",
             "AssetTags": [],
             "BundleID": 0,
             "DependIDs": []
         },
         {
-            "Address": "engines_player",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/Effect/Engines/engines_player.prefab",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 0,
-            "DependIDs": []
-        },
-        {
-            "Address": "explosion_asteroid",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/Effect/Explosions/explosion_asteroid.prefab",
+            "Address": "UIEdit",
+            "AssetPath": "Assets/GameRes/Scene/UIEdit.unity",
             "AssetGUID": "",
             "AssetTags": [],
             "BundleID": 1,
             "DependIDs": []
         },
         {
-            "Address": "explosion_enemy",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/Effect/Explosions/explosion_enemy.prefab",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 1,
-            "DependIDs": []
-        },
-        {
-            "Address": "explosion_player",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/Effect/Explosions/explosion_player.prefab",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 1,
-            "DependIDs": []
-        },
-        {
-            "Address": "asteroid01",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/Entity/asteroid01.prefab",
+            "Address": "UICreateRole",
+            "AssetPath": "Assets/GameRes/UI/CreateRole/UICreateRole.prefab",
             "AssetGUID": "",
             "AssetTags": [],
             "BundleID": 2,
             "DependIDs": []
         },
         {
-            "Address": "asteroid02",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/Entity/asteroid02.prefab",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 2,
-            "DependIDs": []
-        },
-        {
-            "Address": "asteroid03",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/Entity/asteroid03.prefab",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 2,
-            "DependIDs": []
-        },
-        {
-            "Address": "enemy_bullet",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/Entity/enemy_bullet.prefab",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 2,
-            "DependIDs": []
-        },
-        {
-            "Address": "enemy_ship",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/Entity/enemy_ship.prefab",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 2,
-            "DependIDs": []
-        },
-        {
-            "Address": "player_bullet",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/Entity/player_bullet.prefab",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 2,
-            "DependIDs": []
-        },
-        {
-            "Address": "player_ship",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/Entity/player_ship.prefab",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 2,
-            "DependIDs": []
-        },
-        {
-            "Address": "music_background",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/Audio/music_background.wav",
+            "Address": "UILogin",
+            "AssetPath": "Assets/GameRes/UI/Login/UILogin.prefab",
             "AssetGUID": "",
             "AssetTags": [],
             "BundleID": 3,
             "DependIDs": []
         },
         {
-            "Address": "sound_explosion_asteroid",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/Audio/sound_explosion_asteroid.wav",
+            "Address": "ai_tbbehaviortree",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/ai_tbbehaviortree.bytes",
             "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 3,
-            "DependIDs": []
-        },
-        {
-            "Address": "sound_explosion_enemy",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/Audio/sound_explosion_enemy.wav",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 3,
-            "DependIDs": []
-        },
-        {
-            "Address": "sound_explosion_player",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/Audio/sound_explosion_player.wav",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 3,
-            "DependIDs": []
-        },
-        {
-            "Address": "sound_weapon_enemy",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/Audio/sound_weapon_enemy.wav",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 3,
-            "DependIDs": []
-        },
-        {
-            "Address": "sound_weapon_player",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/Audio/sound_weapon_player.wav",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 3,
-            "DependIDs": []
-        },
-        {
-            "Address": "MyShaderVariants",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameArt/ShaderVariants/MyShaderVariants.shadervariants",
-            "AssetGUID": "",
-            "AssetTags": [],
+            "AssetTags": [
+                "data"
+            ],
             "BundleID": 4,
             "DependIDs": []
         },
         {
-            "Address": "scene_battle",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/Scene/scene_battle.unity",
+            "Address": "ai_tbblackboard",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/ai_tbblackboard.bytes",
             "AssetGUID": "",
-            "AssetTags": [],
+            "AssetTags": [
+                "data"
+            ],
             "BundleID": 5,
             "DependIDs": []
         },
         {
-            "Address": "scene_home",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/Scene/scene_home.unity",
+            "Address": "common_tbglobalconfig",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/common_tbglobalconfig.bytes",
             "AssetGUID": "",
-            "AssetTags": [],
+            "AssetTags": [
+                "data"
+            ],
             "BundleID": 6,
             "DependIDs": []
         },
         {
-            "Address": "Space",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UIImage/Space.jpg",
+            "Address": "item_tbitem",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/item_tbitem.bytes",
             "AssetGUID": "",
-            "AssetTags": [],
+            "AssetTags": [
+                "data"
+            ],
             "BundleID": 7,
             "DependIDs": []
         },
         {
-            "Address": "UIAbout",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UIPanel/UIAbout.prefab",
+            "Address": "l10n_tbl10ndemo",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/l10n_tbl10ndemo.bytes",
             "AssetGUID": "",
-            "AssetTags": [],
+            "AssetTags": [
+                "data"
+            ],
             "BundleID": 8,
             "DependIDs": []
         },
         {
-            "Address": "UIBattle",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UIPanel/UIBattle.prefab",
+            "Address": "l10n_tbpatchdemo",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/l10n_tbpatchdemo.bytes",
             "AssetGUID": "",
-            "AssetTags": [],
+            "AssetTags": [
+                "data"
+            ],
             "BundleID": 9,
             "DependIDs": []
         },
         {
-            "Address": "UICanvas",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UIPanel/UICanvas.prefab",
+            "Address": "tag_tbtesttag",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/tag_tbtesttag.bytes",
             "AssetGUID": "",
-            "AssetTags": [],
+            "AssetTags": [
+                "data"
+            ],
             "BundleID": 10,
             "DependIDs": []
         },
         {
-            "Address": "UIHome",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UIPanel/UIHome.prefab",
+            "Address": "test_tbcompositejsontable1",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbcompositejsontable1.bytes",
             "AssetGUID": "",
-            "AssetTags": [],
+            "AssetTags": [
+                "data"
+            ],
             "BundleID": 11,
             "DependIDs": []
         },
         {
-            "Address": "UILoading",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UIPanel/UILoading.prefab",
+            "Address": "test_tbcompositejsontable2",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbcompositejsontable2.bytes",
             "AssetGUID": "",
-            "AssetTags": [],
+            "AssetTags": [
+                "data"
+            ],
             "BundleID": 12,
             "DependIDs": []
         },
         {
-            "Address": "arrow1_left",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UISprite/common/arrows/arrow1_left.png",
+            "Address": "test_tbcompositejsontable3",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbcompositejsontable3.bytes",
             "AssetGUID": "",
-            "AssetTags": [],
+            "AssetTags": [
+                "data"
+            ],
             "BundleID": 13,
             "DependIDs": []
         },
         {
-            "Address": "arrow1_right",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UISprite/common/arrows/arrow1_right.png",
+            "Address": "test_tbdatafrommisc",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbdatafrommisc.bytes",
             "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 13,
-            "DependIDs": []
-        },
-        {
-            "Address": "arrow_left",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UISprite/common/arrows/arrow_left.png",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 13,
-            "DependIDs": []
-        },
-        {
-            "Address": "arrow_right",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UISprite/common/arrows/arrow_right.png",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 13,
-            "DependIDs": []
-        },
-        {
-            "Address": "back_arrow",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UISprite/common/arrows/back_arrow.png",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 13,
-            "DependIDs": []
-        },
-        {
-            "Address": "long_arrow_left",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UISprite/common/arrows/long_arrow_left.png",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 13,
-            "DependIDs": []
-        },
-        {
-            "Address": "long_arrow_right",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UISprite/common/arrows/long_arrow_right.png",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 13,
-            "DependIDs": []
-        },
-        {
-            "Address": "plus",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UISprite/common/arrows/plus.png",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 13,
-            "DependIDs": []
-        },
-        {
-            "Address": "bar_blue",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UISprite/common/bars/bar_blue.png",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 13,
-            "DependIDs": []
-        },
-        {
-            "Address": "bar_blue1",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UISprite/common/bars/bar_blue1.png",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 13,
-            "DependIDs": []
-        },
-        {
-            "Address": "progress_bar",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UISprite/common/bars/progress_bar.png",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 13,
-            "DependIDs": []
-        },
-        {
-            "Address": "progress_bar_background",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UISprite/common/bars/progress_bar_background.png",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 13,
-            "DependIDs": []
-        },
-        {
-            "Address": "bullets",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UISprite/common/buttons/bullets.png",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 13,
-            "DependIDs": []
-        },
-        {
-            "Address": "button1",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UISprite/common/buttons/button1.png",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 13,
-            "DependIDs": []
-        },
-        {
-            "Address": "button_active",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UISprite/common/buttons/button_active.png",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 13,
-            "DependIDs": []
-        },
-        {
-            "Address": "button_pushed",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UISprite/common/buttons/button_pushed.png",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 13,
-            "DependIDs": []
-        },
-        {
-            "Address": "pause",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UISprite/common/buttons/pause.png",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 13,
-            "DependIDs": []
-        },
-        {
-            "Address": "rocket",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UISprite/common/buttons/rocket.png",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 13,
-            "DependIDs": []
-        },
-        {
-            "Address": "window_transparent",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UISprite/common/window/window_transparent.png",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 13,
-            "DependIDs": []
-        },
-        {
-            "Address": "window_transparent1",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/UISprite/common/window/window_transparent1.png",
-            "AssetGUID": "",
-            "AssetTags": [],
-            "BundleID": 13,
-            "DependIDs": []
-        },
-        {
-            "Address": "about",
-            "AssetPath": "Assets/Samples/YooAsset/1.5.3-preview/Space Shooter/GameRes/Config/about.txt",
-            "AssetGUID": "",
-            "AssetTags": [],
+            "AssetTags": [
+                "data"
+            ],
             "BundleID": 14,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbdefinefromexcel2",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbdefinefromexcel2.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 15,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbdemogroup",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbdemogroup.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 16,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbdemogroup_c",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbdemogroup_c.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 17,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbdemogroup_e",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbdemogroup_e.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 18,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbdemogroup_s",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbdemogroup_s.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 19,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbdemoprimitive",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbdemoprimitive.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 20,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbdetectcsvencoding",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbdetectcsvencoding.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 21,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbexcelfromjson",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbexcelfromjson.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 22,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbexcelfromjsonmultirow",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbexcelfromjsonmultirow.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 23,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbfulltypes",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbfulltypes.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 24,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbitem2",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbitem2.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 25,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbmultiindexlist",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbmultiindexlist.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 26,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbmultirowrecord",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbmultirowrecord.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 27,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbmultirowtitle",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbmultirowtitle.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 28,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbmultiunionindexlist",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbmultiunionindexlist.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 29,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbnotindexlist",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbnotindexlist.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 30,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbsingleton",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbsingleton.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 31,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbtestberef",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbtestberef.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 32,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbtestberef2",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbtestberef2.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 33,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbtestglobal",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbtestglobal.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 34,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbtestindex",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbtestindex.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 35,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbtestmap",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbtestmap.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 36,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbtestmapper",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbtestmapper.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 37,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbtestmulticolumn",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbtestmulticolumn.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 38,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbtestnull",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbtestnull.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 39,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbtestref",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbtestref.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 40,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbtestscriptableobject",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbtestscriptableobject.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 41,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbtestset",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbtestset.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 42,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbtestsize",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbtestsize.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 43,
+            "DependIDs": []
+        },
+        {
+            "Address": "test_tbteststring",
+            "AssetPath": "Assets/GameRes/GenerateDatas/bytes/test_tbteststring.bytes",
+            "AssetGUID": "",
+            "AssetTags": [
+                "data"
+            ],
+            "BundleID": 44,
             "DependIDs": []
         }
     ],
     "BundleList": [
         {
-            "BundleName": "assets_samples_yooasset_1_5_3-preview_space shooter_gameres_effect_engines.bundle",
+            "BundleName": "assets_gameres_scene_main.bundle",
             "UnityCRC": 0,
             "FileHash": "00000000000000000000000000000000",
             "FileCRC": "00000000",
@@ -405,7 +463,7 @@
             "ReferenceIDs": []
         },
         {
-            "BundleName": "assets_samples_yooasset_1_5_3-preview_space shooter_gameres_effect_explosions.bundle",
+            "BundleName": "assets_gameres_scene_uiedit.bundle",
             "UnityCRC": 0,
             "FileHash": "00000000000000000000000000000000",
             "FileCRC": "00000000",
@@ -416,7 +474,7 @@
             "ReferenceIDs": []
         },
         {
-            "BundleName": "assets_samples_yooasset_1_5_3-preview_space shooter_gameres_entity.bundle",
+            "BundleName": "assets_gameres_ui_createrole.bundle",
             "UnityCRC": 0,
             "FileHash": "00000000000000000000000000000000",
             "FileCRC": "00000000",
@@ -427,7 +485,7 @@
             "ReferenceIDs": []
         },
         {
-            "BundleName": "assets_samples_yooasset_1_5_3-preview_space shooter_gameres_audio.bundle",
+            "BundleName": "assets_gameres_ui_login.bundle",
             "UnityCRC": 0,
             "FileHash": "00000000000000000000000000000000",
             "FileCRC": "00000000",
@@ -438,124 +496,536 @@
             "ReferenceIDs": []
         },
         {
-            "BundleName": "unityshaders.bundle",
-            "UnityCRC": 0,
-            "FileHash": "00000000000000000000000000000000",
-            "FileCRC": "00000000",
-            "FileSize": 0,
-            "IsRawFile": false,
-            "LoadMethod": 0,
-            "Tags": [],
-            "ReferenceIDs": []
-        },
-        {
-            "BundleName": "assets_samples_yooasset_1_5_3-preview_space shooter_gameres_scene_scene_battle.bundle",
-            "UnityCRC": 0,
-            "FileHash": "00000000000000000000000000000000",
-            "FileCRC": "00000000",
-            "FileSize": 0,
-            "IsRawFile": false,
-            "LoadMethod": 0,
-            "Tags": [],
-            "ReferenceIDs": []
-        },
-        {
-            "BundleName": "assets_samples_yooasset_1_5_3-preview_space shooter_gameres_scene_scene_home.bundle",
-            "UnityCRC": 0,
-            "FileHash": "00000000000000000000000000000000",
-            "FileCRC": "00000000",
-            "FileSize": 0,
-            "IsRawFile": false,
-            "LoadMethod": 0,
-            "Tags": [],
-            "ReferenceIDs": []
-        },
-        {
-            "BundleName": "assets_samples_yooasset_1_5_3-preview_space shooter_gameres_uiimage.bundle",
-            "UnityCRC": 0,
-            "FileHash": "00000000000000000000000000000000",
-            "FileCRC": "00000000",
-            "FileSize": 0,
-            "IsRawFile": false,
-            "LoadMethod": 0,
-            "Tags": [],
-            "ReferenceIDs": []
-        },
-        {
-            "BundleName": "assets_samples_yooasset_1_5_3-preview_space shooter_gameres_uipanel_uiabout.bundle",
-            "UnityCRC": 0,
-            "FileHash": "00000000000000000000000000000000",
-            "FileCRC": "00000000",
-            "FileSize": 0,
-            "IsRawFile": false,
-            "LoadMethod": 0,
-            "Tags": [],
-            "ReferenceIDs": []
-        },
-        {
-            "BundleName": "assets_samples_yooasset_1_5_3-preview_space shooter_gameres_uipanel_uibattle.bundle",
-            "UnityCRC": 0,
-            "FileHash": "00000000000000000000000000000000",
-            "FileCRC": "00000000",
-            "FileSize": 0,
-            "IsRawFile": false,
-            "LoadMethod": 0,
-            "Tags": [],
-            "ReferenceIDs": []
-        },
-        {
-            "BundleName": "assets_samples_yooasset_1_5_3-preview_space shooter_gameres_uipanel_uicanvas.bundle",
-            "UnityCRC": 0,
-            "FileHash": "00000000000000000000000000000000",
-            "FileCRC": "00000000",
-            "FileSize": 0,
-            "IsRawFile": false,
-            "LoadMethod": 0,
-            "Tags": [],
-            "ReferenceIDs": []
-        },
-        {
-            "BundleName": "assets_samples_yooasset_1_5_3-preview_space shooter_gameres_uipanel_uihome.bundle",
-            "UnityCRC": 0,
-            "FileHash": "00000000000000000000000000000000",
-            "FileCRC": "00000000",
-            "FileSize": 0,
-            "IsRawFile": false,
-            "LoadMethod": 0,
-            "Tags": [],
-            "ReferenceIDs": []
-        },
-        {
-            "BundleName": "assets_samples_yooasset_1_5_3-preview_space shooter_gameres_uipanel_uiloading.bundle",
-            "UnityCRC": 0,
-            "FileHash": "00000000000000000000000000000000",
-            "FileCRC": "00000000",
-            "FileSize": 0,
-            "IsRawFile": false,
-            "LoadMethod": 0,
-            "Tags": [],
-            "ReferenceIDs": []
-        },
-        {
-            "BundleName": "assets_samples_yooasset_1_5_3-preview_space shooter_gameres_uisprite_common.bundle",
-            "UnityCRC": 0,
-            "FileHash": "00000000000000000000000000000000",
-            "FileCRC": "00000000",
-            "FileSize": 0,
-            "IsRawFile": false,
-            "LoadMethod": 0,
-            "Tags": [],
-            "ReferenceIDs": []
-        },
-        {
-            "BundleName": "assets_samples_yooasset_1_5_3-preview_space shooter_gameres_config_about_txt.rawfile",
+            "BundleName": "assets_gameres_generatedatas_bytes_ai_tbbehaviortree_bytes.rawfile",
             "UnityCRC": 0,
             "FileHash": "00000000000000000000000000000000",
             "FileCRC": "00000000",
             "FileSize": 0,
             "IsRawFile": true,
             "LoadMethod": 0,
-            "Tags": [],
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_ai_tbblackboard_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_common_tbglobalconfig_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_item_tbitem_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_l10n_tbl10ndemo_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_l10n_tbpatchdemo_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_tag_tbtesttag_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbcompositejsontable1_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbcompositejsontable2_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbcompositejsontable3_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbdatafrommisc_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbdefinefromexcel2_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbdemogroup_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbdemogroup_c_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbdemogroup_e_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbdemogroup_s_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbdemoprimitive_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbdetectcsvencoding_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbexcelfromjson_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbexcelfromjsonmultirow_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbfulltypes_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbitem2_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbmultiindexlist_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbmultirowrecord_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbmultirowtitle_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbmultiunionindexlist_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbnotindexlist_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbsingleton_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbtestberef_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbtestberef2_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbtestglobal_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbtestindex_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbtestmap_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbtestmapper_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbtestmulticolumn_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbtestnull_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbtestref_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbtestscriptableobject_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbtestset_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbtestsize_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
+            "ReferenceIDs": []
+        },
+        {
+            "BundleName": "assets_gameres_generatedatas_bytes_test_tbteststring_bytes.rawfile",
+            "UnityCRC": 0,
+            "FileHash": "00000000000000000000000000000000",
+            "FileCRC": "00000000",
+            "FileSize": 0,
+            "IsRawFile": true,
+            "LoadMethod": 0,
+            "Tags": [
+                "data"
+            ],
             "ReferenceIDs": []
         }
     ]

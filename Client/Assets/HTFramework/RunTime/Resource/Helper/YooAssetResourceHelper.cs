@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,12 +16,13 @@ namespace HT.Framework
         public bool EnableForix;
         public long Milliseconds;
         public EVerifyLevel VerifyLevel;
-   
-        
+
+
+        //是否初始化完成
+        private bool _isInited;
         private bool _isLoading = false;    //单线下载中
         private WaitUntil _loadWait;    //单线下载等待;
         private readonly Dictionary<Object, IDisposable> _obj_2_handles = new();
-        public EPlayMode PlayMode { get; private set; }
         public string PackageName => Main.m_Resource.PackageName;
         public string PackageVersion { get; private set; }
 
@@ -44,15 +44,23 @@ namespace HT.Framework
         {
             // 初始化资源系统
             YooAssets.Initialize();
-             YooAssets.SetOperationSystemMaxTimeSlice(Milliseconds);
+            YooAssets.SetOperationSystemMaxTimeSlice(Milliseconds);
             YooAssets.SetCacheSystemCachedFileVerifyLevel(VerifyLevel);
             
-            // 创建默认的资源包
-            var package = YooAssets.TryGetPackage(PackageName) ?? YooAssets.CreatePackage(PackageName);
-            // 设置该资源包为默认的资源包，可以使用YooAssets相关加载接口加载该资源包内容。
-            YooAssets.SetDefaultPackage(package);
-            
-            _loadWait = new WaitUntil(() => !_isLoading);
+            var initializationOperation = InitPackage("","");
+            initializationOperation.Completed += (asyncOperationBase) =>
+            {
+                if(asyncOperationBase.Status == EOperationStatus.Succeed)
+                {
+                    Debug.Log("资源包初始化成功！");
+                    _isInited = true;
+                }
+                else 
+                {
+                    Debug.LogError($"资源包初始化失败：{asyncOperationBase.Error}");
+                }
+            };
+            _loadWait = new WaitUntil(() => _isInited && !_isLoading);
         }
         
         
@@ -111,7 +119,7 @@ namespace HT.Framework
             YooAssets.SetDefaultPackage(package);
             
             InitializationOperation initializationOperation = null;
-            if (PlayMode == EPlayMode.EditorSimulateMode)
+            if (Main.m_Resource.PlayMode == EPlayMode.EditorSimulateMode)
             {
                 var createParameters = new EditorSimulateModeParameters();
                 createParameters.SimulateManifestFilePath = EditorSimulateModeHelper.SimulateBuild(PackageName);
@@ -119,7 +127,7 @@ namespace HT.Framework
             }
             
             // 单机运行模式
-            if (PlayMode == EPlayMode.OfflinePlayMode)
+            if (Main.m_Resource.PlayMode == EPlayMode.OfflinePlayMode)
             {
                 var createParameters = new OfflinePlayModeParameters();
                 createParameters.DecryptionServices = new GameDecryptionServices();
@@ -127,7 +135,7 @@ namespace HT.Framework
             }
             
             // 联机运行模式
-            if (PlayMode == EPlayMode.HostPlayMode)
+            if (Main.m_Resource.PlayMode == EPlayMode.HostPlayMode)
             {
                 var createParameters = new HostPlayModeParameters();
                 createParameters.DecryptionServices = new GameDecryptionServices();
@@ -137,7 +145,7 @@ namespace HT.Framework
             }
             
             // WebGL运行模式
-            if(PlayMode == EPlayMode.WebPlayMode)
+            if(Main.m_Resource.PlayMode == EPlayMode.WebPlayMode)
             {
                 var createParameters = new WebPlayModeParameters();
                 createParameters.DecryptionServices = new GameDecryptionServices();
@@ -225,7 +233,7 @@ namespace HT.Framework
         {
             var beginTime = Time.realtimeSinceStartup;
             //单线加载，如果其他地方在加载资源，则等待
-            if (_isLoading)
+            if (_isLoading || !_isInited)
             {
                await _loadWait;
             }
@@ -245,6 +253,7 @@ namespace HT.Framework
                 onLoading?.Invoke(p);
             });
             await handle.ToUniTask(progress);
+
             var obj =  handle.AssetObject;
             if (isPrefab)
             {
@@ -276,7 +285,7 @@ namespace HT.Framework
             var endTime = Time.realtimeSinceStartup;
             string.Format("异步加载资源{0}[{1}模式]：\r\n{2}\r\n等待耗时：{3}秒  加载耗时：{4}秒"
                 , obj ? "成功" : "失败"
-                , PlayMode.ToString()
+                , Main.m_Resource.PlayMode.ToString()
                 , info.AssetPath
                 , (waitTime - beginTime).ToString()
                 , (endTime - waitTime).ToString()).Info();
@@ -298,7 +307,7 @@ namespace HT.Framework
         {
             var beginTime = Time.realtimeSinceStartup;
             //单线加载，如果其他地方在加载资源，则等待
-            if (_isLoading)
+            if (_isLoading || !_isInited)
             {
                 await _loadWait;
             }
@@ -323,7 +332,7 @@ namespace HT.Framework
             Scenes.Add(info.AssetPath, handle.SceneObject);
             var endTime = Time.realtimeSinceStartup;
             string.Format("异步加载场景完成[{0}模式]：{1}\r\n等待耗时：{2}秒  加载耗时：{3}秒"
-                ,PlayMode.ToString()
+                ,Main.m_Resource.PlayMode.ToString()
                 , info.AssetPath
                 , (waitTime - beginTime).ToString()
                 , (endTime - waitTime).ToString()).Info();
@@ -344,7 +353,7 @@ namespace HT.Framework
         {
             var beginTime = Time.realtimeSinceStartup;
             //单线加载，如果其他地方在加载资源，则等待
-            if (_isLoading)
+            if (_isLoading || !_isInited)
             {
                 await _loadWait;
             }
@@ -366,7 +375,7 @@ namespace HT.Framework
             var endTime = Time.realtimeSinceStartup;
             string.Format("异步加载资源{0}[{1}模式]：\r\n{2}{3}\r\n等待耗时：{4}秒  加载耗时：{5}秒"
                 , obj ? "成功" : "失败"
-                ,PlayMode.ToString()
+                ,Main.m_Resource.PlayMode.ToString()
                 , string.Format("{location}/{name}")
                 , (waitTime - beginTime).ToString()
                 , (endTime - waitTime).ToString()).Info();
@@ -386,7 +395,7 @@ namespace HT.Framework
         {
             var beginTime = Time.realtimeSinceStartup;
             //单线加载，如果其他地方在加载资源，则等待
-            if (_isLoading)
+            if (_isLoading || !_isInited)
             {
                 await _loadWait;
             }
@@ -406,7 +415,7 @@ namespace HT.Framework
             var endTime = Time.realtimeSinceStartup;
             string.Format("异步加载资源{0}[{1}模式]：\r\n{2}\r\n等待耗时：{3}秒  加载耗时：{4}秒"
                 , handle.IsValid ? "成功" : "失败"
-                , PlayMode.ToString()
+                , Main.m_Resource.PlayMode.ToString()
                 , info.AssetPath
                 , (waitTime - beginTime).ToString()
                 , (endTime - waitTime).ToString()).Info();
@@ -427,7 +436,7 @@ namespace HT.Framework
         {
             var beginTime = Time.realtimeSinceStartup;
             //单线加载，如果其他地方在加载资源，则等待
-            if (_isLoading)
+            if (_isLoading || !_isInited)
             {
                 await _loadWait;
             }
@@ -447,7 +456,7 @@ namespace HT.Framework
             var endTime = Time.realtimeSinceStartup;
             string.Format("异步加载资源{0}[{1}模式]：\r\n{2}\r\n等待耗时：{3}秒  加载耗时：{4}秒"
                 , handle.IsValid ? "成功" : "失败"
-                , PlayMode.ToString()
+                , Main.m_Resource.PlayMode.ToString()
                 , info.AssetPath
                 , (waitTime - beginTime).ToString()
                 , (endTime - waitTime).ToString()).Info();

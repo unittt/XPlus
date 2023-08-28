@@ -15,10 +15,6 @@ namespace HT.Framework
     public interface IResourceHelper : IInternalModuleHelper
     {
         /// <summary>
-        /// 当前的资源加载模式
-        /// </summary>
-        EPlayMode PlayMode { get; }
-        /// <summary>
         /// 所有AssetBundle资源包清单的名称
         /// </summary>
         string PackageName { get; }
