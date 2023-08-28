@@ -32,10 +32,13 @@ namespace HT.Framework
         /// 当前的资源加载模式
         /// </summary>
         public EPlayMode PlayMode => Mode;
-
-
         
         public string PackageVersion => _helper.PackageVersion;
+
+        /// <summary>
+        /// 是否初始化完成
+        /// </summary>
+        public bool IsInitialization => _helper.IsInitialization;
       
         public override void OnInit()
         {
@@ -73,19 +76,6 @@ namespace HT.Framework
            return _helper.CreateResourceDownloader();
         }
         
-        
-        /// <summary>
-        /// 加载资源（异步）
-        /// </summary>
-        /// <typeparam name="T">资源类型</typeparam>
-        /// <param name="info">资源配置信息</param>
-        /// <param name="onLoading">资源加载中回调</param>
-        /// <param name="onLoadDone">资源加载完成回调</param>
-        /// <returns>加载协程</returns>
-        public async UniTask<T> LoadAsset<T>(AssetInfo info, HTFAction<float> onLoading = null) where T : Object
-        {
-           return await _helper.LoadAssetAsync<T>(info, onLoading, false, null, false);
-        }
         /// <summary>
         /// 加载数据集（异步）
         /// </summary>
@@ -140,7 +130,7 @@ namespace HT.Framework
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public async UniTask<byte[]> LoadRawFileDataAsync(AssetInfo info)
+        public async UniTask<byte[]> LoadRawFileDataAsync(YooAsset.AssetInfo info)
         {
             return await _helper.LoadRawFileDataAsync(info);
         }
@@ -150,9 +140,14 @@ namespace HT.Framework
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public async  UniTask<string> LoadRawFileTextAsync(AssetInfo info)
+        public async  UniTask<string> LoadRawFileTextAsync(YooAsset.AssetInfo info)
         {
             return await _helper.LoadRawFileTextAsync(info);
+        }
+        
+        public YooAsset.AssetInfo[] GetAssetInfos(string tag)
+        {
+            return _helper.GetAssetInfos(tag);
         }
 
         /// <summary>

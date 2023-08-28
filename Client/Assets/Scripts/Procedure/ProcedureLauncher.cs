@@ -4,7 +4,6 @@ using UnityEngine;
 using HT.Framework;
 using Luban;
 using YooAsset;
-using AssetInfo = HT.Framework.AssetInfo;
 
 /// <summary>
 /// 启动流程
@@ -32,61 +31,33 @@ public class ProcedureLauncher : ProcedureBase
     public override void OnEnter(ProcedureBase lastProcedure)
     {
         base.OnEnter(lastProcedure);
-
-      
-        // 
-
-        // Main.m_Resource.load
-        xxxxxx().Forget();
+        LoadConfig().Forget();
     }
 
-    private static Dictionary<string, byte[]> _Bytes = new Dictionary<string, byte[]>();
-
-    private async UniTask xxxxxx()
+    
+    /// <summary>
+    /// 加载配置
+    /// </summary>
+    private async UniTask LoadConfig()
     {
-        var asset = new AssetInfo("DefaultPackage","ai_tbbehaviortree","");
-        var file = await Main.m_Resource.LoadRawFileDataAsync(asset);
-
-
-        
-        var package = YooAssets.GetPackage("DefaultPackage");
-        var x = package.GetAssetInfos("data");
-        foreach (var info in x)
-        {
-           // var xxxxx
-           var xxx =  package.LoadRawFileAsync(info);
-           await xxx.ToUniTask();
-           _Bytes.Add(info.Address, xxx.GetRawFileData());
-        }
-        // AllAssetsOperationHandle handle = package.LoadAllAssetsAsync("ai_tbbehaviortree");
-        // await handle.ToUniTask();
-
-        var tables = new cfg.Tables((file) => new ByteBuf(_Bytes[file]));
-
-        foreach (var item in  tables.TbItem.DataList)
-        {
-            Log.Info( item.Name);
-        }
-        
-        foreach (var item in  tables.TbItem2.DataList)
-        {
-            Log.Info( item.Name);
-        }
-      
+        //等待资源管理器初始化完成
+        await UniTask.WaitUntil( ()=>Main.m_Resource.IsInitialization);
+        await LoadDesignerConfigs();
+        Main.m_Procedure.SwitchProcedure<ProcedureLogin>();
     }
     
-    private static ByteBuf LoadByteBuf(string file)
-    {
-        // return new ByteBuf(File.ReadAllBytes($"{Application.dataPath}/../../GenerateDatas/bytes/{file}.bytes"));
-        return new ByteBuf(_Bytes[file]);
-    }
-
     /// <summary>
-    /// 流程帧刷新
+    /// 加载数据表
     /// </summary>
-    public override void OnUpdate()
+    private async UniTask LoadDesignerConfigs()
     {
-        base.OnUpdate();
+        var assetInfos = Main.m_Resource.GetAssetInfos("data");
+        var bytesInstances = new Dictionary<string, byte[]>();
+        foreach (var info in assetInfos)
+        {
+            var bytes =  await Main.m_Resource.LoadRawFileDataAsync(info);
+            bytesInstances.Add(info.Address, bytes);
+        }
+        var tables = new cfg.Tables((file) => new ByteBuf(bytesInstances[file]));
     }
-
 }

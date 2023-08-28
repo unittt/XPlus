@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -28,7 +26,12 @@ namespace HT.Framework
         /// 已加载的所有场景【场景名称、场景】
         /// </summary>
         Dictionary<string, Scene> Scenes { get; }
-        
+
+        /// <summary>
+        /// 是否完成初始化
+        /// </summary>
+        bool IsInitialization { get; set; }
+
         /// <summary>
         /// 初始化package
         /// </summary>
@@ -91,14 +94,21 @@ namespace HT.Framework
         /// </summary>
         /// <param name="info">资源信息标记</param>
         /// <returns></returns>
-        UniTask<byte[]> LoadRawFileDataAsync(ResourceInfoBase info);
+        UniTask<byte[]> LoadRawFileDataAsync(YooAsset.AssetInfo info);
         
         /// <summary>
         /// 加载原生文件二文本数据（异步）
         /// </summary>
         /// <param name="info">资源信息标记</param>
         /// <returns></returns>
-        UniTask<string> LoadRawFileTextAsync(ResourceInfoBase info);
+        UniTask<string> LoadRawFileTextAsync(YooAsset.AssetInfo info);
+        
+        /// <summary>
+        /// 获取资源信息列表
+        /// </summary>
+        /// <param name="tag"></param>
+        /// <returns></returns>
+        YooAsset.AssetInfo[] GetAssetInfos(string tag);
         
         /// <summary>
         /// 卸载资源（异步，Resource模式：卸载未使用的资源，AssetBundle模式：卸载AB包）
@@ -131,5 +141,7 @@ namespace HT.Framework
         /// </summary>
         /// <returns>协程迭代器</returns>
         UniTask ClearMemory();
+
+       
     }
 }

@@ -66,9 +66,9 @@ namespace HT.Framework
                 //     throw new HTFrameworkException(HTFrameworkModule.Hotfix, "热更新初始化失败：热更新库不支持使用Resource加载模式！");
                 // }
 
-                var info = new AssetInfo(_module.HotfixDllAssetBundleName, _module.HotfixDllAssetsPath, "");
-                var asset = await Main.m_Resource.LoadAsset<TextAsset>(info,null);
-                HotfixDllLoadDone(asset);
+                // var info = new AssetInfo(_module.HotfixDllAssetBundleName, _module.HotfixDllAssetsPath, "");
+                // var asset = await Main.m_Resource.LoadAsset<TextAsset>(info,null);
+                // HotfixDllLoadDone(asset);
             }
         }
         /// <summary>

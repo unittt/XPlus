@@ -13,13 +13,9 @@ namespace HT.Framework
     /// </summary>
     public sealed class YooAssetResourceHelper : IResourceHelper
     {
-        public bool EnableForix;
         public long Milliseconds;
         public EVerifyLevel VerifyLevel;
-
-
-        //是否初始化完成
-        private bool _isInited;
+        
         private bool _isLoading = false;    //单线下载中
         private WaitUntil _loadWait;    //单线下载等待;
         private readonly Dictionary<Object, IDisposable> _obj_2_handles = new();
@@ -34,6 +30,11 @@ namespace HT.Framework
         /// 已加载的所有场景【场景名称、场景】
         /// </summary>
         public Dictionary<string, Scene> Scenes { get; private set; } = new Dictionary<string, Scene>();
+
+        /// <summary>
+        /// 是否完成初始哈
+        /// </summary>
+        public bool IsInitialization { get; set; }
 
         public IModuleManager Module { get; set; }
 
@@ -52,15 +53,14 @@ namespace HT.Framework
             {
                 if(asyncOperationBase.Status == EOperationStatus.Succeed)
                 {
-                    Debug.Log("资源包初始化成功！");
-                    _isInited = true;
+                    IsInitialization = true;
                 }
                 else 
                 {
-                    Debug.LogError($"资源包初始化失败：{asyncOperationBase.Error}");
+                    $"资源包初始化失败：{asyncOperationBase.Error}".Error();
                 }
             };
-            _loadWait = new WaitUntil(() => _isInited && !_isLoading);
+            _loadWait = new WaitUntil(() => !_isLoading);
         }
         
         
@@ -233,20 +233,15 @@ namespace HT.Framework
         {
             var beginTime = Time.realtimeSinceStartup;
             //单线加载，如果其他地方在加载资源，则等待
-            if (_isLoading || !_isInited)
+            if (_isLoading)
             {
                await _loadWait;
             }
             //轮到本线路加载资源
             _isLoading = true;
             var waitTime = Time.realtimeSinceStartup;
-
-            if (string.IsNullOrEmpty(info.AssetBundleName))
-            {
-                info.AssetBundleName = PackageName;
-            }
-          
-            var package = YooAssets.GetPackage(info.AssetBundleName);
+            
+            var package = YooAssets.GetPackage(PackageName);
             var handle = package.LoadAssetAsync<T>(info.AssetPath);
             var progress = Progress.Create<float>(p =>
             {
@@ -307,7 +302,7 @@ namespace HT.Framework
         {
             var beginTime = Time.realtimeSinceStartup;
             //单线加载，如果其他地方在加载资源，则等待
-            if (_isLoading || !_isInited)
+            if (_isLoading)
             {
                 await _loadWait;
             }
@@ -353,7 +348,7 @@ namespace HT.Framework
         {
             var beginTime = Time.realtimeSinceStartup;
             //单线加载，如果其他地方在加载资源，则等待
-            if (_isLoading || !_isInited)
+            if (_isLoading)
             {
                 await _loadWait;
             }
@@ -391,11 +386,11 @@ namespace HT.Framework
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public async UniTask<byte[]> LoadRawFileDataAsync(ResourceInfoBase info)
+        public async UniTask<byte[]> LoadRawFileDataAsync(YooAsset.AssetInfo info)
         {
             var beginTime = Time.realtimeSinceStartup;
             //单线加载，如果其他地方在加载资源，则等待
-            if (_isLoading || !_isInited)
+            if (_isLoading)
             {
                 await _loadWait;
             }
@@ -403,13 +398,8 @@ namespace HT.Framework
             _isLoading = true;
             var waitTime = Time.realtimeSinceStartup;
             
-            if (string.IsNullOrEmpty(info.AssetBundleName))
-            {
-                info.AssetBundleName = PackageName;
-            }
-            
-            var package = YooAssets.GetPackage(info.AssetBundleName);
-            var handle = package.LoadRawFileAsync(info.AssetPath);
+            var package = YooAssets.GetPackage(PackageName);
+            var handle = package.LoadRawFileAsync(info);
             await handle.ToUniTask();
             
             var endTime = Time.realtimeSinceStartup;
@@ -432,11 +422,11 @@ namespace HT.Framework
         /// <param name="packageName"></param>
         /// <param name="location"></param>
         /// <returns></returns>
-        public async UniTask<string> LoadRawFileTextAsync(ResourceInfoBase info)
+        public async UniTask<string> LoadRawFileTextAsync(YooAsset.AssetInfo info)
         {
             var beginTime = Time.realtimeSinceStartup;
             //单线加载，如果其他地方在加载资源，则等待
-            if (_isLoading || !_isInited)
+            if (_isLoading )
             {
                 await _loadWait;
             }
@@ -444,13 +434,8 @@ namespace HT.Framework
             _isLoading = true;
             var waitTime = Time.realtimeSinceStartup;
             
-            if (string.IsNullOrEmpty(info.AssetBundleName))
-            {
-                info.AssetBundleName = PackageName;
-            }
-            
-            var package = YooAssets.GetPackage(info.AssetBundleName);
-            var handle = package.LoadRawFileAsync(info.AssetPath);
+            var package = YooAssets.GetPackage(PackageName);
+            var handle = package.LoadRawFileAsync(info);
             await handle.ToUniTask();
             
             var endTime = Time.realtimeSinceStartup;
@@ -466,7 +451,13 @@ namespace HT.Framework
             
             return handle.GetRawFileText();
         }
-        
+
+        public YooAsset.AssetInfo[] GetAssetInfos(string tag)
+        {
+            var package = YooAssets.GetPackage(PackageName);
+            return package.GetAssetInfos(tag);
+        }
+
         public async UniTask UnLoadScene(SceneInfo info)
         {
             if (!Scenes.ContainsKey(info.ResourcePath))
