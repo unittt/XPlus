@@ -27,7 +27,7 @@ namespace HT.Framework
         protected override void OnDefaultEnable()
         {
             base.OnDefaultEnable();
-            _isDefault = !Target.GetType().IsSubclassOf(typeof(VariableBehaviour));
+            // _isDefault = !Target.GetType().IsSubclassOf(typeof(VariableBehaviour));
         }
         
         #region InspectorDefault
