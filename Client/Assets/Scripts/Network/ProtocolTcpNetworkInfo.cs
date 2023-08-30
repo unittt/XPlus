@@ -1,72 +1,55 @@
-using System.IO;
-using HT.Framework;
 using Google.Protobuf;
+using HT.Framework;
 
 public sealed class ProtocolTcpNetworkInfo : INetworkMessage
 {
-    public static int LENGTH = 15;
+    /// <summary>
+    /// 消息头长度
+    /// </summary>
+    public const int LENGTH = 15;
 
     /// <summary>
-    /// 消息总长度
+    /// 消息总长度 2字节
     /// </summary>
-    public ushort sumLength;
+    public ushort SumLength;
     /// <summary>
     /// 请求命令类型 0心跳1业务 2字节
     /// </summary>
-    public ushort cmdCode;
+    public ushort CmdCode;
     /// <summary>
     /// 协议开关 1字节
     /// </summary>
-    public ushort protocolSwich;
+    public ushort ProtocolSwitch;
     /// <summary>
-    /// mergecmd 4字节
+    /// MergeCmd 4字节
     /// </summary>
-    public uint mergeCmd;
+    public int MergeCmd;
     /// <summary>
     /// 返回状态码 2字节
     /// </summary>
-    public ushort responseStatus;
+    public ushort ResponseStatus;
     /// <summary>
     /// 请求体长度 4字节
     /// </summary>
-    public uint dataLen;
+    public int DataLen;
+    /// <summary>
+    /// 包体
+    /// </summary>
+    public byte[] Body;
 
-    
-    public ProtocolTcpNetworkInfo(int checkCode, long sessionid, int command, int subcommand, int encrypt, int returnCode, IMessage message)
-    {
-       
-    }
     public ProtocolTcpNetworkInfo()
     {
+        
     }
     
-    public byte[] ToByteArray()
+    public ProtocolTcpNetworkInfo(ushort cmdCode, ushort protocolSwitch, int mergeCmd, ushort responseStatus, IMessage body)
     {
-        using (MemoryStream memoryStream = new MemoryStream())
-        using (BinaryWriter binaryWriter = new BinaryWriter(memoryStream))
-        {
-            binaryWriter.Write(sumLength);
-            binaryWriter.Write(cmdCode);
-            binaryWriter.Write(protocolSwich);
-            binaryWriter.Write(mergeCmd);
-            binaryWriter.Write(responseStatus);
-            binaryWriter.Write(dataLen);
-
-            return memoryStream.ToArray();
-        }
-    }
-
-    public void Read(byte[] data)
-    {
-        using (MemoryStream memoryStream = new MemoryStream(data))
-        using (BinaryReader binaryReader = new BinaryReader(memoryStream))
-        {
-            sumLength = binaryReader.ReadUInt16();
-            cmdCode = binaryReader.ReadUInt16();
-            protocolSwich = binaryReader.ReadUInt16();
-            mergeCmd = binaryReader.ReadUInt32();
-            responseStatus = binaryReader.ReadUInt16();
-            dataLen = binaryReader.ReadUInt32();
-        }
+        CmdCode = cmdCode;
+        ProtocolSwitch = protocolSwitch;
+        MergeCmd = mergeCmd;
+        ResponseStatus = responseStatus;
+        Body = body.ToByteArray();
+        DataLen = Body.Length;
+        SumLength = (ushort)(LENGTH + DataLen);
     }
 }
