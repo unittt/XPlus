@@ -22,11 +22,23 @@ public class ProcedureLogin : ProcedureBase
         Main.m_Network.ConnectServerSuccessEvent += (channel) =>
         {
             Log.Info(channel.ToString() + " 连接服务器成功！");
+
+            LoginVerify loginVerif = new LoginVerify();
+            ProtocolTcpNetworkInfo info = new ProtocolTcpNetworkInfo(1,1, CmdMgr.getMergeCmd(1, 0),0,loginVerif);
+            var isSend = Main.m_Network.SendMessage<ProtocolChannel>(info);
+            Log.Info("发送消息"+ isSend);
         };
         Main.m_Network.ConnectServerFailEvent += (channel) =>
         {
             Log.Info(channel.ToString() + " 连接服务器失败！");
         };
         Main.m_Network.ConnectServer<ProtocolChannel>();
+
+        Main.m_Network.ReceiveMessageEvent += OnReceiveMessage;
+    }
+
+    private void OnReceiveMessage(ProtocolChannelBase arg1, INetworkMessage arg2)
+    {
+        Log.Info("接受到消息" );
     }
 }
