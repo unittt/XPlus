@@ -1,0 +1,13 @@
+<module name="SystemModule">
+
+<bean name="RoleType">
+		<var name="ID" type="int" comment="角色id"/>
+		<var name="Name" type="string" comment="角色显示名"/>
+		<var name="Sex" type="ESex" comment="性别"/>
+		<var name="Race" type="ERace" comment="种族"/>
+		<var name="SchoolList" type="(list#sep=,),ESchoolType" comment="可加入门派"/>
+		<var name="Racedesc" type="string" comment="种族说明"/>
+		<var name="NamePath" type="string" comment="角色显示名路径"/>
+	</bean>
+	<table name="TbRoleType" value="RoleType" index="ID" input="系统/角色类型.xlsx"/>
+</module>

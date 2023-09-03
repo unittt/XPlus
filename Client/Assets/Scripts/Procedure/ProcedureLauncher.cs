@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using UnityEngine;
 using HT.Framework;
-using Luban;
-using YooAsset;
 
 /// <summary>
 /// 启动流程
@@ -42,22 +39,8 @@ public class ProcedureLauncher : ProcedureBase
     {
         //等待资源管理器初始化完成
         await UniTask.WaitUntil( ()=>Main.m_Resource.IsInitialization);
-        await LoadDesignerConfigs();
+        await TableGlobal.Init();
         Main.m_Procedure.SwitchProcedure<ProcedureLogin>();
     }
     
-    /// <summary>
-    /// 加载数据表
-    /// </summary>
-    private async UniTask LoadDesignerConfigs()
-    {
-        var assetInfos = Main.m_Resource.GetAssetInfos("data");
-        var bytesInstances = new Dictionary<string, byte[]>();
-        foreach (var info in assetInfos)
-        {
-            var bytes =  await Main.m_Resource.LoadRawFileDataAsync(info);
-            bytesInstances.Add(info.Address, bytes);
-        }
-        var tables = new cfg.Tables((file) => new ByteBuf(bytesInstances[file]));
-    }
 }

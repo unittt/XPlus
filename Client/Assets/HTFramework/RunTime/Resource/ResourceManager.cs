@@ -75,6 +75,14 @@ namespace HT.Framework
         {
            return _helper.CreateResourceDownloader();
         }
+
+
+
+
+        public async UniTask<T> LoadAssetAsync<T>(ResourceInfoBase info, HTFAction<float> onLoading) where T : Object
+        {
+            return await _helper.LoadAssetAsync<T>(info, onLoading, false, null,false);
+        }
         
         /// <summary>
         /// 加载数据集（异步）

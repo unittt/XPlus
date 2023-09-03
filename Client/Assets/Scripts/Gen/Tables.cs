@@ -13,16 +13,19 @@ namespace cfg
 {
 public partial class Tables
 {
-    public SchoolModule.TbSchool TbSchool {get; }
+    public SystemModule.TbRoleType TbRoleType {get; }
+    public SystemModule.TbSchool TbSchool {get; }
 
     public Tables(System.Func<string, ByteBuf> loader)
     {
-        TbSchool = new SchoolModule.TbSchool(loader("schoolmodule_tbschool"));
+        TbRoleType = new SystemModule.TbRoleType(loader("systemmodule_tbroletype"));
+        TbSchool = new SystemModule.TbSchool(loader("systemmodule_tbschool"));
         ResolveRef();
     }
     
     private void ResolveRef()
     {
+        TbRoleType.ResolveRef(this);
         TbSchool.ResolveRef(this);
     }
 }

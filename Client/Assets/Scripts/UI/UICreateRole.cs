@@ -1,4 +1,8 @@
-﻿using HT.Framework;
+﻿using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using HT.Framework;
+using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// 新建UI逻辑类
@@ -6,46 +10,51 @@
 [UIResource("AssetBundleName", "UICreateRole", "ResourcePath",UIType.Camera)]
 public class UICreateRole : UILogicResident
 {
+	private Image _imgRoleName;
+	
 	/// <summary>
 	/// 初始化
 	/// </summary>
     public override void OnInit()
     {
         base.OnInit();
+        
+        _imgRoleName = UIEntity.GetComponentByChild<Image>("RoleNameSp");
+        var roleBox= UIEntity.FindChildren("RoleBox").transform;
+        var toggles = new List<Toggle>();
+        roleBox.GetComponentsInSons<Toggle>(toggles);
+
+        for (int i = 0; i < toggles.Count; i++)
+        {
+	        var toggle = toggles[i];
+	        var roleIndex = i;
+	        toggle.onValueChanged.AddListener((result) =>
+	        {
+		        if (result)
+		        {
+			        OnSelectedRole(roleIndex).Forget();
+		        }
+	        });
+        }
     }
+	
+	
 	/// <summary>
 	/// 打开UI
 	/// </summary>
-    public override void OnOpen(params object[] args)
-    {
-        base.OnOpen(args);
-    }
-	/// <summary>
-    /// 置顶UI
-    /// </summary>
-    public override void OnPlaceTop()
-    {
-        base.OnPlaceTop();
+	public override void OnOpen(params object[] args)
+	{
+		base.OnOpen(args);
+		OnSelectedRole(0);
 	}
-	/// <summary>
-	/// 关闭UI
-	/// </summary>
-    public override void OnClose()
-    {
-        base.OnClose();
-    }
-	/// <summary>
-	/// 销毁UI
-	/// </summary>
-    public override void OnDestroy()
-    {
-        base.OnDestroy();
-    }
-	/// <summary>
-	/// UI逻辑刷新
-	/// </summary>
-    public override void OnUpdate()
-    {
-        base.OnUpdate();
-    }
+	
+
+	private async UniTask OnSelectedRole(int roleIndex)
+	{
+		var roleType = TableGlobal.Instance.TbRoleType.DataList[roleIndex];
+		var dataSetInfo = new PrefabInfo("",roleType.NamePath,"");
+		_imgRoleName.sprite = await  Main.m_Resource.LoadAssetAsync<Sprite>(dataSetInfo, null);
+		_imgRoleName.SetNativeSize();
+	}
+	
 }

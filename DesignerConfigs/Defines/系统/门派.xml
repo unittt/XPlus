@@ -1,0 +1,13 @@
+<module name="SystemModule">
+
+<bean name="School">
+		<var name="SchoolType" type="ESchoolType" comment="门派类型"/>
+		<var name="Name" type="string" comment="门派名字"/>
+		<var name="Desc" type="string" comment="描述"/>
+		<var name="IconPath" type="string" comment="图标"/>
+		<var name="HighligtedIconPath" type="string" comment="图标高亮"/>
+		<var name="NamePath" type="string" comment="名称"/>
+		<var name="Characteristic" type="string" comment="门派特色描述路径"/>
+	</bean>
+	<table name="TbSchool" value="School" index="SchoolType" input="系统/门派.xlsx"/>
+</module>

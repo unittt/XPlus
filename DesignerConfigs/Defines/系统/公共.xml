@@ -1,0 +1,33 @@
+<module name="SystemModule">
+
+<!-- 
+	性别
+-->
+<enum name="ESex">
+	<var name="Male" alias="男" comment="男"/>
+	<var name="Female" alias="女" comment="女"/>
+</enum>
+
+
+<!-- 
+	种族
+-->
+<enum name="ERace">
+	<var name="Human" alias="人族" comment="人族"/>
+	<var name="Celestial" alias="仙族" comment="仙族"/>
+	<var name="Demon"  alias="妖族" comment="妖族"/>
+</enum>
+
+<!-- 
+	门派
+-->
+<enum name="ESchoolType">
+	<var name="ShuMountain" alias="蜀山" comment="蜀山"/>
+	<var name="GoldenMountainTemple" alias="金山寺" comment="金山寺"/>
+	<var name="TaiChu"  alias="太初" comment="太初"/>
+	<var name="Yaochi"  alias="瑶池" comment="瑶池"/>
+	<var name="Qingcheng"  alias="青城" comment="青城"/>
+	<var name="DemonGodPalace"  alias="妖神宫" comment="妖神宫"/>
+</enum>
+
+</module>

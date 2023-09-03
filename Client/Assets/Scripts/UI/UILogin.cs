@@ -19,6 +19,7 @@ public class UILogin : UILogicResident
 
 	private void OnClickLogin()
 	{
+		Close();
 		Main.m_UI.OpenUI<UICreateRole>();
 	}
 
