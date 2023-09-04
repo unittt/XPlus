@@ -1,0 +1,11 @@
+<module name="SkillModule">
+
+<bean name="SchoolSkill">
+		<var name="id" type="int" comment="门派技能编号"/>
+		<var name="name" type="string" comment="技能名字"/>
+		<var name="icon" type="int" comment="技能图标"/>
+		<var name="funcdesc" type="string" comment="功效描述"/>
+		<var name="rolecreatedesc" type="string" comment="创建角色使用的功效描述"/>
+	</bean>
+	<table name="TbSchoolSkill" value="SchoolSkill" index="id" input="技能/skill_school.xlsx"/>
+</module>

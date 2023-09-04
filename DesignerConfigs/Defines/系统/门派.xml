@@ -8,6 +8,7 @@
 		<var name="HighligtedIconPath" type="string" comment="图标高亮"/>
 		<var name="NamePath" type="string" comment="名称"/>
 		<var name="Characteristic" type="string" comment="门派特色描述路径"/>
+		<var name="SkillList" type="(list#sep=,),int" comment="创角显示的技能列表"/>
 	</bean>
 	<table name="TbSchool" value="School" index="SchoolType" input="系统/门派.xlsx"/>
 </module>

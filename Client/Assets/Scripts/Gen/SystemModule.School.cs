@@ -23,6 +23,7 @@ public sealed partial class School : Luban.BeanBase
         HighligtedIconPath = _buf.ReadString();
         NamePath = _buf.ReadString();
         Characteristic = _buf.ReadString();
+        {int n0 = System.Math.Min(_buf.ReadSize(), _buf.Size);SkillList = new System.Collections.Generic.List<int>(n0);for(var i0 = 0 ; i0 < n0 ; i0++) { int _e0;  _e0 = _buf.ReadInt(); SkillList.Add(_e0);}}
     }
 
     public static School DeserializeSchool(ByteBuf _buf)
@@ -58,12 +59,17 @@ public sealed partial class School : Luban.BeanBase
     /// 门派特色描述路径
     /// </summary>
     public readonly string Characteristic;
+    /// <summary>
+    /// 创角显示的技能列表
+    /// </summary>
+    public readonly System.Collections.Generic.List<int> SkillList;
    
     public const int __ID__ = 675888967;
     public override int GetTypeId() => __ID__;
 
     public  void ResolveRef(Tables tables)
     {
+        
         
         
         
@@ -83,6 +89,7 @@ public sealed partial class School : Luban.BeanBase
         + "HighligtedIconPath:" + HighligtedIconPath + ","
         + "NamePath:" + NamePath + ","
         + "Characteristic:" + Characteristic + ","
+        + "SkillList:" + Luban.StringUtil.CollectionToString(SkillList) + ","
         + "}";
     }
 }
