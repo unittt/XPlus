@@ -47,20 +47,13 @@ namespace HT.Framework
         /// </summary>
         public event HTFAction<bool> InitializationCompleted;
 
-
         public override void OnInit()
         {
             base.OnInit();
-            if (IsManually) return;
-            var updateHandler = new DefaultUpdateHandler
+            _helper.InitializationCompleted += (result) =>
             {
-                PackageName = PackageName,
-                Mode = Mode,
-                DefaultHostServer = DefaultHostServer,
-                FallbackHostServer = FallbackHostServer,
-                IsDefaultPackage = true
+                InitializationCompleted?.Invoke(result);
             };
-            Initialize(updateHandler);
         }
 
         /// <summary>

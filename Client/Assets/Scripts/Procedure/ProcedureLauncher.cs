@@ -21,6 +21,7 @@ public class ProcedureLauncher : ProcedureBase
         //设置语言环境
         System.Globalization.CultureInfo.DefaultThreadCurrentCulture = new System.Globalization.CultureInfo("en-US");
     }
+    
     /// <summary>
     /// 进入流程
     /// </summary>
@@ -28,19 +29,14 @@ public class ProcedureLauncher : ProcedureBase
     public override void OnEnter(ProcedureBase lastProcedure)
     {
         base.OnEnter(lastProcedure);
-        LoadConfig().Forget();
+        //监听资源管理器初始化完成
+        Main.m_Resource.InitializationCompleted += (result)=>OnInitializationCompleted(result);
     }
-
     
-    /// <summary>
-    /// 加载配置
-    /// </summary>
-    private async UniTask LoadConfig()
+    private async UniTaskVoid OnInitializationCompleted(bool arg)
     {
-        //等待资源管理器初始化完成
-        await UniTask.WaitUntil( ()=>Main.m_Resource.IsInitialized);
+        if (!arg) return;
         await TableGlobal.Init();
         Main.m_Procedure.SwitchProcedure<ProcedureLogin>();
     }
-    
 }

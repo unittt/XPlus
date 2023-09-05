@@ -2,7 +2,6 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using YooAsset;
 using Object = UnityEngine.Object;
 
 namespace HT.Framework
@@ -31,7 +30,12 @@ namespace HT.Framework
         /// 是否完成初始化
         /// </summary>
         bool IsInitialized { get;}
-        
+
+        /// <summary>
+        /// 初始化完成
+        /// </summary>
+        event HTFAction<bool> InitializationCompleted; 
+
         /// <summary>
         /// 初始化
         /// </summary>

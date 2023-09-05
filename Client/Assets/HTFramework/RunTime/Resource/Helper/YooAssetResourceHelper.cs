@@ -40,6 +40,8 @@ namespace HT.Framework
         /// 模块
         /// </summary>
         public IModuleManager Module { get; set; }
+
+        public event HTFAction<bool> InitializationCompleted;
         
         /// <summary>
         /// 初始化助手
@@ -47,8 +49,6 @@ namespace HT.Framework
         public void OnInit()
         {
             _module = Module as ResourceManager;
-            // 初始化资源系统
-            YooAssets.Initialize();
             _loadWait = new WaitUntil(() => !_isLoading);
         }
         
@@ -57,7 +57,16 @@ namespace HT.Framework
         /// </summary>
         public void OnReady()
         {
-           
+            if (_module.IsManually) return;
+            var updateHandler = new DefaultUpdateHandler
+            {
+                PackageName = PackageName,
+                Mode = _module.Mode,
+                DefaultHostServer = _module.DefaultHostServer,
+                FallbackHostServer = _module.FallbackHostServer,
+                IsDefaultPackage = true
+            };
+            Initialize(updateHandler);
         }
         /// <summary>
         /// 刷新助手
@@ -92,10 +101,12 @@ namespace HT.Framework
         public void Initialize(IUpdateHandler handler)
         {
             if (IsInitialized)return;
+            // 初始化资源系统
+            YooAssets.Initialize();
             BeginUpdatePackage(handler).ContinueWith((result) =>
             {
-                IsInitialized = result; 
-                Log.Info("初始化完成");
+                IsInitialized = result;
+                InitializationCompleted?.Invoke(result);
             }).Forget();
         }
 
