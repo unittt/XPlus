@@ -76,7 +76,7 @@ public class UICreateRole : UILogicResident
 	public override void OnOpen(params object[] args)
 	{
 		base.OnOpen(args);
-		OnSelectedRole(0);
+		OnSelectedRole(0).Forget();
 	}
 	
 	
@@ -98,8 +98,6 @@ public class UICreateRole : UILogicResident
 		_race.SetNativeSize();
 		
 		await RefreshSchool(roleType.SchoolList);
-
-		
 	}
 	
 	/// <summary>
@@ -180,8 +178,7 @@ public class UICreateRole : UILogicResident
 		var dataSetInfo = new PrefabInfo("",school.Characteristic,"");
 		_characteristic.sprite  = await Main.m_Resource.LoadAssetAsync<Sprite>(dataSetInfo, null);
 		_characteristic.SetNativeSize();
-		
-		RefreshSKill(school.SkillList);
+		await RefreshSKill(school.SkillList);
 	}
 
 	/// <summary>
