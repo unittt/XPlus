@@ -19,64 +19,67 @@ namespace HT.Framework
         /// 所有AssetBundle资源包清单的名称【请勿在代码中修改】
         /// </summary>
         [SerializeField] internal string PackageName;
+       
         
-        
-        [SerializeField] internal string HostServerURL = "http://127.0.0.1:8081";
-        [SerializeField] internal string FallbackHostServerURL = "http://127.0.0.1:8081";
-        [SerializeField] internal string WindowsUpdateDataUrl = "http://127.0.0.1:8081";
-        [SerializeField] internal string IOSUpdateDataUrl = "http://127.0.0.1:8081";
-        [SerializeField] internal string AndroidUpdateDataUrl = "http://127.0.0.1:8081";
-        
+        [SerializeField] internal string DefaultHostServer = "http://127.0.0.1:8081";
+        [SerializeField] internal string FallbackHostServer = "http://127.0.0.1:8081";
+        /// <summary>
+        /// 是否手动初始化【请勿在代码中修改】
+        /// </summary>
+        [SerializeField] internal bool Manually;
         
         /// <summary>
         /// 当前的资源加载模式
         /// </summary>
         public EPlayMode PlayMode => Mode;
-        
+        /// <summary>
+        /// 是否手动初始化
+        /// </summary>
+        public bool IsManually => Manually;
         public string PackageVersion => _helper.PackageVersion;
 
         /// <summary>
         /// 是否初始化完成
         /// </summary>
-        public bool IsInitialization => _helper.IsInitialization;
-      
+        public bool IsInitialized => _helper.IsInitialized;
+        /// <summary>
+        /// 初始化完成
+        /// </summary>
+        public event HTFAction<bool> InitializationCompleted;
+
+
         public override void OnInit()
         {
             base.OnInit();
-            
+            if (IsManually) return;
+            var updateHandler = new DefaultUpdateHandler
+            {
+                PackageName = PackageName,
+                Mode = Mode,
+                DefaultHostServer = DefaultHostServer,
+                FallbackHostServer = FallbackHostServer,
+                IsDefaultPackage = true
+            };
+            Initialize(updateHandler);
         }
 
-
-        public InitializationOperation InitPackage(string hostServerURL, string fallbackHostServerURL)
-        {
-            return _helper.InitPackage(hostServerURL, fallbackHostServerURL);
-        }
-        
         /// <summary>
-        /// 异步更新最新包的版本。
+        /// 初始化
         /// </summary>
-        /// <param name="appendTimeTicks">请求URL是否需要带时间戳。</param>
-        /// <param name="timeout">超时时间。</param>
-        /// <returns>请求远端包裹的最新版本操作句柄。</returns>
-        public async UniTask<UpdatePackageVersionOperation> UpdatePackageVersionAsync(bool appendTimeTicks = false, int timeout = 60)
+        /// <param name="updateHandler"></param>
+        public void Initialize(IUpdateHandler updateHandler)
         {
-            return await _helper.UpdatePackageVersionAsync(appendTimeTicks, timeout);
+            _helper.Initialize(updateHandler);
         }
-        
-        public async UniTask<UpdatePackageManifestOperation> UpdatePackageManifestAsync(bool autoSaveVersion = true, int timeout = 60)
-        {
-            return await _helper.UpdatePackageManifestAsync(autoSaveVersion, timeout);
-        }
-        
+
         /// <summary>
-        /// 创建资源下载器，用于下载当前资源版本所有的资源包文件
+        /// 更新package
         /// </summary>
-        public ResourceDownloaderOperation CreateResourceDownloader()
+        /// <param name="handler"></param>
+        public void UpdatePackage(IUpdateHandler handler)
         {
-           return _helper.CreateResourceDownloader();
+            _helper.UpdatePackage(handler);
         }
-
-
 
 
         public async UniTask<T> LoadAssetAsync<T>(ResourceInfoBase info, HTFAction<float> onLoading) where T : Object

@@ -30,35 +30,19 @@ namespace HT.Framework
         /// <summary>
         /// 是否完成初始化
         /// </summary>
-        bool IsInitialization { get; set; }
-
-        /// <summary>
-        /// 初始化package
-        /// </summary>
-        InitializationOperation InitPackage(string hostServerURL, string fallbackHostServerURL);
-
-
-        /// <summary>
-        /// 异步更新最新包的版本。
-        /// </summary>
-        /// <param name="appendTimeTicks">请求URL是否需要带时间戳。</param>
-        /// <param name="timeout">超时时间。</param>
-        /// <returns>请求远端包裹的最新版本操作句柄。</returns>
-        UniTask<UpdatePackageVersionOperation> UpdatePackageVersionAsync(bool appendTimeTicks, int timeout);
+        bool IsInitialized { get;}
         
         /// <summary>
-        /// 向网络端请求并更新清单
+        /// 初始化
         /// </summary>
-        /// <param name="packageVersion">更新的包裹版本</param>
-        /// <param name="autoSaveVersion">更新成功后自动保存版本号，作为下次初始化的版本。</param>
-        /// <param name="timeout">超时时间（默认值：60秒）</param>
-        UniTask<UpdatePackageManifestOperation>  UpdatePackageManifestAsync(bool autoSaveVersion, int timeout);
+        void Initialize(IUpdateHandler handler);
         
         /// <summary>
-        ///  创建资源下载器，用于下载当前资源版本所有的资源包文件。
+        /// 更新package
         /// </summary>
-        /// <returns></returns>
-        ResourceDownloaderOperation CreateResourceDownloader();
+        /// <param name="handler"></param>
+        void UpdatePackage(IUpdateHandler handler);
+      
         
         /// <summary>
         /// 加载资源（异步）

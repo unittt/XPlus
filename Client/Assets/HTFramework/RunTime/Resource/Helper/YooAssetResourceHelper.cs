@@ -11,65 +11,53 @@ namespace HT.Framework
     /// <summary>
     ///YooAsset资源管理器助手
     /// </summary>
-    public sealed class YooAssetResourceHelper : IResourceHelper
+    public sealed partial class YooAssetResourceHelper : IResourceHelper
     {
-        public long Milliseconds;
-        public EVerifyLevel VerifyLevel;
-        
-        private bool _isLoading = false;    //单线下载中
+        private ResourceManager _module;
+        private bool _isLoading;    //单线下载中
         private WaitUntil _loadWait;    //单线下载等待;
+        
         private readonly Dictionary<Object, IDisposable> _obj_2_handles = new();
-        public string PackageName => Main.m_Resource.PackageName;
-        public string PackageVersion { get; private set; }
-
-
-        private int downloadingMaxNumber;
-        private int failedTryAgain;
-
+        
         /// <summary>
         /// 已加载的所有场景【场景名称、场景】
         /// </summary>
         public Dictionary<string, Scene> Scenes { get; private set; } = new Dictionary<string, Scene>();
 
         /// <summary>
-        /// 是否完成初始哈
+        /// 是否完成初始化完成
         /// </summary>
-        public bool IsInitialization { get; set; }
-
+        public bool IsInitialized { get; private set; }
+        /// <summary>
+        /// 默认包名
+        /// </summary>
+        public string PackageName => _module.PackageName;
+        /// <summary>
+        /// 当前版本
+        /// </summary>
+        public string PackageVersion { get; private set; }
+        /// <summary>
+        /// 模块
+        /// </summary>
         public IModuleManager Module { get; set; }
-
+        
         /// <summary>
         /// 初始化助手
         /// </summary>
         public void OnInit()
         {
+            _module = Module as ResourceManager;
             // 初始化资源系统
             YooAssets.Initialize();
-            YooAssets.SetOperationSystemMaxTimeSlice(Milliseconds);
-            YooAssets.SetCacheSystemCachedFileVerifyLevel(VerifyLevel);
-            
-            var initializationOperation = InitPackage("","");
-            initializationOperation.Completed += (asyncOperationBase) =>
-            {
-                if(asyncOperationBase.Status == EOperationStatus.Succeed)
-                {
-                    IsInitialization = true;
-                }
-                else 
-                {
-                    $"资源包初始化失败：{asyncOperationBase.Error}".Error();
-                }
-            };
             _loadWait = new WaitUntil(() => !_isLoading);
         }
-        
         
         /// <summary>
         /// 助手准备工作
         /// </summary>
         public void OnReady()
         {
-
+           
         }
         /// <summary>
         /// 刷新助手
@@ -99,108 +87,21 @@ namespace HT.Framework
         {
 
         }
-        
-        public InitializationOperation InitPackage(string hostServerURL, string fallbackHostServerURL)
+
+
+        public void Initialize(IUpdateHandler handler)
         {
-
-            if (string.IsNullOrEmpty(hostServerURL))
+            if (IsInitialized)return;
+            BeginUpdatePackage(handler).ContinueWith((result) =>
             {
-               //设置默认的url
-            }
-
-            if (string.IsNullOrEmpty(fallbackHostServerURL))
-            {
-                //设置默认的url
-            }
-            
-            // 创建默认的资源包
-            var package = YooAssets.TryGetPackage(PackageName) ?? YooAssets.CreatePackage(PackageName);
-            // 设置该资源包为默认的资源包，可以使用YooAssets相关加载接口加载该资源包内容。
-            YooAssets.SetDefaultPackage(package);
-            
-            InitializationOperation initializationOperation = null;
-            if (Main.m_Resource.PlayMode == EPlayMode.EditorSimulateMode)
-            {
-                var createParameters = new EditorSimulateModeParameters();
-                createParameters.SimulateManifestFilePath = EditorSimulateModeHelper.SimulateBuild(PackageName);
-                initializationOperation = package.InitializeAsync(createParameters);
-            }
-            
-            // 单机运行模式
-            if (Main.m_Resource.PlayMode == EPlayMode.OfflinePlayMode)
-            {
-                var createParameters = new OfflinePlayModeParameters();
-                createParameters.DecryptionServices = new GameDecryptionServices();
-                initializationOperation = package.InitializeAsync(createParameters);
-            }
-            
-            // 联机运行模式
-            if (Main.m_Resource.PlayMode == EPlayMode.HostPlayMode)
-            {
-                var createParameters = new HostPlayModeParameters();
-                createParameters.DecryptionServices = new GameDecryptionServices();
-                createParameters.QueryServices = new GameQueryServices();
-                createParameters.RemoteServices = new RemoteServices(hostServerURL, fallbackHostServerURL);
-                initializationOperation = package.InitializeAsync(createParameters);
-            }
-            
-            // WebGL运行模式
-            if(Main.m_Resource.PlayMode == EPlayMode.WebPlayMode)
-            {
-                var createParameters = new WebPlayModeParameters();
-                createParameters.DecryptionServices = new GameDecryptionServices();
-                createParameters.QueryServices = new GameQueryServices();
-                createParameters.RemoteServices = new RemoteServices(hostServerURL, fallbackHostServerURL);
-                initializationOperation = package.InitializeAsync(createParameters);
-            }
-
-            return initializationOperation;
+                IsInitialized = result; 
+                Log.Info("初始化完成");
+            }).Forget();
         }
 
-        /// <summary>
-        /// 异步更新最新包的版本。
-        /// </summary>
-        /// <param name="appendTimeTicks">请求URL是否需要带时间戳。</param>
-        /// <param name="timeout">超时时间。</param>
-        /// <returns>请求远端包裹的最新版本操作句柄。</returns>
-        public async UniTask<UpdatePackageVersionOperation> UpdatePackageVersionAsync(bool appendTimeTicks, int timeout)
+        public void UpdatePackage(IUpdateHandler handler)
         {
-            var package = YooAssets.GetPackage(PackageName);
-            var updatePackageVersionOperation = package.UpdatePackageVersionAsync(appendTimeTicks, timeout);
-            await updatePackageVersionOperation.ToUniTask();
-            if (updatePackageVersionOperation.Status == EOperationStatus.Succeed)
-            {
-                PackageVersion = updatePackageVersionOperation.PackageVersion;
-            }
-            return updatePackageVersionOperation;
-        }
-
-        /// <summary>
-        /// 向网络端请求并更新清单
-        /// </summary>
-        /// <param name="packageVersion">更新的包裹版本</param>
-        /// <param name="autoSaveVersion">更新成功后自动保存版本号，作为下次初始化的版本。</param>
-        /// <param name="timeout">超时时间（默认值：60秒）</param>
-        public async UniTask<UpdatePackageManifestOperation> UpdatePackageManifestAsync(bool autoSaveVersion, int timeout)
-        {
-            var package = YooAssets.GetPackage(PackageName);
-            var updatePackageManifest =  package.UpdatePackageManifestAsync(PackageVersion,autoSaveVersion, timeout);
-            await updatePackageManifest.ToUniTask();
-            if (updatePackageManifest.Status != EOperationStatus.Succeed) return updatePackageManifest;
-            if (autoSaveVersion)
-            {
-                updatePackageManifest.SavePackageVersion();
-            }
-
-            return updatePackageManifest;
-        }
-
-        
-        public ResourceDownloaderOperation CreateResourceDownloader()
-        {
-            var package = YooAssets.GetPackage(PackageName);
-            var downloader = package.CreateResourceDownloader(downloadingMaxNumber, failedTryAgain);
-            return downloader;
+            BeginUpdatePackage(handler).Forget();
         }
         
         /// <summary>

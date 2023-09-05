@@ -38,7 +38,7 @@ public class ProcedureLauncher : ProcedureBase
     private async UniTask LoadConfig()
     {
         //等待资源管理器初始化完成
-        await UniTask.WaitUntil( ()=>Main.m_Resource.IsInitialization);
+        await UniTask.WaitUntil( ()=>Main.m_Resource.IsInitialized);
         await TableGlobal.Init();
         Main.m_Procedure.SwitchProcedure<ProcedureLogin>();
     }

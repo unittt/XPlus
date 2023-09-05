@@ -19,29 +19,9 @@ namespace HT.Framework
 
             PropertyField(nameof(ResourceManager.Mode), "Load Mode");
             PropertyField(nameof(ResourceManager.PackageName), "PackageName");
-
-            // if (Target.Mode == ResourceLoadMode.Resource)
-            // {
-            //     GUILayout.BeginHorizontal();
-            //     GUI.backgroundColor = Color.green;
-            //     if (GUILayout.Button("Resources Folder View", EditorGlobalTools.Styles.LargeButton))
-            //     {
-            //         ResourcesFolderViewWindow window = EditorWindow.GetWindow<ResourcesFolderViewWindow>();
-            //         window.titleContent.image = EditorGUIUtility.IconContent("ViewToolOrbit").image;
-            //         window.titleContent.text = "Resources Folder View";
-            //         window.position = new Rect(200, 200, 400, 400);
-            //         window.Init();
-            //         window.Show();
-            //     }
-            //     GUI.backgroundColor = Color.white;
-            //     GUILayout.EndHorizontal();
-            // }
-            // else if (Target.Mode == ResourceLoadMode.AssetBundle)
-            // {
-            //     PropertyField(nameof(ResourceManager.AssetBundleManifestName), "Manifest Name");
-            //     PropertyField(nameof(ResourceManager.IsEditorMode), "Editor Mode");
-            // }
-
+            PropertyField(nameof(ResourceManager.DefaultHostServer), "DefaultHostServer");
+            PropertyField(nameof(ResourceManager.FallbackHostServer), "FallbackHostServer");
+            PropertyField(nameof(ResourceManager.Manually), "手动初始化");
             GUI.enabled = true;
         }
         protected override void OnInspectorRuntimeGUI()
