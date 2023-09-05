@@ -27,6 +27,7 @@ public class UICreateRole : UILogicResident
 	
 	private Dictionary<ESchoolType, GameObject> _schoolInstance;
 	private Dictionary<int, GameObject> _skillInstacne;
+	private GameObject _roleCreateMainScene;
 
 	/// <summary>
 	/// 初始化
@@ -76,12 +77,19 @@ public class UICreateRole : UILogicResident
 	public override void OnOpen(params object[] args)
 	{
 		base.OnOpen(args);
-		OnSelectedRole(0).Forget();
+		OnSelectedRole(0);
+		//创建场景预制件
+		LoadRoleCreateMainScene();
+	}
+
+	private async UniTask LoadRoleCreateMainScene()
+	{
+		var prefabInfo = new PrefabInfo("", "RoleCreateMainScene", "");
+		//角色对应的门派
+		_roleCreateMainScene = await Main.m_Resource.LoadPrefab(prefabInfo, null);
 	}
 	
-	
-	// ReSharper disable Unity.PerformanceAnalysis
-	private async UniTask OnSelectedRole(int roleIndex)
+	private async UniTaskVoid OnSelectedRole(int roleIndex)
 	{
 		var roleType = TableGlobal.Instance.TbRoleType.DataList[roleIndex];
 		var dataSetInfo = new PrefabInfo("",roleType.NamePath,"");
@@ -97,7 +105,7 @@ public class UICreateRole : UILogicResident
 		_race.sprite = await  Main.m_Resource.LoadAssetAsync<Sprite>(dataSetInfo, null);
 		_race.SetNativeSize();
 		
-		await RefreshSchool(roleType.SchoolList);
+		RefreshSchool(roleType.SchoolList);
 	}
 	
 	/// <summary>
@@ -162,7 +170,7 @@ public class UICreateRole : UILogicResident
 		{
 			if (result)
 			{
-				OnSwitchSchool(eSchoolType).Forget();
+				OnSwitchSchool(eSchoolType);
 			}
 		});
 		return schoolEntity;
@@ -172,13 +180,13 @@ public class UICreateRole : UILogicResident
 	/// 切换门派
 	/// </summary>
 	/// <param name="schoolType"></param>
-	private async UniTask OnSwitchSchool(ESchoolType schoolType)
+	private async UniTaskVoid OnSwitchSchool(ESchoolType schoolType)
 	{
 		var school = TableGlobal.Instance.TbSchool[schoolType];
 		var dataSetInfo = new PrefabInfo("",school.Characteristic,"");
 		_characteristic.sprite  = await Main.m_Resource.LoadAssetAsync<Sprite>(dataSetInfo, null);
 		_characteristic.SetNativeSize();
-		await RefreshSKill(school.SkillList);
+		RefreshSKill(school.SkillList);
 	}
 
 	/// <summary>
