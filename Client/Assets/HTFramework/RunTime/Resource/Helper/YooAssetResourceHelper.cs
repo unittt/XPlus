@@ -130,6 +130,25 @@ namespace HT.Framework
             _obj_2_handles.TryAdd(obj, handle);
         }
 
+        
+        /// <summary>
+        /// 打印加载结束时的信息
+        /// </summary>
+        /// <param name="isValid"></param>
+        /// <param name="location"></param>
+        /// <param name="beginTime"></param>
+        /// <param name="waitTime"></param>
+        private void LogLoadedInfo(bool isValid, string location,float beginTime,float waitTime)
+        {
+            var endTime = Time.realtimeSinceStartup;
+            string.Format("异步加载资源{0}[{1}模式]：\r\n{2}\r\n等待耗时：{3}秒  加载耗时：{4}秒"
+                , isValid ? "成功" : "失败"
+                , _module.PlayMode.ToString()
+                , location
+                , (waitTime - beginTime).ToString()
+                , (endTime - waitTime).ToString()).Info();
+        }
+        
 
         /// <summary>
         /// 加载资源（异步）
@@ -426,6 +445,219 @@ namespace HT.Framework
             await Resources.UnloadUnusedAssets();
             GC.Collect();
             GC.WaitForPendingFinalizers();
+        }
+
+
+        #region 资源信息
+        /// <summary>
+        /// 获取资源信息列表
+        /// </summary>
+        /// <param name="tag">资源标签</param>
+        public AssetInfo[] GetAssetInfos1(string tag)
+        {
+            return YooAssets.GetAssetInfos(tag);
+        }
+        
+        /// <summary>
+        /// 获取资源信息列表
+        /// </summary>
+        /// <param name="tags">资源标签列表</param>
+        public AssetInfo[] GetAssetInfos(string[] tags)
+        {
+            return YooAssets.GetAssetInfos(tags);
+        }
+
+        /// <summary>
+        /// 获取资源信息
+        /// </summary>
+        /// <param name="location">资源的定位地址</param>
+        public AssetInfo GetAssetInfo(string location)
+        {
+            return YooAssets.GetAssetInfo(location);
+        }
+        /// <summary>
+        /// 检查资源定位地址是否有效
+        /// </summary>
+        /// <param name="location">资源的定位地址</param>
+        public bool CheckLocationValid(string location)
+        {
+            return YooAssets.CheckLocationValid(location);
+        }
+        #endregion
+        
+        #region 原生文件
+        /// <summary>
+        /// 异步加载原生文件
+        /// </summary>
+        /// <param name="location">资源的定位地址</param>
+        public async UniTask<RawFileOperationHandle> LoadRawFileAsync(string location)
+        {
+            var beginTime = Time.realtimeSinceStartup;
+            //单线加载，如果其他地方在加载资源，则等待
+            if (_isLoading )
+            {
+                await _loadWait;
+            }
+            //轮到本线路加载资源
+            _isLoading = true;
+            var waitTime = Time.realtimeSinceStartup;
+            
+            var handle = YooAssets.LoadRawFileAsync(location);
+            await handle.ToUniTask();
+            
+            LogLoadedInfo(handle.IsValid, location, beginTime, waitTime);
+            
+            //本线路加载资源结束
+            _isLoading = false;
+            return handle;
+        }
+        #endregion
+        
+        #region 场景加载
+        /// <summary>
+        /// 异步加载场景
+        /// </summary>
+        /// <param name="location">场景的定位地址</param>
+        /// <param name="sceneMode">场景加载模式</param>
+        /// <param name="suspendLoad">场景加载到90%自动挂起</param>
+        /// <param name="priority">优先级</param>
+        public async UniTask<SceneOperationHandle> LoadSceneAsync(string location, LoadSceneMode sceneMode = LoadSceneMode.Single, bool suspendLoad = false, int priority = 100)
+        {
+            var beginTime = Time.realtimeSinceStartup;
+            //单线加载，如果其他地方在加载资源，则等待
+            if (_isLoading )
+            {
+                await _loadWait;
+            }
+            //轮到本线路加载资源
+            _isLoading = true;
+            var waitTime = Time.realtimeSinceStartup;
+            
+            var handle = YooAssets.LoadSceneAsync(location, sceneMode, suspendLoad,priority);
+            await handle.ToUniTask();
+            
+            LogLoadedInfo(handle.IsValid, location, beginTime, waitTime);
+            
+            //本线路加载资源结束
+            _isLoading = false;
+      
+            return handle;
+        }
+        #endregion
+        
+        #region 资源加载
+        /// <summary>
+        /// 异步加载资源对象
+        /// </summary>
+        /// <typeparam name="TObject">资源类型</typeparam>
+        /// <param name="location">资源的定位地址</param>
+        public async UniTask<AssetOperationHandle> LoadAssetAsync<TObject>(string location) where TObject : UnityEngine.Object
+        {
+            var beginTime = Time.realtimeSinceStartup;
+            //单线加载，如果其他地方在加载资源，则等待
+            if (_isLoading )
+            {
+                await _loadWait;
+            }
+            //轮到本线路加载资源
+            _isLoading = true;
+            var waitTime = Time.realtimeSinceStartup;
+            
+            var handle = YooAssets.LoadAssetAsync<TObject>(location);
+            await handle.ToUniTask();
+           
+            LogLoadedInfo(handle.IsValid, location, beginTime, waitTime);
+            //本线路加载资源结束
+            _isLoading = false;
+            return handle;
+        }
+        #endregion
+        
+        #region 资源加载
+        /// <summary>
+        /// 异步加载子资源对象
+        /// </summary>
+        /// <typeparam name="TObject">资源类型</typeparam>
+        /// <param name="location">资源的定位地址</param>
+        public async UniTask<SubAssetsOperationHandle> LoadSubAssetsAsync<TObject>(string location) where TObject : UnityEngine.Object
+        {
+            var beginTime = Time.realtimeSinceStartup;
+            //单线加载，如果其他地方在加载资源，则等待
+            if (_isLoading )
+            {
+                await _loadWait;
+            }
+            //轮到本线路加载资源
+            _isLoading = true;
+            var waitTime = Time.realtimeSinceStartup;
+            
+            var handle = YooAssets.LoadSubAssetsAsync<TObject>(location);
+            await handle.ToUniTask();
+            
+            LogLoadedInfo(handle.IsValid, location, beginTime, waitTime);
+            //本线路加载资源结束
+            _isLoading = false;
+          
+            return handle;
+        }
+        #endregion
+        
+        #region 资源加载
+        /// <summary>
+        /// 异步加载资源包内所有资源对象
+        /// </summary>
+        /// <typeparam name="TObject">资源类型</typeparam>
+        /// <param name="location">资源的定位地址</param>
+        public async UniTask<AllAssetsOperationHandle> LoadAllAssetsAsync<TObject>(string location) where TObject : UnityEngine.Object
+        {
+            var beginTime = Time.realtimeSinceStartup;
+            //单线加载，如果其他地方在加载资源，则等待
+            if (_isLoading )
+            {
+                await _loadWait;
+            }
+            //轮到本线路加载资源
+            _isLoading = true;
+            var waitTime = Time.realtimeSinceStartup;
+            
+            var handle = YooAssets.LoadAllAssetsAsync<TObject>(location);
+            await handle.ToUniTask();
+            
+            LogLoadedInfo(handle.IsValid, location, beginTime, waitTime);
+            
+            return handle;
+        }
+        #endregion
+
+        /// <summary>
+        /// 异步卸载子场景
+        /// </summary>
+        /// <param name="handle"></param>
+        public async UniTask UnloadAsync(SceneOperationHandle handle)
+        { 
+            var unloadSceneOperation = handle.UnloadAsync();
+            await unloadSceneOperation.ToUniTask();
+        }
+        
+        /// <summary>
+        /// 释放资源句柄(单纯只减少引用计数 当引用计数为0)
+        /// </summary>
+        /// <param name="handle"></param>
+        /// <typeparam name="T"></typeparam>
+        public void Release<T>(T handle) where T: OperationHandleBase,IDisposable
+        {
+            handle.Dispose();
+        }
+        
+        /// <summary>
+        /// 一旦调用了Package.UnloadUnusedAssets()，是会把引用计数为0的资源的Provider都给销毁了
+        /// </summary>
+        /// <param name="packageName"></param>
+        public void UnloadUnusedAssets(string packageName)
+        {
+            // 有2个 东西会 引用计数 一个是provider 一个是 Loader
+            var package = YooAssets.TryGetPackage(packageName);
+            package?.UnloadUnusedAssets();
         }
     }
 }
