@@ -521,7 +521,7 @@ namespace HT.Framework
         /// <param name="sceneMode">场景加载模式</param>
         /// <param name="suspendLoad">场景加载到90%自动挂起</param>
         /// <param name="priority">优先级</param>
-        public async UniTask<SceneOperationHandle> LoadSceneAsync(string location, LoadSceneMode sceneMode = LoadSceneMode.Single, bool suspendLoad = false, int priority = 100)
+        public async UniTask<SceneOperationHandle> LoadSceneAsync(string location,HTFAction<float> onLoading = null, LoadSceneMode sceneMode = LoadSceneMode.Single, bool suspendLoad = false, int priority = 100)
         {
             var beginTime = Time.realtimeSinceStartup;
             //单线加载，如果其他地方在加载资源，则等待
@@ -534,7 +534,12 @@ namespace HT.Framework
             var waitTime = Time.realtimeSinceStartup;
             
             var handle = YooAssets.LoadSceneAsync(location, sceneMode, suspendLoad,priority);
-            await handle.ToUniTask();
+            
+            var progress = Progress.Create<float>(p =>
+            {
+                onLoading?.Invoke(p);
+            });
+            await handle.ToUniTask(progress);
             
             LogLoadedInfo(handle.IsValid, location, beginTime, waitTime);
             
@@ -629,6 +634,7 @@ namespace HT.Framework
         }
         #endregion
 
+        #region 资源释放
         /// <summary>
         /// 异步卸载子场景
         /// </summary>
@@ -659,5 +665,6 @@ namespace HT.Framework
             var package = YooAssets.TryGetPackage(packageName);
             package?.UnloadUnusedAssets();
         }
+        #endregion
     }
 }
