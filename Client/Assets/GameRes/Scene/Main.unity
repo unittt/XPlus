@@ -291,6 +291,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RoleCreateMainScene
       objectReference: {fileID: 0}
+    - target: {fileID: 1000012375466672, guid: 345fb28dd08946749b5eb8c05d1d6789, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4000010791068168, guid: 345fb28dd08946749b5eb8c05d1d6789, type: 3}
       propertyPath: m_RootOrder
       value: 2
