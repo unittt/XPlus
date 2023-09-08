@@ -127,7 +127,23 @@ namespace HT.Framework
         
         private void AddAssetOperationHandle(Object obj,IDisposable handle)
         {
-            _obj_2_handles.TryAdd(obj, handle);
+            var  b= _obj_2_handles.TryAdd(obj, handle);
+
+            if (!b)
+            {
+                var operA = _obj_2_handles[obj].Cast<OperationHandleBase>();
+                var operB = handle.Cast<OperationHandleBase>();
+                Log.Info($"加入{obj.GetInstanceID()}      "+ (operA == operB));
+                
+                //保存两个字段
+                
+                //类的GetHashCode不相等
+            }
+            
+           
+            
+            
+          
         }
 
         

@@ -5,6 +5,7 @@ using Cysharp.Threading.Tasks;
 using HT.Framework;
 using UnityEngine;
 using UnityEngine.UI;
+using YooAsset;
 
 /// <summary>
 /// 新建UI逻辑类
@@ -82,6 +83,45 @@ public class UICreateRole : UILogicResident
 		LoadRoleCreateMainScene();
 	}
 
+	public override void OnUpdate()
+	{
+		base.OnUpdate();
+		if (Input.GetKeyDown(KeyCode.A))
+		{
+			LoadTestSprite().Forget();
+		}
+		
+		if (Input.GetKeyDown(KeyCode.B))
+		{
+			if (_spriteList.Count > 0)
+			{
+				Main.m_Resource.UnLoadAsset(_spriteList[0]);
+				_spriteList.RemoveAt(0);
+				Log.Info("释放----------------------------------");
+			}
+		}
+	}
+
+	private List<Sprite> _spriteList = new List<Sprite>();
+
+	private async UniTaskVoid LoadTestSprite()
+	{
+		var path = "Assets/GameRes/Atlas/StaticAtlas/CommonAtlas/Image/10001.png";
+		var dataSetInfo = new PrefabInfo("",path,"");
+		var sprite1 =  await Main.m_Resource.LoadAssetAsync<Sprite>(dataSetInfo, null);
+		var sprite2 =  await Main.m_Resource.LoadAssetAsync<Sprite>(dataSetInfo, null);
+		var sprite3 =  await Main.m_Resource.LoadAssetAsync<Sprite>(dataSetInfo, null);
+	
+		if (sprite1 == sprite2)
+		{
+			Log.Info("图片一样");
+		}
+
+		_spriteList.Add(sprite1);
+		_spriteList.Add(sprite2);
+		_spriteList.Add(sprite3);
+	}
+
 	private async UniTask LoadRoleCreateMainScene()
 	{
 		var prefabInfo = new PrefabInfo("", "RoleCreateMainScene", "");
@@ -102,9 +142,10 @@ public class UICreateRole : UILogicResident
 		//种族
 		var path = $"Assets/GameRes/Atlas/StaticAtlas/RoleCreateAtlas/Image/h7_zuqun_0{(int)roleType.Race + 1}.png";
 		 dataSetInfo = new PrefabInfo("",path,"");
-		_race.sprite = await  Main.m_Resource.LoadAssetAsync<Sprite>(dataSetInfo, null);
+		 
+		 _race.sprite = await Main.m_Resource.LoadAssetAsync<Sprite>(dataSetInfo, null);
 		_race.SetNativeSize();
-		
+
 		RefreshSchool(roleType.SchoolList);
 	}
 	
