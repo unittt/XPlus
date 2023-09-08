@@ -68,13 +68,17 @@ public class ProtocolChannel : ProtocolChannelBase
     public override byte[] EncapsulatedMessage(INetworkMessage networkMessage)
     {
         var protocolTcpNetworkInfo = networkMessage.Cast<ProtocolTcpNetworkInfo>();
-        var externalMessage = new ExternalMessage()
+        var externalMessage = new ExternalMessage
         {
             CmdMerge = protocolTcpNetworkInfo.CmdMerge,
-            Data = protocolTcpNetworkInfo.Message.ToByteString(),
             ProtocolSwitch = 0,
             CmdCode = protocolTcpNetworkInfo.Cmd
         };
+        if (protocolTcpNetworkInfo.Message != null)
+        {
+            externalMessage.Data = protocolTcpNetworkInfo.Message.ToByteString();
+        }
+        
         var byteMsg = externalMessage.ToByteArray();
 
         // 在数据前加4个字节 用来描述数据长度
@@ -128,11 +132,8 @@ public class ProtocolChannel : ProtocolChannelBase
         }
         // 记录缓冲区 最新位置
         _readOffset += num + 4;
+
         var externalMessage = PackageUtils.DeserializeByByteArray<ExternalMessage>(unPackMessage);
-      
-        // externalMessage.CmdCode
-        // externalMessage.ProtocolSwitch
-        // externalMessage.CmdMerge
         var networkInfo = new ProtocolTcpNetworkInfo(externalMessage.CmdMerge,externalMessage.Data.ToByteArray());
         return networkInfo;
     }
