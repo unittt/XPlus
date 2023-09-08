@@ -317,7 +317,7 @@ namespace HT.Framework
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
-        public async UniTask<byte[]> LoadRawFileDataAsync(YooAsset.AssetInfo info)
+        public async UniTask<byte[]> LoadRawFileDataAsync(AssetInfo info)
         {
             var beginTime = Time.realtimeSinceStartup;
             //单线加载，如果其他地方在加载资源，则等待
@@ -353,7 +353,7 @@ namespace HT.Framework
         /// <param name="packageName"></param>
         /// <param name="location"></param>
         /// <returns></returns>
-        public async UniTask<string> LoadRawFileTextAsync(YooAsset.AssetInfo info)
+        public async UniTask<string> LoadRawFileTextAsync(AssetInfo info)
         {
             var beginTime = Time.realtimeSinceStartup;
             //单线加载，如果其他地方在加载资源，则等待
