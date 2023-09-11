@@ -1,7 +1,7 @@
 using HT.Framework;
 using UnityEngine;
 
-namespace YooAssetPlusA
+namespace YooAssetPlus
 {
     public class LoadHandle : IReference
     {
@@ -50,7 +50,7 @@ namespace YooAssetPlusA
         {
             // if (Handle != 0)
             //     YIUILoadDI.ReleaseAction?.Invoke(Handle);
-            // LoadHelper.PutLoad(PkgName, ResName);
+            LoadHelper.PutLoad(PkgName, ResName);
         }
 
         internal bool WaitAsync { get; private set; }

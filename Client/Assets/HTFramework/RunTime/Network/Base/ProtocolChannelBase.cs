@@ -207,6 +207,12 @@ namespace HT.Framework
             {
                 if (IsConnect && _isCanSend && _sendDataBuffer.Count > 0)
                 {
+
+                    if (_sendDataBuffer[0]  == null)
+                    {
+                        Log.Info("为空啊");
+                    }
+                    
                     int sendCount = Client.Send(_sendDataBuffer[0], _sendDataBuffer[0].Length, 0);
                     if (sendCount > 0)
                     {

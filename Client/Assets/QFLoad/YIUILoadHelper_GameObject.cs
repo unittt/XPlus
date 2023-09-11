@@ -57,11 +57,21 @@ namespace YIUIFramework
         /// <summary>
         /// 释放由 实例化出来的GameObject
         /// </summary>
-        internal static void ReleaseInstantiate(Object gameObject)
-        {
-            if (!g_ObjectMap.TryGetValue(gameObject, out var asset)) return;
-            g_ObjectMap.Remove(gameObject);
-            Release(asset);
-        }
+        // internal void ReleaseInstantiate(Object gameObject)
+        // {
+        //     if (!g_ObjectMap.TryGetValue(gameObject, out var asset)) return;
+        //     g_ObjectMap.Remove(gameObject);
+        //     Release(asset);
+        // }
+        
+        /// <summary>
+        /// 释放某个资源对象
+        /// 不包含实例化的对象
+        /// 实例化的对象请调用另外一个实例化释放 ReleaseInstantiate
+        /// </summary>
+        // internal void Release(Object obj)
+        // {
+        //     LoadHelper.GetLoadHandle(obj)?.RemoveRefCount();
+        // }
     }
 }
