@@ -3,47 +3,72 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using YooAsset;
 
-namespace YooAssetPlusA
+namespace YooAssetPlus
 {
-    
     public sealed partial class YooAssetPlusManager
     {
-        //这里是简单的本地记录YooAsset 根据你项目应该有一个资源管理器统一管理这里只是演示所以很简陋
-        private Dictionary<int, AssetOperationHandle> m_AllHandle = new Dictionary<int, AssetOperationHandle>();
+        //这里是简单的本地记录YooAsset
+        private Dictionary<int, AssetOperationHandle> m_AllHandle = new();
         
-
+        /// <summary>
+        /// 加载预制件
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="parent"></param>
+        /// <param name="isUI"></param>
+        /// <returns></returns>
+        public async UniTask<GameObject> LoadPrefab(string location, Transform parent, bool isUI)
+        {
+            var prefab = await LoadAssetAsync<GameObject>(location);
+            //实例化预制件
+            var result = GameObject.Instantiate(prefab);
+            //关联预制件和loadhandle
+            return result;
+        }
+        
         public async UniTask<T> LoadAssetAsync<T>(string location) where T : Object
         {
-            var load = LoadHelper.GetLoad("", location);
-            var loadObj = load.Object;
+            T result = null; // 用于存储要返回的结果
+
+            var loadHandle = LoadHelper.GetLoad(location);
+            var loadObj = loadHandle.Object;
+
             if (loadObj != null)
             {
-                load.AddRefCount();
-                return (T)loadObj;
+                result = (T)loadObj;
             }
-            
-            //如果不存在
-            var handle = YooAssets.LoadAssetAsync<T>(location);
-            await handle.ToUniTask();
-
-            var (obj,hashCode) = LoadAssetHandle(handle);
-            if (obj == null)
+            else
             {
-                load.RemoveRefCount();
-                return null;
+                var assetOperationHandle = YooAssets.LoadAssetAsync<T>(location);
+                await assetOperationHandle.ToUniTask();
+
+                var (obj, hashCode) = GetLoadAssetByHandle(assetOperationHandle);
+
+                if (obj != null)
+                {
+                    if (LoadHelper.AddLoadHandle(obj, loadHandle))
+                    {
+                        loadHandle.ResetHandle(obj, hashCode);
+                        result = (T)obj;
+                    }
+                }
             }
 
-            if (!LoadHelper.AddLoadHandle(obj, load))
+            if (result != null)
             {
-                return null;
+                loadHandle.AddRefCount(); // 只在成功加载资源后增加引用计数
             }
-            
-            load.ResetHandle(obj, hashCode);
-            load.AddRefCount();
-            return (T)obj;
+
+            return result; // 在方法的最后返回结果
         }
-
-        private (Object, int) LoadAssetHandle(AssetOperationHandle handle)
+        
+        
+        /// <summary>
+        /// 获取资源
+        /// </summary>
+        /// <param name="handle">句柄</param>
+        /// <returns></returns>
+        private (Object, int) GetLoadAssetByHandle(AssetOperationHandle handle)
         {
             if (handle.AssetObject != null)
             {
@@ -51,20 +76,11 @@ namespace YooAssetPlusA
                 m_AllHandle.Add(hashCode, handle);
                 return (handle.AssetObject, hashCode);
             }
-            else
-            {
-                handle.Release();
-                return (null, 0);
-            }
+            handle.Release();
+            return (null, 0);
         }
         
-
-        public async UniTask<T> LoadAssetAsync<T>(string location, bool isPrefab, Transform parent, bool isUI)
-            where T : Object
-        {
-            return null;
-        }
-
+        
         /// <summary>
         /// 异步获取原生文件文本
         /// </summary>
@@ -74,7 +90,7 @@ namespace YooAssetPlusA
         {
             return "";
         }
-
+        
         /// <summary>
         /// 异步获取原生文件二进制数据
         /// </summary>
@@ -83,6 +99,21 @@ namespace YooAssetPlusA
         async UniTask<byte[]> LoadRawFileDataAsync(string location)
         {
             return null;
+        }
+
+
+        /// <summary>
+        /// 释放资源
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="isInstantiate">是否为实例化的gameObject</param>
+        public void Release(Object obj, bool isInstantiate = false)
+        {
+            if (isInstantiate)
+            {
+                obj = LoadHelper.RemoveInMap(obj);
+            }
+            LoadHelper.Release(obj);
         }
     }
 }

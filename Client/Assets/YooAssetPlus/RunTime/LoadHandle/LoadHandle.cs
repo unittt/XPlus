@@ -1,25 +1,22 @@
 using HT.Framework;
 using UnityEngine;
 
-namespace YooAssetPlusA
+namespace YooAssetPlus
 {
     public class LoadHandle : IReference
     {
-        internal string PkgName { get; private set; }
         internal string ResName { get; private set; }
         internal int Handle { get; private set; }
         internal int RefCount { get; private set; }
         internal Object Object { get; private set; }
 
-        internal void SetGroupHandle(string pkgName, string resName)
+        internal void SetGroupHandle(string resName)
         {
-            PkgName = pkgName;
             ResName = resName;
         }
 
         public void Reset()
         {
-            PkgName = string.Empty;
             ResName = string.Empty;
             Handle = 0;
             RefCount = 0;
@@ -50,7 +47,7 @@ namespace YooAssetPlusA
         {
             // if (Handle != 0)
             //     YIUILoadDI.ReleaseAction?.Invoke(Handle);
-            // LoadHelper.PutLoad(PkgName, ResName);
+            LoadHelper.PutLoad(ResName);
         }
 
         internal bool WaitAsync { get; private set; }

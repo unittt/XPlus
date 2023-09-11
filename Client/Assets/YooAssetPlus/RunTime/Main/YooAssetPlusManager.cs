@@ -1,30 +1,34 @@
 using HT.Framework;
 using UnityEngine;
 
-
-/// <summary>
-/// YooAsset扩展
-/// </summary>
-[LockTransform]
-[DisallowMultipleComponent]
-[DefaultExecutionOrder(-10)]
-public sealed partial class YooAssetPlusManager :  SingletonBehaviourBase<YooAssetPlusManager>
+namespace YooAssetPlus
 {
-    protected override void Awake()
+    /// <summary>
+    /// YooAsset扩展
+    /// </summary>
+    [LockTransform]
+    [DisallowMultipleComponent]
+    [DefaultExecutionOrder(-10)]
+    public sealed partial class YooAssetPlusManager : SingletonBehaviourBase<YooAssetPlusManager>
     {
-        base.Awake();
-        OnAwake();
+        protected override void Awake()
+        {
+            base.Awake();
+            OnAwake();
+        }
+
+        private void Start()
+        {
+            OnStart();
+        }
+
+        private void Update()
+        {
+            OnUpdate();
+        }
+
+        partial void OnAwake();
+        partial void OnStart();
+        partial void OnUpdate();
     }
-    private void Start()
-    {
-        OnStart();
-    }
-    private void Update()
-    {
-        OnUpdate();
-    }
-    
-    partial void OnAwake();
-    partial void OnStart();
-    partial void OnUpdate();
 }
