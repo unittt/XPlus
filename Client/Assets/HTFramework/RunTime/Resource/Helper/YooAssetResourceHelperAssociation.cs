@@ -24,7 +24,7 @@ namespace HT.Framework
 
         #region location 2 LoadHandle
         /// <summary>
-        /// 根据定位获得LoadHandle
+        /// 从定位中获取到LoadHandle,如果没有则创建一个新的
         /// </summary>
         /// <param name="location">定位</param>
         /// <param name="isSpawn">如果不存在是否生成</param>
@@ -52,8 +52,7 @@ namespace HT.Framework
         {
             return o_LoadHandleMap.TryAdd(obj, loadHandle);
         }
-
-      
+        
         /// <summary>
         /// 获得LoadHandle
         /// </summary>
@@ -84,7 +83,7 @@ namespace HT.Framework
         /// </summary>
         /// <param name="clone"></param>
         /// <returns></returns>
-        private Object GetObjectByClone(Object clone, bool isRemove = true)
+        private Object GetObjectByClone(Object clone, bool isRemove)
         {
             var instanceID = clone.GetInstanceID();
             var obj = instanceID_ObjectMap[instanceID];
@@ -103,7 +102,11 @@ namespace HT.Framework
         /// <param name="handle"></param>
         private void AddAssetOperationHandle(AssetOperationHandle handle)
         {
-            i_AssetOperationHandleMap.Add(handle.GetHashCode(),handle);
+            //只有是有效的才加入
+            if (handle.IsValid)
+            {
+                i_AssetOperationHandleMap.Add(handle.GetHashCode(),handle);
+            }
         }
 
         #region 场景
@@ -145,7 +148,11 @@ namespace HT.Framework
         /// <param name="handle"></param>
         private void ReleaseHandle(LoadHandle handle)
         {
-            if (!handle.WaitAsync) return;
+            if (handle.WaitAsync)
+            {
+                $"释放加载句柄失败 {handle.Location} 正在加载中".Warning();
+                return;
+            }
             
             s_LoadHandleMap.Remove(handle.Location);
             o_LoadHandleMap.Remove(handle.Object);

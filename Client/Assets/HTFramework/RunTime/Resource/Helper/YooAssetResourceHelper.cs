@@ -132,22 +132,27 @@ namespace HT.Framework
             //开始加载
             Object result;
             
+            //从定位中获取到LoadHandle,如果没有则创建一个新的
             var loadHandle = TryGetLoadHandleByLocation(location,true);
+            //设置LoadHandle 为正在加载中
             loadHandle.SetWaitAsync(true);
+            
             if (loadHandle.Object != null)
             {
-                result = (T)loadHandle.Object;
+                result = loadHandle.Object;
             }
             else
             {
-                //加载
+                //使用YooAssets 加载 资源句柄
                 var assetOperationHandle = YooAssets.LoadAssetAsync<T>(location);
                 await assetOperationHandle.ToUniTask();
                 
+                //记录资源句柄
                 AddAssetOperationHandle(assetOperationHandle);
                 
                 result = assetOperationHandle.AssetObject;
            
+                //将result 和 loadHandle 关联
                 if (AddLoadHandle(result, loadHandle))
                 {
                     loadHandle.ResetHandle(result, assetOperationHandle.GetHashCode());
@@ -156,22 +161,23 @@ namespace HT.Framework
 
             if (result != null)
             {
-                loadHandle.AddRefCount(); // 只在成功加载资源后增加引用计数
+                // 只在成功加载资源后增加引用计数
+                loadHandle.AddRefCount(); 
                 
+                //如果当前为预制件 则实例化对象
                 if (isPrefab)
                 {
                     var prefabTem = result.Cast<GameObject>();
                     result = InstanceGameObject(prefabTem, parent, isUI);
+                    //关联clone 与 prefab
                     AddClone(result, prefabTem,loadHandle);
                 }
             }
             
             loadHandle.SetWaitAsync(false);
             LogLoadedInfo(result != null, location,beginTime,waitTime);
-            
             //本线路加载资源结束
             _isLoading = false;
-            
             return result.Cast<T>();
         }
         #endregion
@@ -306,18 +312,30 @@ namespace HT.Framework
         /// <param name="isClone"></param>
         public void UnLoadAsset(Object obj, bool isClone)
         {
+            if (obj == null)
+            {
+                return;
+            }
+
+            //作为clone的实例化编号
+            var cloneInstanceID = 0;
             if (isClone)
             {
-                obj = GetObjectByClone(obj);
+                cloneInstanceID = obj.GetInstanceID();
+                obj = GetObjectByClone(obj, true);
             }
             
             //减少引用
-            if (!TryGetLoadHandleByObj(obj, out var handle)) return;
+            if (!TryGetLoadHandleByObj(obj, out var handle))
+            {
+                Log.Warning($"卸载资源出错:不存在 [{obj.name}] 的加载句柄  IsClone:{isClone.ToString()}");
+                return;
+            }
             
             //如果为克隆先移除其InstanceID
             if (isClone)
             {
-                handle.RemoveInstanceID(obj.GetInstanceID());
+                handle.RemoveInstanceID(cloneInstanceID);
             }
             
             //减少引用

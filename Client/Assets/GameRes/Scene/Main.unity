@@ -220,7 +220,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: DefaultProcedure
-      value: ProcedureLauncher
+      value: GameScript.RunTime.Procedure.ProcedureLauncher
       objectReference: {fileID: 0}
     - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: ActivatedProcedures.Array.size
@@ -228,11 +228,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: ActivatedProcedures.Array.data[0]
-      value: ProcedureLauncher
+      value: GameScript.RunTime.Procedure.ProcedureLauncher
       objectReference: {fileID: 0}
     - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: ActivatedProcedures.Array.data[1]
-      value: ProcedureLogin
+      value: GameScript.RunTime.Procedure.ProcedureLogin
       objectReference: {fileID: 0}
     - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: ActivatedProcedures.Array.data[2]
