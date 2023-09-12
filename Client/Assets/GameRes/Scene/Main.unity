@@ -204,7 +204,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114025988358540096, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: ChannelTypes.Array.data[0]
-      value: ProtocolChannel
+      value: GameScript.RunTime.Network.GameTcpChannel
+      objectReference: {fileID: 0}
+    - target: {fileID: 114025988358540096, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
+      propertyPath: ChannelTypes.Array.data[1]
+      value: GameScript.RunTime.Network.GameTcpChannel
       objectReference: {fileID: 0}
     - target: {fileID: 114046948290896454, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: IsEnableCameraUI
