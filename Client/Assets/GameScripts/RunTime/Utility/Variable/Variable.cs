@@ -6,7 +6,7 @@ namespace GameScripts.RunTime.Utility.Variable
     /// 变量泛型基类
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class Variable<T> : VariableBase
+    public class Variable<T> : IVariable
     {
         /// <summary>
         /// 当前存储的真实值
@@ -33,11 +33,6 @@ namespace GameScripts.RunTime.Utility.Variable
             }
         }
         
-        /// <summary>
-        /// 变量类型
-        /// </summary>
-        public override Type Type => typeof(T);
-
         protected virtual bool IsEquals(T oldValue, T newValue)
         {
             return oldValue.Equals(newValue);
