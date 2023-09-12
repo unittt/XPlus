@@ -701,7 +701,7 @@ namespace HT.Framework
             }
             else
             {
-                uILogic.UIEntity = await Main.m_Resource.LoadPrefab(new PrefabInfo(uIResource), uIParent, null,true);
+                uILogic.UIEntity = await Main.m_Resource.LoadPrefab(uIResource.Location, uIParent,true);
                 uILogic.OnInit();
                 return uILogic;
             }
@@ -727,7 +727,7 @@ namespace HT.Framework
                 }
                 else
                 {
-                    uILogic.UIEntity = await Main.m_Resource.LoadPrefab(new PrefabInfo(uIResource), uIParent, null,true);
+                    uILogic.UIEntity = await Main.m_Resource.LoadPrefab(uIResource.Location, uIParent,true);
                 }
                 
                 uILogic.UIEntity.SetActive(true);
@@ -784,6 +784,9 @@ namespace HT.Framework
                 return;
 
             uILogic.OnDestroy();
+            
+            Main.m_Resource.UnLoadAsset(uILogic.UIEntity, true);
+            
             Main.Kill(uILogic.UIEntity);
             uILogic.UIEntity = null;
         }

@@ -5,12 +5,11 @@ using Cysharp.Threading.Tasks;
 using HT.Framework;
 using UnityEngine;
 using UnityEngine.UI;
-using YooAsset;
 
 /// <summary>
 /// 新建UI逻辑类
 /// </summary>
-[UIResource("AssetBundleName", "UICreateRole", "ResourcePath",UIType.Camera)]
+[UIResource( "UICreateRole",UIType.Camera)]
 public class UICreateRole : UILogicResident
 {
 	private Image _imgRoleName;
@@ -25,11 +24,9 @@ public class UICreateRole : UILogicResident
 	private ToggleGroup _skillGroup;
 	private Text _skillDes;
 	
-	
 	private Dictionary<ESchoolType, GameObject> _schoolInstance;
 	private Dictionary<int, GameObject> _skillInstacne;
-	private GameObject _roleCreateMainScene;
-
+	
 	/// <summary>
 	/// 初始化
 	/// </summary>
@@ -82,68 +79,27 @@ public class UICreateRole : UILogicResident
 		//创建场景预制件
 		LoadRoleCreateMainScene();
 	}
-
-	public override void OnUpdate()
-	{
-		base.OnUpdate();
-		if (Input.GetKeyDown(KeyCode.A))
-		{
-			LoadTestSprite().Forget();
-		}
-		
-		if (Input.GetKeyDown(KeyCode.B))
-		{
-			if (_spriteList.Count > 0)
-			{
-				Main.m_Resource.UnLoadAsset(_spriteList[0]);
-				_spriteList.RemoveAt(0);
-				Log.Info("释放----------------------------------");
-			}
-		}
-	}
-
-	private List<Sprite> _spriteList = new List<Sprite>();
-
-	private async UniTaskVoid LoadTestSprite()
-	{
-		var path = "Assets/GameRes/Atlas/StaticAtlas/CommonAtlas/Image/10001.png";
-		var dataSetInfo = new PrefabInfo("",path,"");
-		var sprite1 =  await Main.m_Resource.LoadAssetAsync<Sprite>(dataSetInfo, null);
-		var sprite2 =  await Main.m_Resource.LoadAssetAsync<Sprite>(dataSetInfo, null);
-		var sprite3 =  await Main.m_Resource.LoadAssetAsync<Sprite>(dataSetInfo, null);
 	
-		if (sprite1 == sprite2)
-		{
-			Log.Info("图片一样");
-		}
-
-		_spriteList.Add(sprite1);
-		_spriteList.Add(sprite2);
-		_spriteList.Add(sprite3);
-	}
+	
 
 	private async UniTask LoadRoleCreateMainScene()
 	{
-		var prefabInfo = new PrefabInfo("", "RoleCreateMainScene", "");
 		//角色对应的门派
-		_roleCreateMainScene = await Main.m_Resource.LoadPrefab(prefabInfo, null);
+		// _roleCreateMainScene = await Main.m_Resource.LoadPrefab("RoleCreateMainScene", null);
 	}
 	
 	private async UniTaskVoid OnSelectedRole(int roleIndex)
 	{
 		var roleType = TableGlobal.Instance.TbRoleType.DataList[roleIndex];
-		var dataSetInfo = new PrefabInfo("",roleType.NamePath,"");
 		//角色名称
-		_imgRoleName.sprite = await  Main.m_Resource.LoadAssetAsync<Sprite>(dataSetInfo, null);
+		_imgRoleName.sprite = await  Main.m_Resource.LoadAsset<Sprite>(roleType.NamePath);
 		_imgRoleName.SetNativeSize();
 		
 		//描述
 		_racedesc.text = roleType.Racedesc;
 		//种族
 		var path = $"Assets/GameRes/Atlas/StaticAtlas/RoleCreateAtlas/Image/h7_zuqun_0{(int)roleType.Race + 1}.png";
-		 dataSetInfo = new PrefabInfo("",path,"");
-		 
-		 _race.sprite = await Main.m_Resource.LoadAssetAsync<Sprite>(dataSetInfo, null);
+		_race.sprite = await Main.m_Resource.LoadAsset<Sprite>(path);
 		_race.SetNativeSize();
 
 		RefreshSchool(roleType.SchoolList);
@@ -185,23 +141,19 @@ public class UICreateRole : UILogicResident
 	/// <returns></returns>
 	private async UniTask<GameObject> LoadSchool(School school)
 	{
-		var prefabInfo = new PrefabInfo("", "PartSchool", "");
 		//角色对应的门派
-		var schoolEntity = await Main.m_Resource.LoadPrefab(prefabInfo, _schoolContainer, null, true);
+		var schoolEntity = await Main.m_Resource.LoadPrefab("PartSchool", _schoolContainer, true);
 		
 		var icon = schoolEntity.GetComponent<Image>();
-		var dataSetInfo = new PrefabInfo("",school.IconPath,"");
-		icon.sprite = await Main.m_Resource.LoadAssetAsync<Sprite>(dataSetInfo, null);
+		icon.sprite = await Main.m_Resource.LoadAsset<Sprite>(school.IconPath);
 		icon.SetNativeSize();
 
 		icon = schoolEntity.GetComponentByChild<Image>("HighIcon");
-		dataSetInfo = new PrefabInfo("",school.HighligtedIconPath,"");
-		icon.sprite = await Main.m_Resource.LoadAssetAsync<Sprite>(dataSetInfo, null);
+		icon.sprite = await Main.m_Resource.LoadAsset<Sprite>(school.HighligtedIconPath);
 		icon.SetNativeSize();
 		
 		icon = schoolEntity.GetComponentByChild<Image>("Name");
-		dataSetInfo = new PrefabInfo("",school.NamePath,"");
-		icon.sprite = await Main.m_Resource.LoadAssetAsync<Sprite>(dataSetInfo, null);
+		icon.sprite = await Main.m_Resource.LoadAsset<Sprite>(school.NamePath);
 		icon.SetNativeSize();
 		
 		var toggle = schoolEntity.GetComponent<Toggle>();
@@ -224,8 +176,7 @@ public class UICreateRole : UILogicResident
 	private async UniTaskVoid OnSwitchSchool(ESchoolType schoolType)
 	{
 		var school = TableGlobal.Instance.TbSchool[schoolType];
-		var dataSetInfo = new PrefabInfo("",school.Characteristic,"");
-		_characteristic.sprite  = await Main.m_Resource.LoadAssetAsync<Sprite>(dataSetInfo, null);
+		_characteristic.sprite  = await Main.m_Resource.LoadAsset<Sprite>(school.Characteristic);
 		_characteristic.SetNativeSize();
 		RefreshSKill(school.SkillList);
 	}
@@ -261,13 +212,12 @@ public class UICreateRole : UILogicResident
 	
 	private async UniTask<GameObject> LoadSkill(SchoolSkill skill)
 	{
-		var prefabInfo = new PrefabInfo("", "PartSkill", "");
+
 		//角色对应的门派
-		var entity = await Main.m_Resource.LoadPrefab(prefabInfo, _skillContainer, null, true);
+		var entity = await Main.m_Resource.LoadPrefab("PartSkill", _skillContainer, true);
 		
 		var icon = entity.GetComponentByChild<Image>("icon");
-		var dataSetInfo = new PrefabInfo("",skill.Icon.ToString(),"");
-		icon.sprite = await Main.m_Resource.LoadAssetAsync<Sprite>(dataSetInfo, null);
+		icon.sprite = await Main.m_Resource.LoadAsset<Sprite>(skill.Icon.ToString());
 		icon.SetNativeSize();
 		
 		var toggle = entity.GetComponent<Toggle>();

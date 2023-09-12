@@ -164,9 +164,8 @@ namespace HT.Framework
         /// </summary>
         /// <param name="type">实体逻辑类</param>
         /// <param name="entityName">实体指定名称（为 <None> 时默认使用实体逻辑类名称）</param>
-        /// <param name="onLoading">创建实体过程进度回调</param>
         /// <returns>加载协程</returns>
-        public async UniTask<T> CreateEntity<T>(Type type, string entityName, HTFAction<float> onLoading) where T : EntityLogicBase
+        public async UniTask<T> CreateEntity<T>(Type type, string entityName) where T : EntityLogicBase
         {
             var attribute = type.GetCustomAttribute<EntityResourceAttribute>();
             if (attribute == null) return null;
@@ -175,8 +174,6 @@ namespace HT.Framework
                 if (attribute.IsUseObjectPool && ObjectPools[type].Count > 0)
                 {
                     var entityLogic = GenerateEntity(type, ObjectPools[type].Dequeue(), entityName == "<None>" ? type.Name : entityName);
-
-                    onLoading?.Invoke(1);
                     return  entityLogic.Cast<T>();
                 }
                 else
@@ -184,13 +181,11 @@ namespace HT.Framework
                     if (_defineEntities.ContainsKey(type.FullName) && _defineEntities[type.FullName] != null)
                     {
                         var entityLogic = GenerateEntity(type, Main.Clone(_defineEntities[type.FullName], _entitiesGroup[type].transform), entityName == "<None>" ? type.Name : entityName);
-
-                        onLoading?.Invoke(1);
                         return entityLogic.Cast<T>();
                     }
                     else
                     {
-                        var obj = await Main.m_Resource.LoadPrefab(new PrefabInfo(attribute), _entitiesGroup[type].transform, onLoading);
+                        var obj = await Main.m_Resource.LoadPrefab(attribute.Location, _entitiesGroup[type].transform);
                         return GenerateEntity(type, obj, entityName == "<None>" ? type.Name : entityName).Cast<T>();
                     }
                 }
@@ -374,6 +369,7 @@ namespace HT.Framework
                         Entities[type].Remove(entityLogic);
                         entityLogic.OnDestroy();
                         Main.m_ReferencePool.Despawn(entityLogic);
+                        Main.m_Resource.UnLoadAsset(entityLogic.Entity,true);
                         Main.Kill(entityLogic.Entity);
                         entityLogic.Entity = null;
                         entityLogic = null;

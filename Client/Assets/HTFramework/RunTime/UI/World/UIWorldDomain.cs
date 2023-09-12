@@ -105,7 +105,7 @@ namespace HT.Framework
                 }
                 else
                 {
-                    ui.UIEntity = await Main.m_Resource.LoadPrefab(new PrefabInfo(type.GetCustomAttribute<UIResourceAttribute>()), _worldResidentPanel, null, true);
+                    ui.UIEntity = await Main.m_Resource.LoadPrefab(type.GetCustomAttribute<UIResourceAttribute>().Location, _worldResidentPanel, true);
                 }
                 ui.UIEntity.SetLayerIncludeChildren(_worldUIRoot.gameObject.layer);
                 ui.OnInit();
@@ -137,7 +137,7 @@ namespace HT.Framework
                 }
                 else
                 {
-                    ui.UIEntity = await Main.m_Resource.LoadPrefab(new PrefabInfo(type.GetCustomAttribute<UIResourceAttribute>()), _worldTemporaryPanel, null, true);
+                    ui.UIEntity = await Main.m_Resource.LoadPrefab(type.GetCustomAttribute<UIResourceAttribute>().Location, _worldTemporaryPanel, true);
                 }
                 ui.UIEntity.SetLayerIncludeChildren(_worldUIRoot.gameObject.layer);
                 ui.OnInit();
@@ -172,7 +172,7 @@ namespace HT.Framework
                     }
                     else
                     {
-                        ui.UIEntity = await Main.m_Resource.LoadPrefab(new PrefabInfo(type.GetCustomAttribute<UIResourceAttribute>()), _worldResidentPanel, null, true);
+                        ui.UIEntity = await Main.m_Resource.LoadPrefab(type.GetCustomAttribute<UIResourceAttribute>().Location, _worldResidentPanel, true);
                     }
                     ui.UIEntity.SetLayerIncludeChildren(_worldUIRoot.gameObject.layer);
                     ui.UIEntity.transform.SetAsLastSibling();
@@ -228,7 +228,7 @@ namespace HT.Framework
                     }
                     else
                     {
-                        ui.UIEntity = await Main.m_Resource.LoadPrefab(new PrefabInfo(type.GetCustomAttribute<UIResourceAttribute>()),_worldTemporaryPanel, null, true);
+                        ui.UIEntity = await Main.m_Resource.LoadPrefab(type.GetCustomAttribute<UIResourceAttribute>().Location,_worldTemporaryPanel, true);
                     }
                     ui.UIEntity.SetLayerIncludeChildren(_worldUIRoot.gameObject.layer);
                     ui.UIEntity.SetActive(true);
@@ -341,6 +341,8 @@ namespace HT.Framework
                     return;
                 
                 ui.OnDestroy();
+                
+                Main.m_Resource.UnLoadAsset(ui.UIEntity, true);
                 Main.Kill(ui.UIEntity);
                 ui.UIEntity = null;
             }

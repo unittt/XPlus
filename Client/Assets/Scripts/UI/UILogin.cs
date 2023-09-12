@@ -4,7 +4,7 @@ using UnityEngine.UI;
 /// <summary>
 /// 登录
 /// </summary>
-[UIResource("AssetBundleName", "UILogin", "UILogin", UIType.Camera)]
+[UIResource("UILogin", UIType.Camera)]
 public class UILogin : UILogicResident
 {
 	/// <summary>

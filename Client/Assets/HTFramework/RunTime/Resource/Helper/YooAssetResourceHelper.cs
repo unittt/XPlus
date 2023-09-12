@@ -17,13 +17,6 @@ namespace HT.Framework
         private bool _isLoading;    //单线下载中
         private WaitUntil _loadWait;    //单线下载等待;
         
-        private readonly Dictionary<Object, IDisposable> _obj_2_handles = new();
-        
-        /// <summary>
-        /// 已加载的所有场景【场景名称、场景】
-        /// </summary>
-        public Dictionary<string, Scene> Scenes { get; private set; } = new Dictionary<string, Scene>();
-
         /// <summary>
         /// 是否完成初始化完成
         /// </summary>
@@ -80,7 +73,7 @@ namespace HT.Framework
         /// </summary>
         public void OnTerminate()
         {
-            ClearMemory();
+           
         }
         /// <summary>
         /// 暂停助手
@@ -96,8 +89,7 @@ namespace HT.Framework
         {
 
         }
-
-
+        
         public void Initialize(IUpdateHandler handler)
         {
             if (IsInitialized)return;
@@ -115,68 +107,17 @@ namespace HT.Framework
             BeginUpdatePackage(handler).Forget();
         }
         
-        /// <summary>
-        /// 获取Pakage
-        /// </summary>
-        /// <param name="packageName"></param>
-        /// <returns></returns>
-        public ResourcePackage TryGetPackage(string packageName)
-        {
-            return YooAssets.TryGetPackage(packageName);
-        }
-        
-        private void AddAssetOperationHandle(Object obj,IDisposable handle)
-        {
-            var  b= _obj_2_handles.TryAdd(obj, handle);
-
-            if (!b)
-            {
-                var operA = _obj_2_handles[obj].Cast<OperationHandleBase>();
-                var operB = handle.Cast<OperationHandleBase>();
-                Log.Info($"加入{obj.GetInstanceID()}      "+ (operA == operB));
-                
-                //保存两个字段
-                
-                //类的GetHashCode不相等
-            }
-            
-           
-            
-            
-          
-        }
-
-        
-        /// <summary>
-        /// 打印加载结束时的信息
-        /// </summary>
-        /// <param name="isValid"></param>
-        /// <param name="location"></param>
-        /// <param name="beginTime"></param>
-        /// <param name="waitTime"></param>
-        private void LogLoadedInfo(bool isValid, string location,float beginTime,float waitTime)
-        {
-            var endTime = Time.realtimeSinceStartup;
-            string.Format("异步加载资源{0}[{1}模式]：\r\n{2}\r\n等待耗时：{3}秒  加载耗时：{4}秒"
-                , isValid ? "成功" : "失败"
-                , _module.PlayMode.ToString()
-                , location
-                , (waitTime - beginTime).ToString()
-                , (endTime - waitTime).ToString()).Info();
-        }
-        
-
+        #region 加载资源
         /// <summary>
         /// 加载资源（异步）
         /// </summary>
-        /// <typeparam name="T">资源类型</typeparam>
-        /// <param name="info">资源信息标记</param>
-        /// <param name="onLoading">加载中事件</param>
+        /// <param name="location"></param>
         /// <param name="isPrefab">是否是加载预制体</param>
         /// <param name="parent">预制体加载完成后的父级</param>
         /// <param name="isUI">是否是加载UI</param>
-        /// <returns>加载协程迭代器</returns>
-        public async UniTask<T> LoadAssetAsync<T> (ResourceInfoBase info, HTFAction<float> onLoading,bool isPrefab, Transform parent,bool isUI) where T : Object
+        /// <typeparam name="T">资源类型</typeparam>
+        /// <returns></returns>
+        public async UniTask<T> LoadAssetAsync<T> (string location,bool isPrefab, Transform parent,bool isUI) where T : Object
         {
             var beginTime = Time.realtimeSinceStartup;
             //单线加载，如果其他地方在加载资源，则等待
@@ -187,326 +128,86 @@ namespace HT.Framework
             //轮到本线路加载资源
             _isLoading = true;
             var waitTime = Time.realtimeSinceStartup;
-            
-            var package = YooAssets.GetPackage(PackageName);
-            var handle = package.LoadAssetAsync<T>(info.AssetPath);
-            var progress = Progress.Create<float>(p =>
-            {
-                onLoading?.Invoke(p);
-            });
-            await handle.ToUniTask(progress);
 
-            var obj =  handle.AssetObject;
-            if (isPrefab)
+            //开始加载
+            Object result;
+            
+            var loadHandle = TryGetLoadHandleByLocation(location,true);
+            loadHandle.SetWaitAsync(true);
+            if (loadHandle.Object != null)
             {
-                var prefabTem = obj.Cast<GameObject>();
-                var operation =  handle.InstantiateAsync(parent);
-                await operation.ToUniTask();
-                var instance = operation.Result;
+                result = (T)loadHandle.Object;
+            }
+            else
+            {
+                //加载
+                var assetOperationHandle = YooAssets.LoadAssetAsync<T>(location);
+                await assetOperationHandle.ToUniTask();
                 
-                if (isUI)
+                AddAssetOperationHandle(assetOperationHandle);
+                
+                result = assetOperationHandle.AssetObject;
+           
+                if (AddLoadHandle(result, loadHandle))
                 {
-                    instance.rectTransform().anchoredPosition3D = prefabTem.rectTransform().anchoredPosition3D;
-                    instance.rectTransform().sizeDelta = prefabTem.rectTransform().sizeDelta;
-                    instance.rectTransform().anchorMin = prefabTem.rectTransform().anchorMin;
-                    instance.rectTransform().anchorMax = prefabTem.rectTransform().anchorMax;
-                    instance.transform.localRotation = Quaternion.identity;
-                    instance.transform.localScale = Vector3.one;
+                    loadHandle.ResetHandle(result, assetOperationHandle.GetHashCode());
                 }
-                else
+            }
+
+            if (result != null)
+            {
+                loadHandle.AddRefCount(); // 只在成功加载资源后增加引用计数
+                
+                if (isPrefab)
                 {
-                    instance.transform.localPosition = prefabTem.transform.localPosition;
-                    instance.transform.localRotation = Quaternion.identity;
-                    instance.transform.localScale = Vector3.one;
+                    var prefabTem = result.Cast<GameObject>();
+                    result = InstanceGameObject(prefabTem, parent, isUI);
+                    AddClone(result, prefabTem,loadHandle);
                 }
-                obj = instance;
             }
             
-            AddAssetOperationHandle(obj, handle);
-            
-            var endTime = Time.realtimeSinceStartup;
-            string.Format("异步加载资源{0}[{1}模式]：\r\n{2}\r\n等待耗时：{3}秒  加载耗时：{4}秒"
-                , obj ? "成功" : "失败"
-                , Main.m_Resource.PlayMode.ToString()
-                , info.AssetPath
-                , (waitTime - beginTime).ToString()
-                , (endTime - waitTime).ToString()).Info();
-            
-            //本线路加载资源结束
-            _isLoading = false;
-            return obj.Cast<T>();
-        }
-        
-        /// <summary>
-        /// 加载场景（异步）
-        /// </summary>
-        /// <param name="info">资源信息标记</param>
-        /// <param name="sceneMode">场景加载模式</param>
-        /// <param name="activateOnLoad">加载完毕时是否主动激活</param>
-        /// <param name="onLoading">加载中事件</param>
-        /// <returns>加载协程迭代器</returns>
-        public async UniTask<Scene> LoadSceneAsync(SceneInfo info, LoadSceneMode sceneMode,bool activateOnLoad, HTFAction<float> onLoading)
-        {
-            var beginTime = Time.realtimeSinceStartup;
-            //单线加载，如果其他地方在加载资源，则等待
-            if (_isLoading)
-            {
-                await _loadWait;
-            }
-            //轮到本线路加载资源
-            _isLoading = true;
-            var waitTime = Time.realtimeSinceStartup;
-            
-            if (string.IsNullOrEmpty(info.AssetBundleName))
-            {
-                info.AssetBundleName = PackageName;
-            }
-            
-            var package = YooAssets.GetPackage(info.AssetBundleName);
-            var handle = package.LoadSceneAsync(info.AssetPath, sceneMode, activateOnLoad);
-            
-            var progress = Progress.Create<float>(p =>
-            {
-                onLoading?.Invoke(p);
-            });
-            
-            await handle.ToUniTask(progress);
-            Scenes.Add(info.AssetPath, handle.SceneObject);
-            var endTime = Time.realtimeSinceStartup;
-            string.Format("异步加载场景完成[{0}模式]：{1}\r\n等待耗时：{2}秒  加载耗时：{3}秒"
-                ,Main.m_Resource.PlayMode.ToString()
-                , info.AssetPath
-                , (waitTime - beginTime).ToString()
-                , (endTime - waitTime).ToString()).Info();
-            
-            //本线路加载资源结束
-            _isLoading = false;
-            return handle.SceneObject;
-        }
-        
-        
-        /// <summary>
-        /// 异步加载子资源对象
-        /// </summary>
-        /// <param name="info"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public async UniTask<T> LoadSubAssetsAsync<T>(SubAssetInfo info)where T : Object
-        {
-            var beginTime = Time.realtimeSinceStartup;
-            //单线加载，如果其他地方在加载资源，则等待
-            if (_isLoading)
-            {
-                await _loadWait;
-            }
-            //轮到本线路加载资源
-            _isLoading = true;
-            var waitTime = Time.realtimeSinceStartup;
-            
-            if (string.IsNullOrEmpty(info.AssetBundleName))
-            {
-                info.AssetBundleName = PackageName;
-            }
-            
-            var package = YooAssets.GetPackage(info.AssetBundleName);
-            var handle = package.LoadSubAssetsAsync<Sprite>(info.AssetPath);
-            await handle.ToUniTask();
-            var obj = handle.GetSubAssetObject<T>(info.Location);
-            AddAssetOperationHandle(obj, handle);
-            
-            var endTime = Time.realtimeSinceStartup;
-            string.Format("异步加载资源{0}[{1}模式]：\r\n{2}{3}\r\n等待耗时：{4}秒  加载耗时：{5}秒"
-                , obj ? "成功" : "失败"
-                ,Main.m_Resource.PlayMode.ToString()
-                , string.Format("{location}/{name}")
-                , (waitTime - beginTime).ToString()
-                , (endTime - waitTime).ToString()).Info();
+            loadHandle.SetWaitAsync(false);
+            LogLoadedInfo(result != null, location,beginTime,waitTime);
             
             //本线路加载资源结束
             _isLoading = false;
             
-            return obj;
-        }
-
-        /// <summary>
-        /// 异步获取原生文件二进制数据
-        /// </summary>
-        /// <param name="info"></param>
-        /// <returns></returns>
-        public async UniTask<byte[]> LoadRawFileDataAsync(AssetInfo info)
-        {
-            var beginTime = Time.realtimeSinceStartup;
-            //单线加载，如果其他地方在加载资源，则等待
-            if (_isLoading)
-            {
-                await _loadWait;
-            }
-            //轮到本线路加载资源
-            _isLoading = true;
-            var waitTime = Time.realtimeSinceStartup;
-            
-            var package = YooAssets.GetPackage(PackageName);
-            var handle = package.LoadRawFileAsync(info);
-            await handle.ToUniTask();
-            
-            var endTime = Time.realtimeSinceStartup;
-            string.Format("异步加载资源{0}[{1}模式]：\r\n{2}\r\n等待耗时：{3}秒  加载耗时：{4}秒"
-                , handle.IsValid ? "成功" : "失败"
-                , Main.m_Resource.PlayMode.ToString()
-                , info.AssetPath
-                , (waitTime - beginTime).ToString()
-                , (endTime - waitTime).ToString()).Info();
-            
-            //本线路加载资源结束
-            _isLoading = false;
-            
-            return handle.GetRawFileData();
-        }
-
-        /// <summary>
-        /// 异步获取原生文件文本
-        /// </summary>
-        /// <param name="packageName"></param>
-        /// <param name="location"></param>
-        /// <returns></returns>
-        public async UniTask<string> LoadRawFileTextAsync(AssetInfo info)
-        {
-            var beginTime = Time.realtimeSinceStartup;
-            //单线加载，如果其他地方在加载资源，则等待
-            if (_isLoading )
-            {
-                await _loadWait;
-            }
-            //轮到本线路加载资源
-            _isLoading = true;
-            var waitTime = Time.realtimeSinceStartup;
-            
-            var package = YooAssets.GetPackage(PackageName);
-            var handle = package.LoadRawFileAsync(info);
-            await handle.ToUniTask();
-            
-            var endTime = Time.realtimeSinceStartup;
-            string.Format("异步加载资源{0}[{1}模式]：\r\n{2}\r\n等待耗时：{3}秒  加载耗时：{4}秒"
-                , handle.IsValid ? "成功" : "失败"
-                , Main.m_Resource.PlayMode.ToString()
-                , info.AssetPath
-                , (waitTime - beginTime).ToString()
-                , (endTime - waitTime).ToString()).Info();
-            
-            //本线路加载资源结束
-            _isLoading = false;
-            
-            return handle.GetRawFileText();
-        }
-
-        public YooAsset.AssetInfo[] GetAssetInfos(string tag)
-        {
-            var package = YooAssets.GetPackage(PackageName);
-            return package.GetAssetInfos(tag);
-        }
-
-        public async UniTask UnLoadScene(SceneInfo info)
-        {
-            if (!Scenes.ContainsKey(info.ResourcePath))
-            {
-                $"卸载场景失败：名为 {info.ResourcePath} 的场景还未加载！".Warning();
-                return;
-            }
-
-            Scenes.Remove(info.ResourcePath);
-            await SceneManager.UnloadSceneAsync(info.ResourcePath).ToUniTask();
-        }
-
-        public async UniTask UnLoadAllScene()
-        {
-            foreach (var scene in Scenes)
-            {
-              await SceneManager.UnloadSceneAsync(scene.Key).ToUniTask();
-            }
-            Scenes.Clear();
-        }
-
-        /// <summary>
-        /// 释放资源
-        /// </summary>
-        /// <param name="obj"></param>
-        public void UnLoadAsset(Object obj)
-        {
-            if (obj is null)
-            {
-                return;
-            }
-            if (_obj_2_handles.Remove(obj, out var handle))
-            {
-                handle.Dispose();
-            }
-        }
-        
-        /// <summary>
-        /// 释放package资源
-        /// </summary>
-        /// <param name="packageName"></param>
-        public void UnLoadAsset(string assetBundleName)
-        {
-            var package = YooAssets.GetPackage(assetBundleName);
-            package.UnloadUnusedAssets();
-        }
-        
-        /// <summary>
-        /// 清理内存，释放空闲内存（异步）
-        /// </summary>
-        /// <returns>协程迭代器</returns>
-        public async UniTask ClearMemory()
-        {
-            await Resources.UnloadUnusedAssets();
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-        }
-
-
-        #region 资源信息
-        /// <summary>
-        /// 获取资源信息列表
-        /// </summary>
-        /// <param name="tag">资源标签</param>
-        public AssetInfo[] GetAssetInfos1(string tag)
-        {
-            return YooAssets.GetAssetInfos(tag);
-        }
-        
-        /// <summary>
-        /// 获取资源信息列表
-        /// </summary>
-        /// <param name="tags">资源标签列表</param>
-        public AssetInfo[] GetAssetInfos(string[] tags)
-        {
-            return YooAssets.GetAssetInfos(tags);
-        }
-
-        /// <summary>
-        /// 获取资源信息
-        /// </summary>
-        /// <param name="location">资源的定位地址</param>
-        public AssetInfo GetAssetInfo(string location)
-        {
-            return YooAssets.GetAssetInfo(location);
-        }
-        /// <summary>
-        /// 检查资源定位地址是否有效
-        /// </summary>
-        /// <param name="location">资源的定位地址</param>
-        public bool CheckLocationValid(string location)
-        {
-            return YooAssets.CheckLocationValid(location);
+            return result.Cast<T>();
         }
         #endregion
         
         #region 原生文件
         /// <summary>
+        /// 获取原生文件文本
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public async UniTask<string> LoadRawFileTextAsync(string location)
+        {
+            var rawFileOperationHandle = await LoadRawFileAsync(location);
+            var rawFileText = rawFileOperationHandle.GetRawFileText();
+            rawFileOperationHandle.Release();
+            return rawFileText;
+        }
+        
+        /// <summary>
+        /// 获取原生文件二进制数据
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public async UniTask<byte[]> LoadRawFileDataAsync(string location)
+        {
+            var rawFileOperationHandle = await LoadRawFileAsync(location);
+            var rawFileData = rawFileOperationHandle.GetRawFileData();
+            rawFileOperationHandle.Release();
+            return rawFileData;
+        }
+        
+        /// <summary>
         /// 异步加载原生文件
         /// </summary>
         /// <param name="location">资源的定位地址</param>
-        public async UniTask<RawFileOperationHandle> LoadRawFileAsync(string location)
+        private async UniTask<RawFileOperationHandle> LoadRawFileAsync(string location)
         {
             var beginTime = Time.realtimeSinceStartup;
             //单线加载，如果其他地方在加载资源，则等待
@@ -531,13 +232,15 @@ namespace HT.Framework
         
         #region 场景加载
         /// <summary>
-        /// 异步加载场景
+        /// 加载场景
         /// </summary>
         /// <param name="location">场景的定位地址</param>
+        /// <param name="onLoading">加载进度</param>
         /// <param name="sceneMode">场景加载模式</param>
-        /// <param name="suspendLoad">场景加载到90%自动挂起</param>
+        /// <param name="suspendLoad">景加载到90%自动挂起</param>
         /// <param name="priority">优先级</param>
-        public async UniTask<SceneOperationHandle> LoadSceneAsync(string location,HTFAction<float> onLoading = null, LoadSceneMode sceneMode = LoadSceneMode.Single, bool suspendLoad = false, int priority = 100)
+        /// <returns></returns>
+        public async UniTask<Scene> LoadSceneAsync(string location,HTFAction<float> onLoading = null, LoadSceneMode sceneMode = LoadSceneMode.Single, bool suspendLoad = false, int priority = 100)
         {
             var beginTime = Time.realtimeSinceStartup;
             //单线加载，如果其他地方在加载资源，则等待
@@ -558,128 +261,148 @@ namespace HT.Framework
             await handle.ToUniTask(progress);
             
             LogLoadedInfo(handle.IsValid, location, beginTime, waitTime);
-            
             //本线路加载资源结束
             _isLoading = false;
-      
-            return handle;
+            
+            var scene = handle.SceneObject;
+            AddSceneOperationHandle(scene.name,handle);
+            return scene;
         }
-        #endregion
-        
-        #region 资源加载
-        /// <summary>
-        /// 异步加载资源对象
-        /// </summary>
-        /// <typeparam name="TObject">资源类型</typeparam>
-        /// <param name="location">资源的定位地址</param>
-        public async UniTask<AssetOperationHandle> LoadAssetAsync<TObject>(string location) where TObject : UnityEngine.Object
-        {
-            var beginTime = Time.realtimeSinceStartup;
-            //单线加载，如果其他地方在加载资源，则等待
-            if (_isLoading )
-            {
-                await _loadWait;
-            }
-            //轮到本线路加载资源
-            _isLoading = true;
-            var waitTime = Time.realtimeSinceStartup;
-            
-            var handle = YooAssets.LoadAssetAsync<TObject>(location);
-            await handle.ToUniTask();
-           
-            LogLoadedInfo(handle.IsValid, location, beginTime, waitTime);
-            //本线路加载资源结束
-            _isLoading = false;
-            return handle;
-        }
-        #endregion
-        
-        #region 资源加载
-        /// <summary>
-        /// 异步加载子资源对象
-        /// </summary>
-        /// <typeparam name="TObject">资源类型</typeparam>
-        /// <param name="location">资源的定位地址</param>
-        public async UniTask<SubAssetsOperationHandle> LoadSubAssetsAsync<TObject>(string location) where TObject : UnityEngine.Object
-        {
-            var beginTime = Time.realtimeSinceStartup;
-            //单线加载，如果其他地方在加载资源，则等待
-            if (_isLoading )
-            {
-                await _loadWait;
-            }
-            //轮到本线路加载资源
-            _isLoading = true;
-            var waitTime = Time.realtimeSinceStartup;
-            
-            var handle = YooAssets.LoadSubAssetsAsync<TObject>(location);
-            await handle.ToUniTask();
-            
-            LogLoadedInfo(handle.IsValid, location, beginTime, waitTime);
-            //本线路加载资源结束
-            _isLoading = false;
-          
-            return handle;
-        }
-        #endregion
-        
-        #region 资源加载
-        /// <summary>
-        /// 异步加载资源包内所有资源对象
-        /// </summary>
-        /// <typeparam name="TObject">资源类型</typeparam>
-        /// <param name="location">资源的定位地址</param>
-        public async UniTask<AllAssetsOperationHandle> LoadAllAssetsAsync<TObject>(string location) where TObject : UnityEngine.Object
-        {
-            var beginTime = Time.realtimeSinceStartup;
-            //单线加载，如果其他地方在加载资源，则等待
-            if (_isLoading )
-            {
-                await _loadWait;
-            }
-            //轮到本线路加载资源
-            _isLoading = true;
-            var waitTime = Time.realtimeSinceStartup;
-            
-            var handle = YooAssets.LoadAllAssetsAsync<TObject>(location);
-            await handle.ToUniTask();
-            
-            LogLoadedInfo(handle.IsValid, location, beginTime, waitTime);
-            
-            return handle;
-        }
-        #endregion
 
-        #region 资源释放
         /// <summary>
-        /// 异步卸载子场景
+        /// 获取资源信息的路径列表
         /// </summary>
-        /// <param name="handle"></param>
-        public async UniTask UnloadAsync(SceneOperationHandle handle)
-        { 
-            var unloadSceneOperation = handle.UnloadAsync();
-            await unloadSceneOperation.ToUniTask();
+        /// <param name="tag">标签</param>
+        /// <param name="isAddress">是否为可寻址路径</param>
+        /// <returns></returns>
+        public string[] GetAssetPath(string tag, bool isAddress)
+        {
+            var assetInfos =  YooAssets.GetAssetInfos(tag);
+            var pathAry = new string[assetInfos.Length];
+            if (isAddress)
+            {  
+                for (var i = 0; i < assetInfos.Length; i++)
+                {
+                    pathAry[i] = assetInfos[i].Address;
+                }
+            }
+            else
+            {
+                for (var i = 0; i < assetInfos.Length; i++)
+                {
+                    pathAry[i] = assetInfos[i].AssetPath;
+                }
+            }
+            return pathAry;
+        }
+
+        #endregion
+        
+        #region 释放
+        /// <summary>
+        ///  卸载资源
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="isClone"></param>
+        public void UnLoadAsset(Object obj, bool isClone)
+        {
+            if (isClone)
+            {
+                obj = GetObjectByClone(obj);
+            }
+            
+            //减少引用
+            if (!TryGetLoadHandleByObj(obj, out var handle)) return;
+            
+            //如果为克隆先移除其InstanceID
+            if (isClone)
+            {
+                handle.RemoveInstanceID(obj.GetInstanceID());
+            }
+            
+            //减少引用
+            handle.RemoveRefCount();
+            
+            //如果引用为0 则释放
+            if (handle.RefCount == 0)
+            {
+                ReleaseHandle(handle);
+            }
         }
         
         /// <summary>
-        /// 释放资源句柄(单纯只减少引用计数 当引用计数为0)
+        /// 卸载场景
         /// </summary>
-        /// <param name="handle"></param>
-        /// <typeparam name="T"></typeparam>
-        public void Release<T>(T handle) where T: OperationHandleBase,IDisposable
+        /// <param name="sceneName">场景名称</param>
+        public async UniTask UnLoadScene(string sceneName)
         {
-            handle.Dispose();
+            if (TryGetSceneOperationHandle(sceneName, out var sceneOperationHandle))
+            {
+                await sceneOperationHandle.UnloadAsync().ToUniTask();
+            }
+            RemoveSceneOperationHandle(sceneName);
         }
         
         /// <summary>
-        /// 一旦调用了Package.UnloadUnusedAssets()，是会把引用计数为0的资源的Provider都给销毁了
+        ///  清理内存，释放空闲内存（异步）
         /// </summary>
-        /// <param name="packageName"></param>
-        public void UnloadUnusedAssets(string packageName)
+        public async UniTask ClearMemory()
         {
-            // 有2个 东西会 引用计数 一个是provider 一个是 Loader
-            var package = YooAssets.TryGetPackage(packageName);
-            package?.UnloadUnusedAssets();
+            ReleaseAllHandle();
+            var package = YooAssets.GetPackage(PackageName);
+            package.UnloadUnusedAssets();
+            
+            await Resources.UnloadUnusedAssets();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+        #endregion
+        
+        #region 工具
+        /// <summary>
+        /// 实例化对象
+        /// </summary>
+        /// <param name="prefabTem">预制体</param>
+        /// <param name="parent">父物体</param>
+        /// <param name="isUI">是否是ui</param>
+        /// <returns></returns>
+        private GameObject InstanceGameObject(GameObject prefabTem, Transform parent,bool isUI)
+        {
+            var clone = Main.Instantiate(prefabTem, parent);
+            if (isUI)
+            {
+                clone.rectTransform().anchoredPosition3D = prefabTem.rectTransform().anchoredPosition3D;
+                clone.rectTransform().sizeDelta = prefabTem.rectTransform().sizeDelta;
+                clone.rectTransform().anchorMin = prefabTem.rectTransform().anchorMin;
+                clone.rectTransform().anchorMax = prefabTem.rectTransform().anchorMax;
+                clone.transform.localRotation = Quaternion.identity;
+                clone.transform.localScale = Vector3.one;
+            }
+            else
+            {
+                clone.transform.localPosition = prefabTem.transform.localPosition;
+                clone.transform.localRotation = Quaternion.identity;
+                clone.transform.localScale = Vector3.one;
+            }
+            return clone;
+        }
+        
+        /// <summary>
+        /// 打印加载结束时的信息
+        /// </summary>
+        /// <param name="isValid"></param>
+        /// <param name="location"></param>
+        /// <param name="beginTime"></param>
+        /// <param name="waitTime"></param>
+        private void LogLoadedInfo(bool isValid, string location,float beginTime,float waitTime)
+        {
+            var endTime = Time.realtimeSinceStartup;
+            string.Format("异步加载资源{0}[{1}模式]：\r\n{2}\r\n等待耗时：{3}秒  加载耗时：{4}秒"
+                , isValid ? "成功" : "失败"
+                , _module.PlayMode.ToString()
+                , location
+                , (waitTime - beginTime).ToString()
+                , (endTime - waitTime).ToString()).Info();
         }
         #endregion
     }

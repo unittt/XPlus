@@ -1,4 +1,5 @@
-﻿using Cysharp.Threading.Tasks;
+﻿using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using YooAsset;
@@ -73,128 +74,143 @@ namespace HT.Framework
         {
             _helper.UpdatePackage(handler);
         }
-
-
-        public async UniTask<T> LoadAssetAsync<T>(ResourceInfoBase info, HTFAction<float> onLoading) where T : Object
-        {
-            return await _helper.LoadAssetAsync<T>(info, onLoading, false, null,false);
-        }
         
         /// <summary>
-        /// 加载数据集（异步）
+        /// 加载资源（异步）
         /// </summary>
-        /// <typeparam name="T">数据集类型</typeparam>
-        /// <param name="info">数据集配置信息</param>
-        /// <param name="onLoading">数据集加载中回调</param>
-        /// <param name="onLoadDone">数据集加载完成回调</param>
-        /// <returns>加载协程</returns>
-        public async UniTask<T> LoadDataSet<T>(DataSetInfo info, HTFAction<float> onLoading = null, HTFAction<T> onLoadDone = null) where T : DataSetBase
+        /// <param name="location"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public async UniTask<T> LoadAsset<T>(string location) where T : Object
         {
-            return await _helper.LoadAssetAsync<T>(info, onLoading, false, null,false);
+            return await _helper.LoadAssetAsync<T>(location, false, null, false);
         }
+        
         /// <summary>
         /// 加载预制体（异步）
         /// </summary>
-        /// <param name="info">预制体配置信息</param>
+        /// <param name="location"></param>
         /// <param name="parent">预制体的预设父物体</param>
-        /// <param name="onLoading">预制体加载中回调</param>
-        /// <param name="isUI">预制体是否是UI</param>
-        /// <returns>加载协程</returns>
-        public async UniTask<GameObject> LoadPrefab(PrefabInfo info, Transform parent, HTFAction<float> onLoading = null,bool isUI = false)
+        /// <param name="isUI">预制体是否是U</param>
+        /// <returns></returns>
+        public async UniTask<GameObject> LoadPrefab(string location, Transform parent, bool isUI = false)
         {
-            return await _helper.LoadAssetAsync<GameObject>(info, onLoading, true, parent, isUI);
+            return await _helper.LoadAssetAsync<GameObject>(location, true, parent, isUI);
         }
         
         /// <summary>
-        /// 加载场景（异步）
+        /// 加载原生文件文本（异步）
         /// </summary>
-        /// <param name="info">资源信息标记</param>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public async UniTask<string> LoadRawFileText(string location)
+        {
+            return await _helper.LoadRawFileTextAsync(location);
+        }
+        
+        /// <summary>
+        /// 获取原生文件二进制数据
+        /// </summary>
+        /// <param name="location"></param>
+        /// <returns></returns>
+        public async UniTask<byte[]> LoadRawFileData(string location)
+        {
+            return await _helper.LoadRawFileDataAsync(location);
+        }
+
+        /// <summary>
+        /// 加载资源 （异步）
+        /// </summary>
+        /// <param name="tag">标签</param>
+        /// <param name="isAddress">是否为可寻址路径</param>
+        /// <typeparam name="T">类型</typeparam>
+        /// <returns></returns>
+        public async UniTask<Dictionary<string, T>> LoadAssetByTag<T>(string tag,bool isAddress) where T : Object
+        {
+            var entities = new Dictionary<string, T>();
+            var paths = _helper.GetAssetPath(tag, isAddress);
+            foreach (var location in paths)
+            {
+                var obj = await _helper.LoadAssetAsync<T>(location, false, null, false);
+                entities.Add(location,obj);
+            }
+            return entities;
+        }
+
+        /// <summary>
+        ///  加载原生文件文本（异步）
+        /// </summary>
+        /// <param name="tag">标签</param>
+        /// <param name="isAddress">是否为可寻址路径</param>
+        /// <returns></returns>
+        public async UniTask<Dictionary<string, string>> LoadRawFileTextByTag<T>(string tag, bool isAddress)
+        {
+            var entities = new Dictionary<string, string>();
+            var paths = _helper.GetAssetPath(tag, isAddress);
+            foreach (var location in paths)
+            {
+                var rawFileText = await _helper.LoadRawFileTextAsync(location);
+                entities.Add(location,rawFileText);
+            }
+            return entities;
+        }
+        
+        /// <summary>
+        /// 获取原生文件二进制数据（异步）
+        /// </summary>
+        /// <param name="tag">标签</param>
+        /// <param name="isAddress">是否为可寻址路径</param>
+        /// <returns></returns>
+        public async UniTask<Dictionary<string, byte[]>> LoadRawFileDataByTag(string tag, bool isAddress)
+        {
+            var entities = new Dictionary<string, byte[]>();
+            var paths = _helper.GetAssetPath(tag, isAddress);
+            foreach (var location in paths)
+            {
+                var rawFileData = await _helper.LoadRawFileDataAsync(location);
+                entities.Add(location, rawFileData);
+            }
+
+            return entities;
+        }
+
+        /// <summary>
+        /// 加载场景
+        /// </summary>
+        /// <param name="location">场景的定位地址</param>
+        /// <param name="onLoading">加载进度</param>
         /// <param name="sceneMode">场景加载模式</param>
-        /// <param name="activateOnLoad">加载完毕时是否主动激活</param>
-        /// <param name="onLoading">加载中事件</param>
-        /// <returns>加载协程迭代器</returns>
-        public async UniTask<Scene> LoadScene(SceneInfo info, LoadSceneMode sceneMode,bool activateOnLoad, HTFAction<float> onLoading = null)
+        /// <param name="suspendLoad">景加载到90%自动挂起</param>
+        /// <param name="priority">优先级</param>
+        /// <returns></returns>
+        public async UniTask<Scene> LoadSceneAsync(string location, HTFAction<float> onLoading = null,
+            LoadSceneMode sceneMode = LoadSceneMode.Single, bool suspendLoad = false, int priority = 100)
         {
-            return await _helper.LoadSceneAsync(info, sceneMode, activateOnLoad,onLoading);
+            return await _helper.LoadSceneAsync(location, onLoading,sceneMode, suspendLoad, priority);
+        }
+
+        /// <summary>
+        /// 卸载场景
+        /// </summary>
+        /// <param name="sceneName">场景名称</param>
+        public async UniTask UnLoadScene(string sceneName)
+        {
+             await _helper.UnLoadScene(sceneName);
         }
         
         /// <summary>
-        /// 异步加载子资源对象
-        /// </summary>
-        /// <param name="info"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public async UniTask<T> LoadSubAssetsAsync<T>(SubAssetInfo info) where T : Object
-        {
-            return await _helper.LoadSubAssetsAsync<T>(info);
-        }
-
-        /// <summary>
-        /// 异步获取原生文件二进制数据
-        /// </summary>
-        /// <param name="info"></param>
-        /// <returns></returns>
-        public async UniTask<byte[]> LoadRawFileDataAsync(YooAsset.AssetInfo info)
-        {
-            return await _helper.LoadRawFileDataAsync(info);
-        }
-
-        /// <summary>
-        /// 异步获取原生文件文本
-        /// </summary>
-        /// <param name="info"></param>
-        /// <returns></returns>
-        public async  UniTask<string> LoadRawFileTextAsync(YooAsset.AssetInfo info)
-        {
-            return await _helper.LoadRawFileTextAsync(info);
-        }
-        
-        public YooAsset.AssetInfo[] GetAssetInfos(string tag)
-        {
-            return _helper.GetAssetInfos(tag);
-        }
-
-        /// <summary>
-        /// 卸载资源（异步，Resource模式：卸载未使用的资源，AssetBundle模式：卸载AB包）
-        /// </summary>
-        /// <param name="assetBundleName">AB包名称</param>
-        /// <param name="unloadAllLoadedObjects">是否同时卸载所有实体对象</param>
-        /// <returns>卸载协程</returns>
-        public void UnLoadAsset(string assetBundleName)
-        {
-            _helper.UnLoadAsset(assetBundleName);
-        }
-
-        /// <summary>
-        ///  释放资源
+        ///  卸载资源
         /// </summary>
         /// <param name="obj"></param>
-        public void UnLoadAsset(Object obj)
+        /// <param name="isClone"></param>
+        public void UnLoadAsset(Object obj, bool isClone = false)
         {
-            _helper.UnLoadAsset(obj);
+            _helper.UnLoadAsset(obj, isClone);
         }
-        
+
         /// <summary>
-        /// 卸载场景（异步）
+        ///  清理内存，释放空闲内存（异步）
         /// </summary>
-        /// <param name="info">场景配置信息</param>
-        /// <returns>卸载协程</returns>
-        public async UniTask UnLoadScene(SceneInfo info)
-        {
-            await _helper.UnLoadScene(info);
-        }
-        /// <summary>
-        /// 卸载所有场景（异步）
-        /// </summary>
-        /// <returns>卸载协程</returns>
-        public async UniTask UnLoadAllScene()
-        {
-            await _helper.UnLoadAllScene();
-        }
-        /// <summary>
-        /// 清理内存，释放空闲内存（异步）
-        /// </summary>
-        /// <returns>协程</returns>
         public async UniTask ClearMemory()
         {
             await _helper.ClearMemory();
