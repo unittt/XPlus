@@ -1,0 +1,313 @@
+syntax = "proto3";
+package pb.mmo;
+
+// 背包物品
+message BagItemMessage {
+  // 背包物品 id
+  string id = 1;
+  // 物品类型 id
+  string itemTypeId = 2;
+  // 物品数量
+  int32 quantity = 3;
+}
+
+// 背包
+message BagMessage {
+  // 背包物品
+  map<string,BagItemMessage> itemMap = 1;
+}
+
+// 人物基础属性
+message BasicPropertyMessage {
+  // 生命值
+  int32 hp = 1;
+  // 魔法值
+  int32 mp = 2;
+  // 物理攻击
+  int32 physicsAttack = 3;
+  // 物理防御
+  int32 physicsDefense = 4;
+  // 魔法攻击
+  int32 magicAttack = 5;
+  // 魔法防御
+  int32 magicDefense = 6;
+  // 治疗强度
+  int32 treatAttack = 7;
+  // 封印强度
+  int32 sealAttack = 8;
+  // 封印防御（抵抗封印）
+  int32 sealDefense = 9;
+  // 速度
+  int32 speed = 10;
+  // 怒气
+  int32 anger = 11;
+}
+
+// 地图信息
+message EnterMapMessage {
+  // 地图 id
+  int64 mapId = 1;
+  // 地图上的玩家列表
+  repeated MapPlayerMessage players = 2;
+}
+
+// 进入地图
+message EnterMapReq {
+  // 地图 id
+  int64 mapId = 1;
+}
+
+// 经验值
+message ExpMessage {
+  // userId or 宠物id or other
+  int64 id = 1;
+  // 经验值
+  int32 exp = 2;
+}
+
+// 
+message HeroMessage {
+  // 基础属性
+  BasicPropertyMessage basicProperty = 1;
+}
+
+// 物品信息
+message ItemMessage {
+  // 物品类型 id
+  string itemTypeId = 1;
+  // 物品名
+  string name = 2;
+  // 物品描述
+  string description = 3;
+}
+
+// 等级信息
+message LevelMessage {
+  // userId
+  int64 id = 1;
+  // 当前经验值
+  int64 exp = 2;
+  // 当前等级
+  int32 level = 3;
+}
+
+// 地图位置相关
+message LocationMessage {
+  // x 轴
+  int32 x = 1;
+  // y 轴
+  int32 y = 2;
+  // 方向 H
+  int32 directionH = 3;
+  // 方向 V
+  int32 directionV = 4;
+  // 玩家 id
+  int64 playerId = 5;
+}
+
+// 登录
+message LoginVerify {
+  // jwt
+  string jwt = 1;
+}
+
+// 邮件附件（奖励）
+message MailAttachmentMessage {
+  string id = 1;
+  // 物品类型 id
+  string itemTypeId = 2;
+  // 物品数量
+  int32 quantity = 3;
+}
+
+// 玩家邮件
+message MailMessage {
+  string id = 1;
+  // 发件人
+  string senderName = 2;
+  // 发件人 userId
+  int64 senderUserId = 3;
+  // 邮件主题
+  string subject = 4;
+  // 邮件正文
+  string body = 5;
+  // 发送时间
+  int64 milliseconds = 6;
+  // 过期时间
+  int64 expiredMilliseconds = 7;
+  // 邮件状态
+  MailStatusMessageEnum mailStatus = 8;
+  // 附件（奖励）
+  repeated MailAttachmentMessage mailAttachments = 9;
+}
+
+// 
+enum MailStatusMessageEnum {
+  // 密封的邮件、未开封的邮件
+  SEAL = 0;
+  // 已开封的邮件、奖励已经被领取了
+  OPEN = 1;
+}
+
+// 地图上的玩家
+message MapPlayerMessage {
+  // 玩家id
+  int64 id = 1;
+  // nickname
+  string nickname = 2;
+  // 所在地图位置
+  LocationMessage location = 3;
+}
+
+// 人物信息
+message PersonMessage {
+  // 玩家id
+  int64 userId = 1;
+  // 等级信息
+  LevelMessage level = 2;
+  // 基本属性
+  BasicPropertyMessage basicProperty = 3;
+  // 英雄列表
+  repeated HeroMessage heroList = 4;
+  // 当前使用的英雄
+  HeroMessage currentHero = 5;
+}
+
+// 宠物（宝宝）
+message PetMessage {
+  string id = 1;
+  // 所属宠物
+  string petTemplateId = 2;
+  // 昵称
+  string nickname = 3;
+  // 进化经验值
+  int32 mutationExp = 4;
+  // 形态变化的编号
+  int32 mutationNo = 5;
+  // 当前使用的形态模型
+  string mutationSkin = 6;
+  // 可分配的属性点数量
+  int32 propertyPointNum = 7;
+  // 体质
+  int32 constitution = 8;
+  // 魔力
+  int32 magicPower = 9;
+  // 力量
+  int32 power = 10;
+  // 耐力
+  int32 endurance = 11;
+  // 敏捷
+  int32 agile = 12;
+  // 最大技能数量上限
+  int32 maxSkill = 13;
+  map<int32,PetSkillMessage> skillMap = 14;
+}
+
+// 宝宝技能
+message PetSkillMessage {
+  // 下标
+  int32 index = 1;
+  // 技能
+  string skill = 2;
+}
+
+// 宝宝技能模板
+message PetSkillTemplateMessage {
+  // 宝宝技能id itemTypeId
+  string skill = 1;
+  // 技能名
+  string name = 2;
+  // 技能描述
+  string description = 3;
+}
+
+// 宝宝模板
+message PetTemplateMessage {
+  string id = 1;
+  // 宠物（宝宝）名
+  string name = 2;
+  // 描述
+  string description = 3;
+  repeated PetTransformationTemplateMessage transformationList = 4;
+}
+
+// 宝宝的形态、变化
+message PetTransformationTemplateMessage {
+  string mutationName = 1;
+  // 形态变化的编号
+  int32 mutationNo = 2;
+  // 皮肤
+  string mutationSkin = 3;
+  // 基础属性值
+  PetValueTemplateMessage petValueTemplate = 4;
+  // 可分配的属性点数量
+  int32 propertyPointNum = 5;
+}
+
+// 宝宝的属性值模板
+message PetValueTemplateMessage {
+  int32 hp = 1;
+  // 速度
+  int32 speed = 2;
+  // 魔法值
+  int32 mp = 3;
+  // 物理攻击
+  int32 physicsAttack = 4;
+  // 物理防御
+  int32 physicsDefense = 5;
+  // 魔法攻击
+  int32 magicAttack = 6;
+  // 魔法防御
+  int32 magicDefense = 7;
+}
+
+// 显示的物品消息
+message ShowItemMessage {
+  // 物品类型 id
+  string itemTypeId = 1;
+  // 物品数量
+  int32 quantity = 2;
+}
+
+// 更新宝宝属性
+message UpdatePetPropertyMessage {
+  // 宝宝 id
+  string petId = 1;
+  // 体质
+  int32 constitution = 2;
+  // 魔力
+  int32 magicPower = 3;
+  // 力量
+  int32 power = 4;
+  // 耐力
+  int32 endurance = 5;
+  // 敏捷
+  int32 agile = 6;
+}
+
+// 使用物品的具体信息
+message UseItemMessage {
+  // 背包物品 id
+  string id = 1;
+  // 物品类型 id
+  string itemTypeId = 2;
+  // 使用数量
+  int32 quantity = 3;
+}
+
+// 使用物品
+message UseMessage {
+  // 业务场景
+  string scene = 1;
+  // 使用多个物品
+  repeated UseItemMessage useItems = 2;
+}
+
+// 用户信息
+message UserInfo {
+  // id
+  int64 id = 1;
+  // 昵称
+  string nickname = 2;
+}
+
