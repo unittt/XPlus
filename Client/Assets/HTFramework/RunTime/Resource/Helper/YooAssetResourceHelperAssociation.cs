@@ -83,9 +83,14 @@ namespace HT.Framework
         /// </summary>
         /// <param name="clone"></param>
         /// <returns></returns>
-        private Object GetObjectByClone(Object clone, bool isRemove)
+        private Object TryGetObjectByClone(Object clone, bool isRemove)
         {
             var instanceID = clone.GetInstanceID();
+
+            if (!instanceID_ObjectMap.ContainsKey(instanceID))
+            {
+                return null;
+            }
             var obj = instanceID_ObjectMap[instanceID];
             if (isRemove)
             {

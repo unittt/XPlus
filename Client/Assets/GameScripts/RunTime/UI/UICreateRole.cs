@@ -79,18 +79,18 @@ namespace GameScript.RunTime.UI
 		public override void OnOpen(params object[] args)
 		{
 			base.OnOpen(args);
-			OnSelectedRole(0);
+			OnSelectedRole(0).Forget();
 			//创建场景预制件
-			LoadRoleCreateMainScene();
+			// LoadRoleCreateMainScene().Forget();
 		}
 
 
 
-		private async UniTask LoadRoleCreateMainScene()
-		{
-			//角色对应的门派
-			// _roleCreateMainScene = await Main.m_Resource.LoadPrefab("RoleCreateMainScene", null);
-		}
+		// private async UniTask LoadRoleCreateMainScene()
+		// {
+		// 	//角色对应的门派
+		// 	// _roleCreateMainScene = await Main.m_Resource.LoadPrefab("RoleCreateMainScene", null);
+		// }
 
 		private async UniTaskVoid OnSelectedRole(int roleIndex)
 		{
@@ -109,7 +109,7 @@ namespace GameScript.RunTime.UI
 			_race.SetNativeSize();
 			_spriteInstances.Add(_race.sprite);
 
-			RefreshSchool(roleType.SchoolList);
+			await RefreshSchool(roleType.SchoolList);
 		}
 
 		/// <summary>
@@ -173,7 +173,7 @@ namespace GameScript.RunTime.UI
 			{
 				if (result)
 				{
-					OnSwitchSchool(eSchoolType);
+					OnSwitchSchool(eSchoolType).Forget();
 				}
 			});
 			return schoolEntity;
@@ -189,7 +189,7 @@ namespace GameScript.RunTime.UI
 			_characteristic.sprite = await Main.m_Resource.LoadAsset<Sprite>(school.Characteristic);
 			_characteristic.SetNativeSize();
 			_spriteInstances.Add(_characteristic.sprite);
-			RefreshSKill(school.SkillList);
+			RefreshSKill(school.SkillList).Forget();
 		}
 
 		/// <summary>

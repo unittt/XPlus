@@ -33,7 +33,7 @@ namespace GameScript.RunTime.Procedure
         {
             base.OnEnter(lastProcedure);
             //监听资源管理器初始化完成
-            Main.m_Resource.InitializationCompleted += (result) => OnInitializationCompleted(result);
+            Main.m_Resource.InitializationCompleted += (result) => OnInitializationCompleted(result).Forget();
         }
 
         private async UniTaskVoid OnInitializationCompleted(bool arg)

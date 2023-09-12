@@ -10,6 +10,8 @@ namespace GameScript.RunTime.UI
 	[UIResource("UILogin", UIType.Camera)]
 	public sealed class UILogin : UILogicResident
 	{
+		protected override bool IsAutomate => false;
+
 		/// <summary>
 		/// 初始化
 		/// </summary>

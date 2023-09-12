@@ -322,13 +322,17 @@ namespace HT.Framework
             if (isClone)
             {
                 cloneInstanceID = obj.GetInstanceID();
-                obj = GetObjectByClone(obj, true);
+                obj = TryGetObjectByClone(obj, true);
+
+                if (obj == null)
+                {
+                    return;
+                }
             }
             
             //减少引用
             if (!TryGetLoadHandleByObj(obj, out var handle))
             {
-                Log.Warning($"卸载资源出错:不存在 [{obj.name}] 的加载句柄  IsClone:{isClone.ToString()}");
                 return;
             }
             
