@@ -32,10 +32,6 @@ namespace GameScript.RunTime.Procedure
             //此处仅作为为发送msg的示例 参数需要自己根据实际情况填写
             LoginVerify loginVerify = new LoginVerify();
             loginVerify.Jwt = "1";
-            //BagItemMessage itemMessage = new BagItemMessage();
-            //itemMessage.Id = "";
-            //itemMessage.ItemTypeId = "";
-            //GameNetManager.SendMessage((int)ActionCmd.Cmd, (int)ModuleCmd.Login_module_cmd, loginVerify);
             GameNetManager.SendMessage(1, 1, loginVerify);
         }
 
