@@ -8,123 +8,18 @@ using Pathfinding.Serialization;
 using UnityEditor;
 using UnityEngine;
 using Object = UnityEngine.Object;
-using Path = System.IO.Path;
 using UnityEditor.SceneManagement;
 
 namespace GameScripts.Editor.GridMapGenerator
 {
-    public class GridMapTexturePostprocessor : AssetPostprocessor
-    {
-        [MenuItem("地图/地图资源格式处理/Off", false, 15)]
-        public static void DisableGridMapTexturePostprocess()
-        {
-            EditorPrefs.SetBool("GridMapTexturePostprocessToggle", false);
-        }
-
-        [MenuItem("地图/地图资源格式处理/Off", true, 15)]
-        public static bool DisableGridMapTexturePostprocessState()
-        {
-            return EditorPrefs.GetBool("GridMapTexturePostprocessToggle", true);
-        }
-
-        [MenuItem("地图/地图资源格式处理/On", false, 20)]
-        public static void EnableGridMapTexturePostprocess()
-        {
-            EditorPrefs.SetBool("GridMapTexturePostprocessToggle", true);
-        }
-
-        [MenuItem("地图/地图资源格式处理/On", true, 20)]
-        public static bool EnableGridMapTexturePostprocessState()
-        {
-            return !EditorPrefs.GetBool("GridMapTexturePostprocessToggle", true);
-        }
-
-        private void OnPreprocessTexture()
-        {
-            if (!EditorPrefs.GetBool("GridMapTexturePostprocessToggle", true)) return;
-            TextureImporter textureImporter = (TextureImporter)assetImporter;
-            if (textureImporter == null) return;
-
-            if (!assetPath.StartsWith("Assets/GameRes/Map2d")) return;
-
-            string fileName = Path.GetFileName(assetPath);
-            if (string.IsNullOrEmpty(fileName)) return;
-
-            if (fileName.StartsWith("minimap_"))
-            {
-                // textureImporter.textureType = TextureImporterType.Advanced;
-                textureImporter.textureType = TextureImporterType.Default;
-                textureImporter.spriteImportMode = SpriteImportMode.None;
-                textureImporter.mipmapEnabled = false;
-                textureImporter.textureFormat = TextureImporterFormat.ARGB16;
-                textureImporter.npotScale = TextureImporterNPOTScale.None;
-            }
-            else if (fileName.StartsWith("gridRef_"))
-            {
-                // textureImporter.textureType = TextureImporterType.Advanced;
-                textureImporter.textureType = TextureImporterType.Default;
-                textureImporter.npotScale = TextureImporterNPOTScale.None;
-                textureImporter.isReadable = true;
-                textureImporter.mipmapEnabled = false;
-                textureImporter.wrapMode = TextureWrapMode.Clamp;
-                textureImporter.filterMode = FilterMode.Point;
-                textureImporter.textureFormat = TextureImporterFormat.AutomaticTruecolor;
-            }
-            else
-            {
-                string folderName = Path.GetFileName(Path.GetDirectoryName(assetPath));
-
-                if (folderName.StartsWith("tilemap_"))
-                {
-                    // textureImporter.textureType = TextureImporterType.Advanced;
-                    textureImporter.textureType = TextureImporterType.Default;
-                    textureImporter.spriteImportMode = SpriteImportMode.None;
-                    textureImporter.wrapMode = TextureWrapMode.Clamp;
-                    textureImporter.mipmapEnabled = false;
-                    textureImporter.anisoLevel = -1;
-                    textureImporter.textureFormat = TextureImporterFormat.AutomaticCompressed;
-                }
-                else if (folderName.StartsWith("fgbuild_") ||
-                         folderName.StartsWith("bgbuild_"))
-                {
-                    TextureImporterSettings texSettings = new TextureImporterSettings();
-                    textureImporter.ReadTextureSettings(texSettings);
-                    //texSettings.spriteAlignment = (int)SpriteAlignment.Center;
-                    texSettings.spriteMode = (int)SpriteImportMode.None;
-                    texSettings.readable = false;
-                    texSettings.mipmapEnabled = false;
-                    texSettings.maxTextureSize = 2048;
-                    texSettings.aniso = -1;
-                    textureImporter.SetTextureSettings(texSettings);
-
-                    textureImporter.textureType = TextureImporterType.Default;
-                    textureImporter.wrapMode = TextureWrapMode.Clamp;
-                    textureImporter.npotScale = TextureImporterNPOTScale.None;
-                    textureImporter.alphaIsTransparency = true;
-                    textureImporter.spritePackingTag = "";
-                    textureImporter.ClearPlatformTextureSettings("Andriod");
-                    textureImporter.ClearPlatformTextureSettings("iPhone");
-                    textureImporter.textureFormat = TextureImporterFormat.Automatic16bit;
-
-                    ////以贴图文件名作为PackingTag,因为如果需要使用Unity的Android RGB+Alpha通道分离的ETC压缩格式必须打到一个图集里才可以
-                    //textureImporter.spritePackingTag = Path.GetFileNameWithoutExtension(assetPath);
-                    //textureImporter.textureFormat = TextureImporterFormat.AutomaticCompressed;
-                    //textureImporter.SetAllowsAlphaSplitting(true);
-                    //textureImporter.SetPlatformTextureSettings("Android", 2048, TextureImporterFormat.ETC_RGB4, true);
-                    //textureImporter.SetPlatformTextureSettings("iPhone", 2048, TextureImporterFormat.PVRTC_RGBA4, true);
-                }
-            }
-        }
-    }
-
+    
     public class GridMapGenerator : EditorWindow
     {
         public const string SceneRawDataPath = "Assets/GameRes/Map2d";
         public const string GridEffectEditorScene = "Assets/Scene/GridMapEffectEditor.unity";
 
         public const string NavDataRoot = "Assets/GameRes/Map2d/ConfigData";
-
-        //public const string ServerNavDataRoot = "Assets/GameRes/Map2d/ServerNavData";
+        
         public const string ConfigRoot = "Assets/GameRes/Map2d/ConfigData";
         public static GridMapGenerator Instance;
         private string _curSceneId;
@@ -220,36 +115,6 @@ namespace GameScripts.Editor.GridMapGenerator
                 }
 
                 EditorGUILayout.EndHorizontal();
-                //if (GUILayout.Button("生成透明遮罩Prefab", "LargeButton", GUILayout.Height(50f)))
-                //{
-                //    if (EditorUtility.DisplayDialog("提示", "生成透明遮罩Prefab过程中会卡顿,是否继续?", "Yes", "No"))
-                //    {
-                //        GenerateAllBuildPrefabs();
-                //    }
-                //}
-                //EditorGUILayout.Space();
-                //EditorGUILayout.BeginHorizontal();
-                //if (GUILayout.Button("生成透明遮罩图集", "LargeButton", GUILayout.Height(50f), GUILayout.Width(250f)))
-                //{
-                //    if (EditorUtility.DisplayDialog("提示", "生成透明遮罩图集过程中会卡顿,是否继续?", "Yes", "No"))
-                //    {
-                //        GenerateAllBuildInfo();
-                //    }
-                //}
-                //EditorGUILayout.BeginVertical();
-                //if (GUILayout.Button("打开前景遮罩图集", "LargeButton", GUILayout.Height(25f)))
-                //{
-                //    OpenSpriteCollectionEditor(string.Format("{0}/{1}/fgbuild_{1}/fgbuild_{1}_atlas.prefab",
-                //        SceneRawDataPath, _curSceneId));
-                //}
-                //if (GUILayout.Button("打开背景遮罩图集", "LargeButton", GUILayout.Height(25f)))
-                //{
-                //    OpenSpriteCollectionEditor(string.Format("{0}/{1}/bgbuild_{1}/bgbuild_{1}_atlas.prefab",
-                //        SceneRawDataPath, _curSceneId));
-                //}
-                //EditorGUILayout.EndVertical();
-                //EditorGUILayout.EndHorizontal();
-                //EditorGUILayout.Space();
             }
             EditorGUILayout.EndVertical();
 
