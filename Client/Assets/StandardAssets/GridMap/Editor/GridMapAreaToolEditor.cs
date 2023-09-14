@@ -1,3 +1,4 @@
+
 using GameScripts.RunTime.GridMapEditor;
 using UnityEditor;
 using UnityEngine;
@@ -39,11 +40,11 @@ namespace GameScripts.Editor.GridMapGenerator
 
         private void OnDisable()
         {
-            if (GridMapGenerator.Instance &&
-                GridMapGenerator.Instance.gridEditorType != GridMapGenerator.GridEditorType.Nothing)
-            {
-                Selection.activeGameObject = GridMapGenerator.Instance.AreaTool.gameObject;
-            }
+            // if (GridMapGeneratorWindow.Instance &&
+            //     GridMapGeneratorWindow.Instance.gridEditorType != GridMapGeneratorWindow.GridEditorType.Nothing)
+            // {
+            //     Selection.activeGameObject = GridMapGeneratorWindow.Instance.AreaTool.gameObject;
+            // }
         }
 
         public override void OnInspectorGUI()
