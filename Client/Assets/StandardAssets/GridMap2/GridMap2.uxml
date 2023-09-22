@@ -2,14 +2,14 @@
     <ui:Template name="MapInfoElement" src="project://database/Assets/StandardAssets/GridMap2/MapInfoElement.uxml?fileID=9197481963319205126&amp;guid=d951e04cfba1a5242ba8155cae072734&amp;type=3#MapInfoElement" />
     <ui:Label text="地图编辑" display-tooltip-when-elided="true" style="justify-content: space-around; align-items: stretch; flex-wrap: wrap; flex-direction: column; position: relative; -unity-text-align: middle-center; font-size: 20px; -unity-font-style: bold; -unity-text-outline-color: rgb(0, 0, 0); white-space: normal; -unity-text-outline-width: 0;" />
     <ui:VisualElement name="Top">
-        <ui:VisualElement name="SceneContainer" style="flex-direction: row;">
+        <ui:VisualElement name="SceneContainer" style="flex-direction: row; justify-content: space-around;">
             <ui:TextField picking-mode="Ignore" label="场景" readonly="true" is-delayed="false" name="ScenePathTextField" style="flex-grow: 1; font-size: 12px; -unity-text-align: middle-left; white-space: nowrap;" />
             <ui:Button text="浏览" display-tooltip-when-elided="true" name="SceneBrowseBtn" />
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="Mid" reorderable="false" show-add-remove-footer="false" style="flex-grow: 1; height: auto; flex-direction: column; justify-content: flex-start; width: auto; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; -unity-font-style: bold; margin-top: 5px; margin-bottom: 5px; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0;">
         <ui:Instance template="MapInfoElement" name="MapInfoElement" />
-        <ui:ListView focusable="true" horizontal-scrolling="false" show-border="false" tooltip="AAAAAAAAAAAA" name="MapListView" style="flex-grow: 1; height: auto; width: auto; align-items: flex-start; justify-content: flex-start;" />
+        <ui:ListView focusable="true" horizontal-scrolling="false" show-border="false" tooltip="AAAAAAAAAAAA" name="MapListView" show-add-remove-footer="true" show-bound-collection-size="true" style="flex-grow: 1; height: auto; width: auto; align-items: stretch; justify-content: center; flex-shrink: 0;" />
         <ui:VisualElement style="height: 20px; flex-direction: row-reverse; margin-right: 10px;">
             <ui:Button text="+" display-tooltip-when-elided="true" name="AddButton" />
             <ui:Button text="-" display-tooltip-when-elided="true" name="RemoveButton" />
