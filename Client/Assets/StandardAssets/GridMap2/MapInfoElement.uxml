@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="MapInfoElement" style="flex-direction: row; height: auto; align-items: flex-start; justify-content: space-between; margin-left: 0; margin-right: 0; flex-grow: 1; margin-top: 0; margin-bottom: 0; width: 500px; flex-shrink: 0; flex-wrap: nowrap; -unity-text-align: middle-center;">
+        <ui:Label text="编号" display-tooltip-when-elided="true" name="ID" style="width: 25%;" />
+        <ui:Label text="描述" display-tooltip-when-elided="true" name="Des" style="width: 25%;" />
+        <ui:Label text="创建时间" display-tooltip-when-elided="true" name="CreateTime" style="width: 25%;" />
+        <ui:Label text="修改时间" display-tooltip-when-elided="true" name="ChangeTime" style="width: 25%;" />
+    </ui:VisualElement>
+</ui:UXML>
