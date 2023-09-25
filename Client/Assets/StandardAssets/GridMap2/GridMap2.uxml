@@ -8,9 +8,9 @@
         </ui:VisualElement>
     </ui:VisualElement>
     <ui:VisualElement name="Mid" reorderable="false" show-add-remove-footer="false" style="flex-grow: 1; height: auto; flex-direction: column; justify-content: flex-start; width: auto; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; -unity-font-style: bold; margin-top: 5px; margin-bottom: 5px; border-left-width: 0; border-right-width: 0; border-top-width: 0; border-bottom-width: 0; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0;">
-        <ui:Instance template="MapInfoElement" name="MapInfoElement" />
-        <ui:ListView focusable="true" horizontal-scrolling="false" show-border="false" tooltip="AAAAAAAAAAAA" name="MapListView" show-add-remove-footer="true" show-bound-collection-size="true" style="flex-grow: 1; height: auto; width: auto; align-items: stretch; justify-content: center; flex-shrink: 0;" />
-        <ui:VisualElement style="height: 20px; flex-direction: row-reverse; margin-right: 10px;">
+        <ui:Instance template="MapInfoElement" name="MapInfoElement" style="border-left-width: 5px; border-right-width: 5px; border-top-width: 5px; border-bottom-width: 5px;" />
+        <ui:ListView focusable="true" horizontal-scrolling="false" show-border="true" tooltip="AAAAAAAAAAAA" name="MapListView" show-add-remove-footer="true" show-bound-collection-size="true" show-foldout-header="false" reorderable="false" virtualization-method="FixedHeight" style="flex-grow: 0; height: 350px; width: auto; align-items: stretch; justify-content: flex-start; flex-shrink: 1; flex-direction: column; flex-wrap: nowrap; border-left-width: 5px; border-right-width: 5px; border-top-width: 5px; border-bottom-width: 5px; min-height: 350px; max-height: 936px;" />
+        <ui:VisualElement style="height: 20px; flex-direction: row-reverse; margin-right: 10px; align-items: auto; flex-wrap: nowrap; justify-content: flex-start; -unity-text-align: middle-left; white-space: normal; max-height: 20px; flex-grow: 0;">
             <ui:Button text="+" display-tooltip-when-elided="true" name="AddButton" />
             <ui:Button text="-" display-tooltip-when-elided="true" name="RemoveButton" />
         </ui:VisualElement>

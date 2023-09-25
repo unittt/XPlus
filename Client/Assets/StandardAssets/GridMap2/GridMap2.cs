@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using HT.Framework;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -51,6 +52,7 @@ public class GridMap2 : EditorWindow
         _listView.itemsSource = _tempList;
         _listView.Rebuild();
     }
+    
 
     private void OnClickAdd()
     {
@@ -68,6 +70,7 @@ public class GridMap2 : EditorWindow
     
     private VisualElement MakeListItem()
     {
+        Log.Info("****************************");
         var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/StandardAssets/GridMap2/MapInfoElement.uxml");
         VisualElement labelFromUXML = visualTree.Instantiate();
         return labelFromUXML;
@@ -75,7 +78,7 @@ public class GridMap2 : EditorWindow
     
     private void BindListItem(VisualElement arg1, int arg2)
     {
-      
+      Log.Info("半丁---");
     }
     
     private void OnSelectItem(IEnumerable<object> obj)
