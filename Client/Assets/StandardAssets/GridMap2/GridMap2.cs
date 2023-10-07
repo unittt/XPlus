@@ -38,21 +38,41 @@ public class GridMap2 : EditorWindow
             }
         };
         
-        root.Q<Button>("AddButton").clicked += OnClickAdd;
-        root.Q<Button>("RemoveButton").clicked += OnClickRemove;
+       
        
         
         _tempList = new List<int>();
 
         _listView = root.Q<ListView>("MapListView");
-       
+        _listView.Q<Button>("unity-list-view__add-button").clicked += OnClickAdd;
+        _listView.Q<Button>("unity-list-view__remove-button").clicked += OnClickRemove;
+        
+        _listView.showAddRemoveFooter
+        // "unity-list-view__add-button"
         _listView.makeItem = MakeListItem;
         _listView.bindItem = BindListItem;
         _listView.onSelectionChange += OnSelectItem;
         _listView.itemsSource = _tempList;
         _listView.Rebuild();
+        
+      
     }
-    
+
+    private void OnItemAdded(IEnumerable<int> obj)
+    {
+        // 当项被添加到 ListView 时触发的操作
+        foreach (var item in obj)
+        {
+            // 在这里可以对每个添加的项执行自定义操作
+            Debug.Log("Item added: " + item);
+        }
+    }
+
+    private void OnItemRemoved(IEnumerable<int> obj)
+    {
+
+    }
+
 
     private void OnClickAdd()
     {
