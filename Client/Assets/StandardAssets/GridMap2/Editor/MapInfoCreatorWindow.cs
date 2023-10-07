@@ -1,4 +1,3 @@
-using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -29,42 +28,29 @@ public sealed class MapInfoCreatorWindow : EditorWindow
         root.Add(labelFromUXML);
         
         _idTextField = rootVisualElement.Q<TextField>("IDTextField");
-        _idTextField.RegisterValueChangedCallback(OnValueChanged);
-        
         _confirmBtn = rootVisualElement.Q<Button>("ConfirmBtn");
         _confirmBtn.clicked += OnClickConfirm;
     }
-
-    private void OnValueChanged(ChangeEvent<string> evt)
-    {
-        RefreshConfirmBtn();
-    }
-
+    
     private void OnClickConfirm()
     {
         if (!int.TryParse(_idTextField.value, out var id))
         {
+            EditorUtility.DisplayDialog("警告", "请输入正确的编号", "Yes");
             return;
         }
         
         var gridMapConfig = AssetDatabase.LoadAssetAtPath<GridMapConfig>("Assets/StandardAssets/GridMap2/GridMapConfig.asset");
         if (gridMapConfig.IsExistsID(id))
         {
+            EditorUtility.DisplayDialog("警告", "编号重复", "Yes");
             return;
         }
         
+        //创建一个mapinfo
         gridMapConfig.AddMapInfo(id,"");
         
         //关闭界面
         Close();
-    }
-
-    private void RefreshConfirmBtn()
-    {
-        if (!int.TryParse(_idTextField.value, out _))
-        {
-            //设置为禁用
-            return;
-        }
     }
 }

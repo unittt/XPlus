@@ -1,5 +1,7 @@
 using System.Collections.Generic;
+using GridMap;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -110,6 +112,8 @@ public sealed class GridMapWindow : EditorWindow
         rootVisualElement.Q<TextField>("TextFieldID").value = isNull ? "" : gridMapInfo.ID.ToString();
         rootVisualElement.Q<TextField>("TextFieldCTime").value = isNull ? "" : gridMapInfo.CrateTime;
         rootVisualElement.Q<TextField>("TextFieldDescribe").value = isNull ? "" : gridMapInfo.Describe;
+        _editorBtn.visible = !isNull;
+
     }
     #endregion
 
@@ -128,6 +132,7 @@ public sealed class GridMapWindow : EditorWindow
             _gridMapInfo.Describe = evt.newValue;
             //保存数据
         }
+        
     }
 
     private void OnClickEditor()
@@ -135,7 +140,35 @@ public sealed class GridMapWindow : EditorWindow
         if (_gridMapInfo != null)
         {
             //开始编辑了啊
+            
+            var isInScene = EditorSceneManager.GetActiveScene().path == _gridMapConfig.ScenePath;
+            //如果当前在场景中 判断是否要保存
+            if (isInScene)
+            {
+                
+            }
+
+            if (EditorUtility.DisplayDialog("提示", "需要打开2d编辑场景才能生成2d场景寻路数据,是否继续?", "Yes", "No"))
+            {
+                EditorSceneManager.OpenScene( _gridMapConfig.ScenePath);
+            }
         }
+    }
+    
+    
+    
+    /// <summary>
+    /// 检查编辑场景是否打开
+    /// </summary>
+    /// <returns></returns>
+    private bool ValidateSceneOpen()
+    {
+        var isInScene = EditorSceneManager.GetActiveScene().path == _gridMapConfig.ScenePath;
+        if (!isInScene && EditorUtility.DisplayDialog("提示", "需要打开2d测试场景才能生成2d场景寻路数据,是否继续?", "Yes", "No"))
+        {
+            EditorSceneManager.OpenScene( _gridMapConfig.ScenePath);
+        }
+        return isInScene;
     }
     #endregion
 }
