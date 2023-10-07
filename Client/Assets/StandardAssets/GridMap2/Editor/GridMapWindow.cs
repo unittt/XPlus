@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using GridMap;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -20,8 +19,7 @@ public sealed class GridMapWindow : EditorWindow
     
     private GridMapConfig _gridMapConfig;
     private GridMapInfo _gridMapInfo;
-   
-
+    
     private void OnShow()
     {
         ShowGridMapInfo(null);
@@ -137,38 +135,33 @@ public sealed class GridMapWindow : EditorWindow
 
     private void OnClickEditor()
     {
-        if (_gridMapInfo != null)
-        {
-            //开始编辑了啊
-            
-            var isInScene = EditorSceneManager.GetActiveScene().path == _gridMapConfig.ScenePath;
-            //如果当前在场景中 判断是否要保存
-            if (isInScene)
-            {
-                
-            }
 
-            if (EditorUtility.DisplayDialog("提示", "需要打开2d编辑场景才能生成2d场景寻路数据,是否继续?", "Yes", "No"))
-            {
-                EditorSceneManager.OpenScene( _gridMapConfig.ScenePath);
-            }
-        }
-    }
-    
-    
-    
-    /// <summary>
-    /// 检查编辑场景是否打开
-    /// </summary>
-    /// <returns></returns>
-    private bool ValidateSceneOpen()
-    {
-        var isInScene = EditorSceneManager.GetActiveScene().path == _gridMapConfig.ScenePath;
-        if (!isInScene && EditorUtility.DisplayDialog("提示", "需要打开2d测试场景才能生成2d场景寻路数据,是否继续?", "Yes", "No"))
+        if (string.IsNullOrEmpty( _gridMapConfig.ScenePath))
         {
-            EditorSceneManager.OpenScene( _gridMapConfig.ScenePath);
+            EditorUtility.DisplayDialog("警告", "场景路径为空", "Yes");
+            return;
         }
-        return isInScene;
+
+        if (_gridMapInfo == null)
+        {
+            EditorUtility.DisplayDialog("警告", "未选择地图", "Yes");
+            return;
+        }
+        
+        if (!EditorUtility.DisplayDialog("提示", "需要打开2d编辑场景才能生成2d场景寻路数据,是否继续?", "Yes", "No")) return;
+        EditorSceneManager.OpenScene( _gridMapConfig.ScenePath);
+                
+        //删除所有对象
+        var allObjects = FindObjectsOfType<GameObject>();
+        foreach (var obj in allObjects)
+        {
+            DestroyImmediate(obj);
+        }
+                
+        //加载GridMapManager
+        var gridMapPrefab = AssetDatabase.LoadAssetAtPath<GameObject>("Assets/StandardAssets/GridMap2/GridMapManager.prefab");
+        var gridMapManager = Instantiate(gridMapPrefab);
+        gridMapManager.name = "GridMapManager";
     }
     #endregion
 }
