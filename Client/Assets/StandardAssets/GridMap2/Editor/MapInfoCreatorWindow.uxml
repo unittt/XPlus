@@ -1,14 +1,10 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <ui:VisualElement name="Container" style="flex-grow: 1;">
         <ui:Label text="创建地图信息" display-tooltip-when-elided="true" />
-        <ui:TextField picking-mode="Ignore" label="编号" readonly="false" is-delayed="true" name="IDTextField" style="flex-grow: 1; font-size: 12px; -unity-text-align: middle-left; white-space: nowrap;" />
-        <ui:VisualElement name="SceneContainer" style="flex-direction: row; justify-content: space-around;">
-            <ui:TextField picking-mode="Ignore" label="资源目录" readonly="true" is-delayed="false" name="ScenePathTextField" style="flex-grow: 1; font-size: 12px; -unity-text-align: middle-left; white-space: nowrap;" />
-            <ui:Button text="浏览" display-tooltip-when-elided="true" name="SceneBrowseBtn" />
-        </ui:VisualElement>
-        <ui:VisualElement name="SceneContainer" style="flex-direction: row; justify-content: space-around;">
-            <ui:TextField picking-mode="Ignore" label="资源目录" readonly="true" is-delayed="false" name="ScenePathTextField" style="flex-grow: 1; font-size: 12px; -unity-text-align: middle-left; white-space: nowrap;" />
-            <ui:Button text="浏览" display-tooltip-when-elided="true" name="SceneBrowseBtn" />
+        <ui:TextField picking-mode="Ignore" label="编号" readonly="false" is-delayed="true" name="IDTextField" style="flex-grow: 0; font-size: 12px; -unity-text-align: middle-left; white-space: nowrap;" />
+        <ui:VisualElement name="TileContainer" style="flex-direction: row; justify-content: space-around;">
+            <ui:TextField picking-mode="Ignore" label="瓦片资源目录" readonly="true" is-delayed="false" name="TilePathTextField" style="flex-grow: 1; font-size: 12px; -unity-text-align: middle-left; white-space: nowrap;" />
+            <ui:Button text="浏览" display-tooltip-when-elided="true" name="TileBrowseBtn" />
         </ui:VisualElement>
         <ui:Button text="确认" display-tooltip-when-elided="true" name="ConfirmBtn" usage-hints="None" style="flex-direction: column-reverse; bottom: 0; flex-wrap: wrap; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; margin-left: 1px; margin-right: 1px; margin-top: 1px; margin-bottom: 1px; padding-left: 1px; padding-right: 1px; padding-top: 1px; padding-bottom: 1px; align-items: auto; justify-content: space-around; font-size: 10px; border-top-left-radius: 0; border-bottom-left-radius: 0; border-top-right-radius: 0; border-bottom-right-radius: 0;" />
     </ui:VisualElement>

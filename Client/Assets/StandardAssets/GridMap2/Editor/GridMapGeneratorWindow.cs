@@ -240,7 +240,7 @@ namespace GridMap
                 return false;
             }
 
-            GridMapEditorSceneManager.Current.SetupAstarPath(_gridRef);
+            // GridMapEditorSceneManager.Current.SetupAstarPath(_gridRef);
             return  true;
         }
         

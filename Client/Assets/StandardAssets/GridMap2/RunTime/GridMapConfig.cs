@@ -8,8 +8,7 @@ using System.Linq;
 /// 新建数据集
 /// </summary>
 [Serializable]
-[CreateAssetMenu(menuName = "HTFramework DataSet/GridMapDataSet")]
-public class GridMapConfig : DataSetBase
+public sealed class GridMapConfig : DataSetBase
 {
     /// <summary>
     /// 编辑场景的地址
@@ -17,7 +16,23 @@ public class GridMapConfig : DataSetBase
     public string ScenePath;
     public List<GridMapInfo> InfoList = new List<GridMapInfo>();
 
-    public event Action OnInfoListValueChanged; 
+    public event Action OnInfoListValueChanged;
+
+
+    private static GridMapConfig _instance;
+
+    public static GridMapConfig Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = Resources.Load<GridMapConfig>("GridMapConfig");
+            }
+
+            return _instance;
+        }
+    }
 
     /// <summary>
     /// 是否存在此编号的地图
@@ -46,7 +61,7 @@ public class GridMapConfig : DataSetBase
         return false;
     }
     
-    public void AddMapInfo(int id, string des)
+    public void AddMapInfo(int id, string tileFolder)
     {
         if (IsExistsID(id))
         {
@@ -57,6 +72,7 @@ public class GridMapConfig : DataSetBase
         {
             ID = id,
             CrateTime = DateTime.Now.ToString(),
+            TileFolder = tileFolder
         };
         InfoList.Add(gridMapInfo);
         OnInfoListValueChanged?.Invoke();
@@ -68,5 +84,14 @@ public class GridMapInfo
 {
     public int ID;
     public string CrateTime;
+    public string TileFolder;
     public string Describe;
+    /// <summary>
+    /// 行数(y)
+    /// </summary>
+    public int Rows;
+    /// <summary>
+    /// 列数(x)
+    /// </summary>
+    public int Columns;
 }

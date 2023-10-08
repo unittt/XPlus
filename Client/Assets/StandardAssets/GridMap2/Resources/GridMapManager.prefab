@@ -475,3 +475,4 @@ MonoBehaviour:
   BgBuildLayer: {fileID: 0}
   _transferLayer: {fileID: 0}
   _tfEffectLayer: {fileID: 0}
+  GridPrefab: {fileID: 1000013698899992, guid: bb7bbcaeecaf8bb4ebb3ce748db3ae17, type: 3}
