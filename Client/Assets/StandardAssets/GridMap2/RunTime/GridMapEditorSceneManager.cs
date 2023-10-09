@@ -20,61 +20,26 @@ public sealed class GridMapEditorSceneManager : SingletonBehaviourBase<GridMapEd
     /// 网格图节点大小
     /// </summary>
     [Label("网格图节点大小")] public float GridGraphNodeSize = 0.32f;
-
-    /// <summary>
-    /// 栅格图旋转
-    /// </summary>
-    [Label("栅格图形旋转")] public Vector3 GridGraphRotation = new Vector3(-90, 0, 0);
-
+    
     /// <summary>
     /// 场景指定的根目录
     /// </summary>
     [Label("场景指定的根目录")] public GameObject SceneRoot;
 
     /// <summary>
-    /// 玩家
-    /// </summary>
-    [Label("玩家")] public GameObject Player;
-
-    /// <summary>
     /// 场景相机
     /// </summary>
     [Label("场景相机")] public GameObject SceneCam;
 
-    /// <summary>
-    /// 
-    /// </summary>
-    public GameObject _fgEffectLayer;
-
-    /// <summary>
-    /// 背景特效层
-    /// </summary>
-    [Label("背景特效层")] public GameObject BgEffectLayer;
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public GameObject _fgBuildLayer;
-
-    /// <summary>
-    /// 背景构建层
-    /// </summary>
-    [Label("背景构建层")] public GameObject BgBuildLayer;
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public GameObject _transferLayer;
-
-    public GameObject _tfEffectLayer;
-
-    public GameObject GridPrefab;
     
+    public GameObject GridPrefab;
+
     private List<SpriteRenderer> _activeSpriteList = new List<SpriteRenderer>();
     private Queue<SpriteRenderer> _inactiveSpritePool = new Queue<SpriteRenderer>();
     private const float SpriteTile = 2.56f;
     private int _maxSizeX;
     private int _maxSizeY;
+
 
 
     private GridMapInfo _gridMapInfo;
@@ -87,10 +52,13 @@ public sealed class GridMapEditorSceneManager : SingletonBehaviourBase<GridMapEd
     private void Start()
     {
         LoadGridMapInfo();
-        xxxxxxxx();
-        SetupSceneObjReference();
-       
+        // GenerateGridMap(_gridMapInfo.ID, _gridMapInfo.Rows,_gridMapInfo.Columns,2.5f);
+        //生成地图
+        GenerateGridMap(1010, 13,24,2.5f);
+        //初始化A*
+        InitPathfinder(1,1,1);
     }
+
 
 
     private void LoadGridMapInfo()
@@ -100,71 +68,139 @@ public sealed class GridMapEditorSceneManager : SingletonBehaviourBase<GridMapEd
         GridMapConfig.Instance.TryGetGridMapInfo(mapID, out _gridMapInfo);
     }
 
-    private void xxxxxxxx()
+    #region 生成格子图片
+
+    /// <summary>
+    /// 生成格子拼接的地图
+    /// </summary>
+    private void GenerateGridMap(int mapID, int rows, int columns, float scale)
     {
-        _gridMapInfo.ID = 1010;
-        _gridMapInfo.Rows = 12;
-        _gridMapInfo.Columns = 23;
-        _gridMapInfo.TileFolder = "Assets/GameRes/Map2d/1010/tilemap_1010";
-        for (var y = 0; y <= _gridMapInfo.Rows; y++)
+        for (var y = 0; y < rows; y++)
         {
-            for (var x = 0; x <= _gridMapInfo.Columns; x++)
+            for (var x = 0; x < columns; x++)
             {
-                var path = $"{_gridMapInfo.TileFolder}/tile_{_gridMapInfo.ID}_{x}_{y}.png";
-                var texture = AssetDatabase.LoadAssetAtPath<Texture>(path);
-                var grid = Instantiate(GridPrefab, new Vector3(x ,y,0) * 2.5f, Quaternion.identity, SceneRoot.transform);
-                var mr = grid.GetComponent<MeshRenderer>();
-                var propertyBlock = new MaterialPropertyBlock();
-                mr.GetPropertyBlock(propertyBlock);
-                propertyBlock.SetTexture("_MainTex",texture);
-                mr.SetPropertyBlock(propertyBlock);
+                GenerateGrid(mapID, x, y, scale);
             }
         }
     }
 
-    public void SetupSceneObjReference()
+    private void GenerateGrid(int id, int x, int y, float scale)
     {
-        Selection.activeGameObject = AstarPath.gameObject;
+        var grid = Instantiate(GridPrefab, new Vector3(x, y, 0) * scale, Quaternion.identity, SceneRoot.transform);
+        grid.transform.localScale = Vector3.one * scale;
+        var mr = grid.GetComponent<MeshRenderer>();
+        var propertyBlock = new MaterialPropertyBlock();
+        mr.GetPropertyBlock(propertyBlock);
+        propertyBlock.SetTexture("_MainTex", GetGridTexture(id, x, y));
+        mr.SetPropertyBlock(propertyBlock);
     }
 
-    /// <summary>
-    /// 清理场景上冗余对象,GridEffectEditorScene意外保存时会残留一下冗余对象
-    /// </summary>
-    public void CleanUp()
+    private Texture GetGridTexture(int id, int x, int y)
     {
-
+        var path = $"{_gridMapInfo.TileFolder}/tile_{id}_{x}_{y}.png";
+        var texture = AssetDatabase.LoadAssetAtPath<Texture>(path);
+        return texture;
     }
 
+    #endregion
+
+    #region 生成A*节点
+
+
+
     /// <summary>
-    /// 设置A*参数
+    /// 网格图
     /// </summary>
-    /// <param name="gridRef"></param>
-    public void SetupAstarPath(Texture2D gridRef)
+    public GridGraph Graph { get; private set; }
+
+    public void InitPathfinder(int nodeSize, int width, int height)
     {
-        if (AstarPath.graphs.Length == 0)
+        //读取
+        var graphData = AssetDatabase.LoadAssetAtPath<TextAsset>("");
+
+        if (graphData != null)
         {
-            //创建网格图
-            AstarPath.data.AddGraph(typeof(GridGraph));
+            //反序列化graphs
+            AstarPath.active.data.DeserializeGraphs(graphData.bytes);  
+            // AstarPath.active.Scan();
+        }
+        else
+        {
+            SetGraph(nodeSize, width, height);
         }
 
-        var gridGraph = AstarPath.graphs[0] as GridGraph;
-
-        //配置GridGraph参数 channels[index] = 目前不确定 
-        gridGraph.nodeSize = GridGraphNodeSize;
-        gridGraph.Width = gridRef.width;
-        gridGraph.Depth = gridRef.height;
-        gridGraph.UpdateSizeFromWidthDepth();
-        gridGraph.center = Vector3.zero -
-                           (GridGraphEditor.RoundVector3(gridGraph.transform.Transform(new Vector3(0, 0, 0))) -
-                            gridGraph.center);
-        gridGraph.rotation = GridGraphRotation;
-        gridGraph.textureData.enabled = true;
-        gridGraph.textureData.source = gridRef;
-        gridGraph.textureData.channels[0] = GridGraph.TextureData.ChannelUse.None;
-        gridGraph.textureData.factors[0] = 0;
-        gridGraph.textureData.channels[1] = GridGraph.TextureData.ChannelUse.None;
-        gridGraph.textureData.factors[1] = 1;
-        gridGraph.textureData.channels[2] = GridGraph.TextureData.ChannelUse.WalkablePenalty;
-        // gridGraph.textureData.factors[2] =  BrushTool.threshold * 3;;
+        Graph = AstarPath.graphs[0] as GridGraph;
     }
+
+
+    private void SetGraph(int nodeSize, int width, int height)
+    {
+        var graph = AstarPath.graphs[0] as GridGraph;
+        graph.nodeSize = nodeSize;
+        graph.Width = width;
+        graph.Depth = height;
+        //更新size 根据 Width 和 Depth
+        graph.UpdateSizeFromWidthDepth();
+
+        //设置中心点 （为图片的中心点）
+        graph.center = Vector3.zero -
+                       (GridGraphEditor.RoundVector3(graph.transform.Transform(new Vector3(0, 0, 0))) -
+                        graph.center);
+    }
+
+    /// <summary>
+    /// 保存SaveGridGraph
+    /// </summary>
+    /// <param name="nodeSize"></param>
+    /// <param name="width"></param>
+    /// <param name="height"></param>
+    /// <param name="nodeInfoDic"></param>
+    public void SaveGridGraph(int nodeSize, int width, int height, Dictionary<Vector2Int,bool> nodeInfoDic)
+    {
+        SetGraph(nodeSize, width, height);
+        var graph = AstarPath.graphs[0] as GridGraph;
+        // Save to file
+        foreach (var nodeInfo in nodeInfoDic)
+        {
+            var gridNode =  graph.GetNode(nodeInfo.Key.x, nodeInfo.Key.y);
+            gridNode.Walkable = nodeInfo.Value;
+        }
+        
+        //将所有图形设置序列化为字节数组。
+        var graphData = AstarPath.active.data.SerializeGraphs();
+        //将指定的数据保存在指定的路径
+        Pathfinding.Serialization.AstarSerializer.SaveToFile("",graphData);
+    }
+    #endregion
+    
+    
+    
+    // var gridSizeX = 10;
+    // var gridSizeZ = 10;
+    // var nodeSize = 1;
+    // // 创建一个新的GridGraph
+    // GridGraph gridGraph = AstarData.active.data.AddGraph(typeof(GridGraph)) as GridGraph;
+    // gridGraph.width = gridSizeX; // 设置网格的宽度
+    // gridGraph.depth = gridSizeZ; // 设置网格的深度
+    // //格子的宽度 和 深度
+    // //设置可行走区域
+    // //grid的scale
+    //
+    // // 添加节点
+    // for (int x = 0; x < gridSizeX; x++)
+    // {
+    //     for (int z = 0; z < gridSizeZ; z++)
+    //     {
+    //         int nodeIndex = x + z * gridSizeX;
+    //         bool walkable = true;
+    //         Int3 nodePosition = new Int3(x * nodeSize, 0, z * nodeSize); // 节点坐标
+    //
+    //         // gridGraph.nodes[nodeIndex] = gridGraph.CreateNodes(typeof(GridNode), 1)[0];
+    //
+    //         var gridGraphNode = gridGraph.nodes[nodeIndex];
+    //         gridGraphNode.position = nodePosition;
+    //         gridGraphNode.Walkable = walkable;
+    //
+    //     }
+    // }
 }

@@ -19,7 +19,6 @@ namespace StandardAssets.GridMap.Editor.ToolBar
         
         private static bool _overToolBarBg;
         private static bool _overToolBar;
-        private static bool _haveToolbar;
 
         private static List<VisualElement> _toolVisualElements = new();
 
@@ -38,17 +37,11 @@ namespace StandardAssets.GridMap.Editor.ToolBar
                 PlayerPrefs.SetString("previewStage", "false");
             }
             
-            if (!_haveToolbar)
-            {
-                InitToolBar();
-                _haveToolbar = true;
-            }
-            
             SceneView.lastActiveSceneView.in2DMode = true;
         }
         
 
-        private static void InitToolBar()
+        public void CreateGUI()
         {
             
             SceneView sceneView = SceneView.lastActiveSceneView;
