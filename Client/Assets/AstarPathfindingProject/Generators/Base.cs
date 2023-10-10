@@ -382,6 +382,7 @@ namespace Pathfinding {
 		}
 
 		protected void DrawUnwalkableNodes (float size) {
+			
 			Gizmos.color = AstarColor.UnwalkableNode;
 			GetNodes(node => {
 				if (!node.Walkable) Gizmos.DrawCube((Vector3)node.position, Vector3.one*size);

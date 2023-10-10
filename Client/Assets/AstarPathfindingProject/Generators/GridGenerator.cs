@@ -1695,7 +1695,7 @@ namespace Pathfinding {
 			}
 			ArrayPool<GridNodeBase>.Release(ref allNodes);
 
-			if (active.showUnwalkableNodes) DrawUnwalkableNodes(nodeSize * 0.3f);
+			if (active.showUnwalkableNodes) DrawUnwalkableNodes(nodeSize * active.unwalkableNodeDebugSize);
 		}
 
 		/// <summary>

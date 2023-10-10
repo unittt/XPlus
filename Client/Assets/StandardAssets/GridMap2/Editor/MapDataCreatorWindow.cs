@@ -1,17 +1,21 @@
+using System;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public sealed class MapInfoCreatorWindow : EditorWindow
+public sealed class MapDataCreatorWindow : EditorWindow
 {
     private Button _confirmBtn;
     private TextField _idTextField;
     private TextField _pathTextField;
     
+  
+    public static Func<int,string, bool> CreateMapData;
+
     public static void Show()
     {
-        var wnd = GetWindow<MapInfoCreatorWindow>();
-        wnd.titleContent = new GUIContent("MapInfoCreatorWindow");
+        var wnd = GetWindow<MapDataCreatorWindow>();
+        wnd.titleContent = new GUIContent("MapDataCreatorWindow");
         wnd.OnShow();
     }
     
@@ -25,7 +29,7 @@ public sealed class MapInfoCreatorWindow : EditorWindow
     {
         var root = rootVisualElement;
         
-        var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/StandardAssets/GridMap2/Editor/MapInfoCreatorWindow.uxml");
+        var visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/StandardAssets/GridMap2/Editor/MapDataCreatorWindow.uxml");
         var labelFromUXML = visualTree.Instantiate();
         root.Add(labelFromUXML);
         
@@ -49,6 +53,7 @@ public sealed class MapInfoCreatorWindow : EditorWindow
 
     private void OnClickConfirm()
     {
+        
         if (!int.TryParse(_idTextField.value, out var id))
         {
             EditorUtility.DisplayDialog("警告", "请输入正确的编号", "Yes");
@@ -61,16 +66,15 @@ public sealed class MapInfoCreatorWindow : EditorWindow
             return;
         }
         
-        if (GridMapConfig.Instance.IsExistsID(id))
+        if (CreateMapData.Invoke(id, _pathTextField.value))
         {
-            EditorUtility.DisplayDialog("警告", "编号重复", "Yes");
-            return;
+            Close();
         }
-
-        //创建一个mapinfo
-        GridMapConfig.Instance.AddMapInfo(id, _pathTextField.value);
-
-        //关闭界面
-        Close();
+        
+        // if (GridMapConfig.Instance.IsExistsID(id))
+        // {
+        //     EditorUtility.DisplayDialog("警告", "编号重复", "Yes");
+        //     return;
+        // }
     }
 }

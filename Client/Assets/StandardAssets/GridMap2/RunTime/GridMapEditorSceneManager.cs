@@ -1,25 +1,23 @@
+using System;
 using System.Collections.Generic;
 using HT.Framework;
 using Pathfinding;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Pool;
+using UnityEngine.SceneManagement;
 
 
 /// <summary>
 /// 地图编辑场景管理
 /// </summary>
 [ExecuteInEditMode]
-public sealed class GridMapEditorSceneManager : SingletonBehaviourBase<GridMapEditorSceneManager>
+public sealed class GridMapEditorSceneManager : MonoBehaviour
 {
     /// <summary>
     /// A*寻路系统的核心组件
     /// </summary>
     [Label(" A*寻路系统的核心组件")] public AstarPath AstarPath;
-
-    /// <summary>
-    /// 网格图节点大小
-    /// </summary>
-    [Label("网格图节点大小")] public float GridGraphNodeSize = 0.32f;
     
     /// <summary>
     /// 场景指定的根目录
@@ -33,41 +31,106 @@ public sealed class GridMapEditorSceneManager : SingletonBehaviourBase<GridMapEd
 
     
     public GameObject GridPrefab;
+    /// <summary>
+    /// 是否为运行时
+    /// </summary>
+    public bool IsRuntime = false;
 
+    private MapData _mapData;
+    
     private List<SpriteRenderer> _activeSpriteList = new List<SpriteRenderer>();
     private Queue<SpriteRenderer> _inactiveSpritePool = new Queue<SpriteRenderer>();
-    private const float SpriteTile = 2.56f;
-    private int _maxSizeX;
-    private int _maxSizeY;
 
+    /// <summary>
+    /// 运行时获取格子贴图
+    /// </summary>
+    public Func<int, int, int, Texture> GridTextFunc;
 
+   
+    private ObjectPool<GameObject> _gridObjectPool;
 
-    private GridMapInfo _gridMapInfo;
-
-    protected override void Awake()
+    void Awake()
     {
-        base.Awake();
+#if UNITY_EDITOR
+        Selection.activeGameObject = AstarPath.gameObject;   
+#endif
+        _gridObjectPool = new ObjectPool<GameObject>(OnCreateGridObj);
+    }
+    
+    private GameObject OnCreateGridObj()
+    {
+        var result = Instantiate(GridPrefab);
+        return result;
     }
 
     private void Start()
     {
-        LoadGridMapInfo();
-        // GenerateGridMap(_gridMapInfo.ID, _gridMapInfo.Rows,_gridMapInfo.Columns,2.5f);
-        //生成地图
-        GenerateGridMap(1010, 13,24,2.5f);
-        //初始化A*
-        InitPathfinder(1,1,1);
+        // if (!IsRuntime)
+        // {
+        //     //加载图片
+        //     var mapID = EditorPrefs.GetInt(MapGlobal.EDITOR_MAP_ID_KEY);
+        //     // GridMapConfig.Instance.TryGetGridMapInfo(mapID, out _gridMapInfo);
+        //     // LoadGridMapInfo();
+        //     // GenerateGridMap(_gridMapInfo.ID, _gridMapInfo.Rows,_gridMapInfo.Columns,2.5f);
+        //     //生成地图
+        //     // GenerateGridMap(1010, 13,24,2.5f);
+        //     //初始化A*
+        //     // InitPathfinder(1,1,1);
+        // }
+
+        // if (Application.isEditor)
+        // {
+        //     
+        //     //选择
+        //     Selection.activeGameObject = AstarPath.gameObject;
+        //     var mapID = EditorPrefs.GetInt(MapGlobal.EDITOR_MAP_ID_KEY);
+        //     var path = $"{GridMapConfig.Instance.DataFolderPath}/mapdata_{mapID}.bytes";
+        //     var textAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(path);
+        //     var mapData = MapData.Deserialize(textAsset.bytes) ;
+        //     SetGridMapData(mapData);
+        // }
+        // else  if (Application.isPlaying && SceneManager.GetActiveScene().path == GridMapConfig.Instance.ScenePath)
+        // {
+        //     //测试模式
+        // }
+        // else
+        // {
+        //     //运行模式
+        // }
     }
 
+    // void OnDestroy()
+    // {
+    //     Release();
+    // }
 
-
-    private void LoadGridMapInfo()
+    
+    /// <summary>
+    /// 设置GridMapData
+    /// </summary>
+    /// <param name="mapData"></param>
+    public void SetGridMapData(MapData mapData)
     {
-        //加载图片
-        var mapID = EditorPrefs.GetInt(MapGlobal.EDITOR_MAP_ID_KEY);
-        GridMapConfig.Instance.TryGetGridMapInfo(mapID, out _gridMapInfo);
+        Release();
+
+        _mapData = mapData;
+        //生成地图
+        GenerateGridMap(mapData.ID,mapData.NumberOfRows,mapData.NumberOfColumns,mapData.TexturSize);
+        //初始化A*
+        SetGraphs(mapData);
     }
 
+    /// <summary>
+    /// 释放
+    /// </summary>
+    public void Release()
+    {
+        _mapData = null;
+        //清理所有格子
+        _gridObjectPool?.Clear();
+
+    }
+    
     #region 生成格子图片
 
     /// <summary>
@@ -79,29 +142,40 @@ public sealed class GridMapEditorSceneManager : SingletonBehaviourBase<GridMapEd
         {
             for (var x = 0; x < columns; x++)
             {
-                GenerateGrid(mapID, x, y, scale);
+                InstantiateGrid(mapID, x, y, scale);
             }
         }
     }
 
-    private void GenerateGrid(int id, int x, int y, float scale)
+    /// <summary>
+    /// 实例化格子
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="x"></param>
+    /// <param name="y"></param>
+    /// <param name="scale"></param>
+    private void InstantiateGrid(int id, int x, int y, float scale)
     {
-        var grid = Instantiate(GridPrefab, new Vector3(x, y, 0) * scale, Quaternion.identity, SceneRoot.transform);
+        var grid = _gridObjectPool.Get(); 
+        grid.transform.SetParent(SceneRoot.transform);
         grid.transform.localScale = Vector3.one * scale;
-        var mr = grid.GetComponent<MeshRenderer>();
-        var propertyBlock = new MaterialPropertyBlock();
-        mr.GetPropertyBlock(propertyBlock);
-        propertyBlock.SetTexture("_MainTex", GetGridTexture(id, x, y));
-        mr.SetPropertyBlock(propertyBlock);
+        grid.transform.SetLocalPositionAndRotation(new Vector3(x, y, 0) * scale, Quaternion.identity);
+
+        var texture = GetGridTexture(id, x, y);
+        if (texture != null)
+        {
+            var mr = grid.GetComponent<MeshRenderer>();
+            var propertyBlock = new MaterialPropertyBlock();
+            mr.GetPropertyBlock(propertyBlock);
+            propertyBlock.SetTexture("_MainTex", GetGridTexture(id, x, y));
+            mr.SetPropertyBlock(propertyBlock);
+        }
     }
 
     private Texture GetGridTexture(int id, int x, int y)
     {
-        var path = $"{_gridMapInfo.TileFolder}/tile_{id}_{x}_{y}.png";
-        var texture = AssetDatabase.LoadAssetAtPath<Texture>(path);
-        return texture;
+        return IsRuntime ? GridTextFunc(id, x, y) : MapGlobal.GetGridTexture(_mapData.TextureFolder,id,x,y);
     }
-
     #endregion
 
     #region 生成A*节点
@@ -113,28 +187,32 @@ public sealed class GridMapEditorSceneManager : SingletonBehaviourBase<GridMapEd
     /// </summary>
     public GridGraph Graph { get; private set; }
 
-    public void InitPathfinder(int nodeSize, int width, int height)
+    private void SetGraphs(MapData mapData)
     {
-        //读取
-        var graphData = AssetDatabase.LoadAssetAtPath<TextAsset>("");
-
-        if (graphData != null)
+        if (mapData.GraphData != null)
         {
             //反序列化graphs
-            AstarPath.active.data.DeserializeGraphs(graphData.bytes);  
-            // AstarPath.active.Scan();
+            AstarPath.active.data.DeserializeGraphs(mapData.GraphData);
         }
         else
         {
-            SetGraph(nodeSize, width, height);
+            //可以计算出来
+            
+            SetGraph(GridMapConfig.Instance.NodeSize, mapData.NumberOfColumns, mapData.NumberOfRows);
         }
-
         Graph = AstarPath.graphs[0] as GridGraph;
     }
-
-
-    private void SetGraph(int nodeSize, int width, int height)
+    
+    private void SetGraph(float nodeSize, int width, int height)
     {
+        Log.Info(AstarPath.graphs.Length + "--------------");
+
+        if ( AstarPath.graphs.Length == 0)
+        {
+          
+            GridGraph gridGraph = AstarData.active.data.AddGraph(typeof(GridGraph)) as GridGraph;
+        }
+        
         var graph = AstarPath.graphs[0] as GridGraph;
         graph.nodeSize = nodeSize;
         graph.Width = width;
@@ -155,22 +233,22 @@ public sealed class GridMapEditorSceneManager : SingletonBehaviourBase<GridMapEd
     /// <param name="width"></param>
     /// <param name="height"></param>
     /// <param name="nodeInfoDic"></param>
-    public void SaveGridGraph(int nodeSize, int width, int height, Dictionary<Vector2Int,bool> nodeInfoDic)
-    {
-        SetGraph(nodeSize, width, height);
-        var graph = AstarPath.graphs[0] as GridGraph;
-        // Save to file
-        foreach (var nodeInfo in nodeInfoDic)
-        {
-            var gridNode =  graph.GetNode(nodeInfo.Key.x, nodeInfo.Key.y);
-            gridNode.Walkable = nodeInfo.Value;
-        }
-        
-        //将所有图形设置序列化为字节数组。
-        var graphData = AstarPath.active.data.SerializeGraphs();
-        //将指定的数据保存在指定的路径
-        Pathfinding.Serialization.AstarSerializer.SaveToFile("",graphData);
-    }
+    // public void SaveGridGraph(int nodeSize, int width, int height, Dictionary<Vector2Int,bool> nodeInfoDic)
+    // {
+    //     SetGraph(nodeSize, width, height);
+    //     var graph = AstarPath.graphs[0] as GridGraph;
+    //     // Save to file
+    //     foreach (var nodeInfo in nodeInfoDic)
+    //     {
+    //         var gridNode =  graph.GetNode(nodeInfo.Key.x, nodeInfo.Key.y);
+    //         gridNode.Walkable = nodeInfo.Value;
+    //     }
+    //     
+    //     //将所有图形设置序列化为字节数组。
+    //     var graphData = AstarPath.active.data.SerializeGraphs();
+    //     //将指定的数据保存在指定的路径
+    //     Pathfinding.Serialization.AstarSerializer.SaveToFile("",graphData);
+    // }
     #endregion
     
     
