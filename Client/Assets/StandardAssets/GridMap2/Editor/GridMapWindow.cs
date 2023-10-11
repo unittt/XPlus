@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEditor.SceneManagement;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -47,19 +48,22 @@ public sealed class GridMapWindow :EditorWindow
     /// <param name="id"></param>
     /// <param name="textureFolder"></param>
     /// <returns></returns>
-    private bool CreateMapData(int id, string textureFolder)
+    private bool CreateMapData(int id, string textureFolder,float size, int w, int h)
     {
         if (_mapDatas.Any(data => data.ID == id))
         {
             EditorUtility.DisplayDialog("警告", "编号重复", "Yes");
             return false;
         }
-
+        
         var mapData = new MapData
         {
             ID = id,
             TextureFolder = textureFolder,
-            AssetPath = GetMapDataPath(id)
+            AssetPath = GetMapDataPath(id),
+            TexturSize =  size,
+            NumberOfColumns = w,
+            NumberOfRows = h
         };
         
         // 创建并写入文件
@@ -67,6 +71,9 @@ public sealed class GridMapWindow :EditorWindow
         // 刷新Asset数据库，以便Unity编辑器能够检测到新文件
         AssetDatabase.Refresh();
         RefreshMapData();
+        
+        //选中对象
+        SelectGridMapData(mapData);
         return true;
     }
     
@@ -249,6 +256,19 @@ public sealed class GridMapWindow :EditorWindow
             _mapData.Save();
         };
 
+        rootVisualElement.Q<Button>("AssetPathBrowseBtn").clicked += () =>
+        {
+            if (string.IsNullOrEmpty(_mapData.AssetPath))
+            {
+                return;
+            }
+            var asset = AssetDatabase.LoadAssetAtPath<Object>(_mapData.AssetPath);
+            if (asset != null)
+            {
+                EditorGUIUtility.PingObject(asset); // 选中文件但不显示在Inspector
+            }
+        };
+        
         rootVisualElement.Q<Button>("EditorBtn").clicked += OnClickEditor;
     }
     
@@ -259,6 +279,11 @@ public sealed class GridMapWindow :EditorWindow
         if (_mapData == null) return;
         rootVisualElement.Q<TextField>("TextFieldID").value = mapData.ID.ToString();
         rootVisualElement.Q<TextField>("TileFolderTextField").value = mapData.TextureFolder;
+        rootVisualElement.Q<TextField>("AssetPath").value = mapData.AssetPath;
+        
+        rootVisualElement.Q<FloatField>("TextureSize").value = mapData.TexturSize;
+        rootVisualElement.Q<IntegerField>("TextureW").value = mapData.NumberOfColumns;
+        rootVisualElement.Q<IntegerField>("TextureH").value = mapData.NumberOfColumns;
     }
 
     private void OnClickEditor()

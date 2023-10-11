@@ -13,7 +13,7 @@ public static class MapDataExtensions
             return;
         }
 
-        AssetDatabase.DeleteAsset(AssetDatabase.GUIDToAssetPath(mapData.AssetPath));
+        AssetDatabase.DeleteAsset(mapData.AssetPath);
     }
 
     /// <summary>

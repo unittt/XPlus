@@ -1,5 +1,6 @@
 using System;
 using UnityEditor;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -8,9 +9,12 @@ public sealed class MapDataCreatorWindow : EditorWindow
     private Button _confirmBtn;
     private TextField _idTextField;
     private TextField _pathTextField;
+    private Slider _textureSize;
+    private IntegerField _textureW;
+    private IntegerField _textureH;
     
   
-    public static Func<int,string, bool> CreateMapData;
+    public static Func<int,string, float,int,int,bool> CreateMapData;
 
     public static void Show()
     {
@@ -23,6 +27,9 @@ public sealed class MapDataCreatorWindow : EditorWindow
     {
         _idTextField.value = "";
         _pathTextField.value = "";
+        _textureSize.value = GridMapConfig.Instance.TextureSize;
+        _textureW.value = 1;
+        _textureH.value = 1;
     }
 
     public void CreateGUI()
@@ -47,6 +54,10 @@ public sealed class MapDataCreatorWindow : EditorWindow
             _pathTextField.value = path;
         };
         
+        _textureSize = rootVisualElement.Q<Slider>("TextureSize");
+        _textureW = rootVisualElement.Q<IntegerField>("TextureW");
+        _textureH = rootVisualElement.Q<IntegerField>("TextureH");
+        
         _confirmBtn = rootVisualElement.Q<Button>("ConfirmBtn");
         _confirmBtn.clicked += OnClickConfirm;
     }
@@ -65,8 +76,14 @@ public sealed class MapDataCreatorWindow : EditorWindow
             EditorUtility.DisplayDialog("警告", "瓦片资源目录为空", "Yes");
             return;
         }
+
+        if (_textureW.value <= 0 || _textureH.value <= 0)
+        {
+            EditorUtility.DisplayDialog("警告", "宽和高必须大于0", "Yes");
+            return;
+        }
         
-        if (CreateMapData.Invoke(id, _pathTextField.value))
+        if (CreateMapData.Invoke(id, _pathTextField.value, _textureSize.value, _textureW.value, _textureH.value))
         {
             Close();
         }

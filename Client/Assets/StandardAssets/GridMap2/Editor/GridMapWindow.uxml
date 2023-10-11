@@ -18,7 +18,7 @@
     </ui:VisualElement>
     <ui:VisualElement name="Mid" reorderable="false" show-add-remove-footer="false" style="flex-grow: 1; height: auto; flex-direction: row; justify-content: space-between; width: auto; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; -unity-font-style: bold; margin-top: 0; margin-bottom: 0; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-top-left-radius: 2px; border-bottom-left-radius: 2px; border-top-right-radius: 2px; border-bottom-right-radius: 2px; background-color: rgba(0, 0, 0, 0); -unity-slice-left: 5; -unity-slice-top: 5; -unity-slice-right: 5; -unity-slice-bottom: 5; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); flex-wrap: nowrap; align-items: stretch; flex-shrink: 1; position: relative; margin-left: 0; margin-right: 0;">
         <ui:ListView focusable="true" name="MapListView" show-add-remove-footer="true" style="width: 110px; height: auto; margin-left: 2px; margin-right: 2px; margin-top: 2px; margin-bottom: 2px; flex-grow: 0; flex-shrink: 0;" />
-        <ui:VisualElement name="Content" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0); margin-left: 2px; margin-right: 2px; margin-top: 2px; margin-bottom: 2px; justify-content: flex-start; align-items: stretch; flex-direction: column; flex-wrap: nowrap; flex-shrink: 1;">
+        <ui:VisualElement name="Content" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); border-left-width: 2px; border-right-width: 2px; border-top-width: 2px; border-bottom-width: 2px; border-left-color: rgb(84, 84, 84); border-right-color: rgb(84, 84, 84); border-top-color: rgb(84, 84, 84); border-bottom-color: rgb(84, 84, 84); margin-left: 2px; margin-right: 2px; margin-top: 2px; margin-bottom: 2px; justify-content: flex-start; align-items: stretch; flex-direction: column; flex-wrap: nowrap; flex-shrink: 1;">
             <ui:Label text="地图信息" display-tooltip-when-elided="true" name="Label" style="height: 32px; width: 416px; font-size: 20px; flex-shrink: 0;" />
             <ui:VisualElement name="MapDataContainer" style="flex-grow: 1;">
                 <ui:TextField picking-mode="Ignore" label="编号" value="0" password="false" readonly="true" is-delayed="false" name="TextFieldID" style="flex-shrink: 1; flex-grow: 0; border-left-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-top-color: rgb(0, 0, 0); border-bottom-color: rgb(0, 0, 0);" />
@@ -26,6 +26,15 @@
                     <ui:TextField picking-mode="Ignore" label="贴图资源目录" readonly="true" is-delayed="false" name="TileFolderTextField" style="flex-grow: 1; font-size: 12px; -unity-text-align: middle-left; white-space: nowrap;" />
                     <ui:Button text="浏览" display-tooltip-when-elided="true" name="TileFolderBrowseBtn" />
                 </ui:VisualElement>
+                <ui:VisualElement name="AssetPathContainer" style="flex-direction: row; justify-content: space-around;">
+                    <ui:TextField picking-mode="Ignore" label="数据路径" readonly="true" is-delayed="false" name="AssetPath" style="flex-grow: 1; font-size: 12px; -unity-text-align: middle-left; white-space: nowrap;" />
+                    <ui:Button text="浏览" display-tooltip-when-elided="true" name="AssetPathBrowseBtn" />
+                </ui:VisualElement>
+                <ui:Foldout text="基础数据" name="Foldout" style="margin-left: 1px; margin-right: 1px; margin-top: 1px; margin-bottom: 1px; padding-left: 1px; padding-right: 1px; padding-top: 1px; padding-bottom: 1px; -unity-slice-left: 1; -unity-slice-top: 1; -unity-slice-right: 1; -unity-slice-bottom: 1; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(108, 108, 108); border-right-color: rgb(108, 108, 108); border-top-color: rgb(108, 108, 108); border-bottom-color: rgb(108, 108, 108);">
+                    <uie:FloatField label="贴图尺寸" value="42.2" readonly="true" name="TextureSize" />
+                    <uie:IntegerField label="贴图高" value="42" name="TextureW" readonly="true" />
+                    <uie:IntegerField label="贴图宽" value="42" name="TextureH" readonly="true" />
+                </ui:Foldout>
                 <ui:Button text="编辑" display-tooltip-when-elided="true" name="EditorBtn" style="justify-content: flex-end; flex-grow: 0; align-items: auto; flex-shrink: 0; height: auto; width: auto; flex-direction: column; margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; font-size: 20px;" />
             </ui:VisualElement>
         </ui:VisualElement>

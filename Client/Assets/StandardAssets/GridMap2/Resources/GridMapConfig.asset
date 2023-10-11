@@ -15,5 +15,5 @@ MonoBehaviour:
   ScenePath: Assets/Test.unity
   DataFolderPath: Assets/GraphCaches
   TextureNameRule: tile_[ID]_[X]_[Y]
-  TextureSize: 1
-  NodeSize: 0.51
+  TextureSize: 2.5
+  NodeSize: 1
