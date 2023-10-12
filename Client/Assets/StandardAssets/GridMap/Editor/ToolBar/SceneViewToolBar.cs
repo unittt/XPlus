@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using HT.Framework;
@@ -22,27 +23,23 @@ namespace StandardAssets.GridMap.Editor.ToolBar
 
         private static List<VisualElement> _toolVisualElements = new();
 
+
+        private static bool _isCreate;
         
+
         [MenuItem("UIToolkit/ToolBar")]
         public static void ShowExample()
         {
-            OpenEditor();
-        }
-        
-        public static void OpenEditor()
-        { 
-            //在播放预制体的时候打开编辑器，不修改判断播放预制体的值(临时处理手法)
-            if (EditorApplication.isPlaying != true)
-            {
-                PlayerPrefs.SetString("previewStage", "false");
-            }
-            
-            SceneView.lastActiveSceneView.in2DMode = true;
-        }
-        
 
-        public void CreateGUI()
-        {
+            if (_isCreate)
+            {
+                _toolbarBg.visible = true;
+                return;
+            }
+
+            _isCreate = true;
+            SceneView.lastActiveSceneView.in2DMode = true;
+            
             
             SceneView sceneView = SceneView.lastActiveSceneView;
             VisualTreeAsset toolbarTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/StandardAssets/GridMap/Editor/ToolBar/ToolBar.uxml");
@@ -120,6 +117,7 @@ namespace StandardAssets.GridMap.Editor.ToolBar
             {
                 _overToolBar = false;
             });
+       
             
         }
 
