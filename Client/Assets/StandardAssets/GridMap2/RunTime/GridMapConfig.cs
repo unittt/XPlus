@@ -9,10 +9,6 @@ using System;
 public sealed class GridMapConfig : DataSetBase
 {
     /// <summary>
-    /// 编辑场景的地址
-    /// </summary>
-    public string ScenePath;
-    /// <summary>
     /// 文件保存的路径
     /// </summary>
     public string DataFolderPath;

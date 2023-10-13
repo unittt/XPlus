@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using StandardAssets.GridMap.Editor.ToolBar;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEditor.UIElements;
@@ -120,22 +121,6 @@ public sealed class GridMapWindow :EditorWindow
     #region Top
     private void InitTop()
     {
-        //编辑器场景
-        var pathTextField = rootVisualElement.Q<TextField>("ScenePathTextField");
-        pathTextField.value = GridMapConfig.Instance.ScenePath;
-        rootVisualElement.Q<Button>("SceneBrowseBtn").clicked += () =>
-        {
-            var path = EditorUtility.OpenFilePanel("选择编辑场景", Application.dataPath, "unity");
-            if (string.IsNullOrEmpty(path)) return;
-
-            path = MapGlobal.AbsoluteToRelativePath(path);
-            pathTextField.value = path;
-            GridMapConfig.Instance.ScenePath = path;
-            
-            //保存数据
-            GridMapConfigValueChanged();
-        };
-        
         //地图数据存储目录
         var mapDataFolderTextField = rootVisualElement.Q<TextField>("MapDataFolderTextField");
         mapDataFolderTextField.value = GridMapConfig.Instance.DataFolderPath;
@@ -288,13 +273,6 @@ public sealed class GridMapWindow :EditorWindow
 
     private void OnClickEditor()
     {
-
-        if (string.IsNullOrEmpty(GridMapConfig.Instance.ScenePath))
-        {
-            EditorUtility.DisplayDialog("警告", "场景路径为空", "Yes");
-            return;
-        }
-
         if (_mapData == null)
         {
             EditorUtility.DisplayDialog("警告", "未选择地图", "Yes");
@@ -305,25 +283,19 @@ public sealed class GridMapWindow :EditorWindow
         
         //保存编辑的关卡编号
         EditorPrefs.SetInt(MapGlobal.EDITOR_MAP_ID_KEY, _mapData.ID);
-        
-        //打开场景
-        EditorSceneManager.OpenScene(GridMapConfig.Instance.ScenePath);
-      
-        //删除所有对象
-        var allObjects = FindObjectsOfType<GameObject>();
-        foreach (var obj in allObjects)
-        {
-            DestroyImmediate(obj);
-        }
+        EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
         
         //加载GridMapManager
         var gridMapPrefab = Resources.Load<GameObject>("GridMapManager");
         var gridMapManager = Instantiate(gridMapPrefab);
         gridMapManager.name = "GridMapManager";
 
-        var gridMapEditorSceneManager = gridMapManager.GetComponent<GridMapEditorSceneManager>();
+        var gridMapEditorSceneManager = gridMapManager.GetComponent<GridMapManager>();
         Selection.activeGameObject = gridMapEditorSceneManager.AstarPath.gameObject;
         gridMapEditorSceneManager.SetGridMapData(_mapData);
+        
+        
+        GridMapSceneView.Instance.Show(_mapData);
     }
     #endregion
 }

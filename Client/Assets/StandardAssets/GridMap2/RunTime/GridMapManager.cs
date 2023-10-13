@@ -2,17 +2,15 @@ using System;
 using System.Collections.Generic;
 using HT.Framework;
 using Pathfinding;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.Pool;
-using UnityEngine.SceneManagement;
 
 
 /// <summary>
 /// 地图编辑场景管理
 /// </summary>
 [ExecuteInEditMode]
-public sealed class GridMapEditorSceneManager : MonoBehaviour
+public sealed class GridMapManager : SingletonBehaviourBase<GridMapManager>
 {
     /// <summary>
     /// A*寻路系统的核心组件
@@ -48,10 +46,13 @@ public sealed class GridMapEditorSceneManager : MonoBehaviour
 
    
     private ObjectPool<GameObject> _gridObjectPool;
+    private Dictionary<GameObject,Vector2Int> _girdEnities;
 
-    void Awake()
+
+
+    protected override void Awake()
     {
-       
+       base.Awake();
 #if UNITY_EDITOR
         //在播放模式之外用于初始化AstarPath对象，即使尚未在检查器中选择它。
         AstarPath.FindAstarPath();
@@ -59,6 +60,7 @@ public sealed class GridMapEditorSceneManager : MonoBehaviour
         // Selection.activeGameObject = AstarPath.gameObject;   
 #endif
         _gridObjectPool = new ObjectPool<GameObject>(OnCreateGridObj);
+        _girdEnities = new Dictionary<GameObject, Vector2Int>();
     }
     
     private GameObject OnCreateGridObj()
@@ -122,7 +124,7 @@ public sealed class GridMapEditorSceneManager : MonoBehaviour
         //生成地图
         GenerateGridMap(mapData.ID,mapData.NumberOfRows,mapData.NumberOfColumns,mapData.TexturSize);
         //初始化A*
-        SetGraphs(mapData);
+        SetGraph(mapData);
     }
 
     /// <summary>
@@ -133,6 +135,7 @@ public sealed class GridMapEditorSceneManager : MonoBehaviour
         _mapData = null;
         //清理所有格子
         _gridObjectPool?.Clear();
+        _girdEnities?.Clear();
 
     }
     
@@ -163,19 +166,24 @@ public sealed class GridMapEditorSceneManager : MonoBehaviour
     {
         var grid = _gridObjectPool.Get();
         grid.transform.SetParent(SceneRoot.transform);
-        grid.transform.localScale = Vector3.one * scale;
-        var position = new Vector3((x + 0.5f) * scale, (y + 0.5f) * scale, 0);
-        grid.transform.SetLocalPositionAndRotation(position, Quaternion.identity);
-
+        _girdEnities[grid] = new Vector2Int(x, y);
+        
+        SetGridTransform(grid.transform, x, y, scale);
+        
         var texture = GetGridTexture(id, x, y);
-        if (texture != null)
-        {
-            var mr = grid.GetComponent<MeshRenderer>();
-            var propertyBlock = new MaterialPropertyBlock();
-            mr.GetPropertyBlock(propertyBlock);
-            propertyBlock.SetTexture("_MainTex", GetGridTexture(id, x, y));
-            mr.SetPropertyBlock(propertyBlock);
-        }
+        if (texture == null) return;
+        var mr = grid.GetComponent<MeshRenderer>();
+        var propertyBlock = new MaterialPropertyBlock();
+        mr.GetPropertyBlock(propertyBlock);
+        propertyBlock.SetTexture("_MainTex", GetGridTexture(id, x, y));
+        mr.SetPropertyBlock(propertyBlock);
+    }
+
+    private void SetGridTransform(Transform grid,  int x, int y, float scale)
+    {
+        grid.localScale = Vector3.one * scale;
+        var position = new Vector3((x + 0.5f) * scale, (y + 0.5f) * scale, 0);
+        grid.SetLocalPositionAndRotation(position, Quaternion.identity);
     }
 
     private Texture GetGridTexture(int id, int x, int y)
@@ -185,15 +193,12 @@ public sealed class GridMapEditorSceneManager : MonoBehaviour
     #endregion
 
     #region 生成A*节点
-
-
-
     /// <summary>
     /// 网格图
     /// </summary>
     public GridGraph Graph { get; private set; }
 
-    private void SetGraphs(MapData mapData)
+    public void SetGraph(MapData mapData)
     {
         if (mapData.GraphData != null)
         {
@@ -209,10 +214,11 @@ public sealed class GridMapEditorSceneManager : MonoBehaviour
             SetGraph(centerPoint, nodeSize, width, height);
         }
         Graph = AstarPath.graphs[0] as GridGraph;
+  
         Graph.Scan();
     }
     
-    private void SetGraph(Vector2 centerPoint, float nodeSize, int width, int height)
+    public void SetGraph(Vector2 centerPoint, float nodeSize, int width, int height)
     {
         var graph = AstarPath.graphs[0] as GridGraph;
         graph.nodeSize = nodeSize;
@@ -222,6 +228,27 @@ public sealed class GridMapEditorSceneManager : MonoBehaviour
         //更新size 根据 Width 和 Depth
         graph.UpdateSizeFromWidthDepth();
         AstarPath.unwalkableNodeDebugSize = nodeSize;
+    }
+
+
+    private Vector2 GetGraphCenterPoint(float textureSize)
+    {
+       return new Vector2(_mapData.NumberOfColumns , _mapData.NumberOfRows) *  (textureSize * 0.5f);
+    }
+    
+    /// <summary>
+    /// 重置贴图尺寸
+    /// </summary>
+    /// <param name="_textureSize"></param>
+    public void ResetTextureSize(float size)
+    {
+        foreach (var keyValue in _girdEnities)
+        {
+            SetGridTransform(keyValue.Key.transform, keyValue.Value.x, keyValue.Value.y, size);
+        }
+        //设置中心点
+        var graph = AstarPath.graphs[0] as GridGraph;
+        graph.center = GetGraphCenterPoint(size);
     }
 
     /// <summary>
