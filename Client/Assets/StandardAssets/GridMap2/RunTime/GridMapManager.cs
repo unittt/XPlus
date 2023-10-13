@@ -214,8 +214,11 @@ public sealed class GridMapManager : SingletonBehaviourBase<GridMapManager>
             SetGraph(centerPoint, nodeSize, width, height);
         }
         Graph = AstarPath.graphs[0] as GridGraph;
-  
         Graph.Scan();
+        
+        // var gridGraphNode = Graph.nodes[0];
+        // // gridGraphNode.position = nodePosition;
+        // gridGraphNode.Walkable = true;
     }
     
     public void SetGraph(Vector2 centerPoint, float nodeSize, int width, int height)
@@ -227,7 +230,7 @@ public sealed class GridMapManager : SingletonBehaviourBase<GridMapManager>
         graph.center = centerPoint;
         //更新size 根据 Width 和 Depth
         graph.UpdateSizeFromWidthDepth();
-        AstarPath.unwalkableNodeDebugSize = nodeSize;
+        // AstarPath.unwalkableNodeDebugSize = nodeSize;
     }
 
 
