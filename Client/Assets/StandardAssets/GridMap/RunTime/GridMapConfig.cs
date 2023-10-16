@@ -1,32 +1,48 @@
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using System;
 
-namespace GameScripts.RunTime.Map
+namespace GridMap
 {
-    public class GridMapConfig
+    /// <summary>
+    /// 新建数据集
+    /// </summary>
+    [Serializable]
+    public sealed class GridMapConfig : ScriptableObject
     {
-        public string id;
-        public int xTile;
-        public int yTile;
+        /// <summary>
+        /// 文件保存的路径
+        /// </summary>
+        public string DataFolderPath;
 
-        public List<GridMapEffectData> fgEffectList = new();
-        public List<GridMapEffectData> bgEffectList = new();
-        public List<GridMapEffectData> tfEffectList = new();
-        public List<GridMapTransferData> transferList = new();
-    }
-    
-    public class GridMapEffectData
-    {
-        public string name;
-        public Vector2 pos;
-        public Vector3 rotation;
-        public Vector3 scale;
-    }
+        /// <summary>
+        /// 贴图命名规则
+        /// </summary>
+        public string TextureNameRule = "tile_[ID]_[X]_[Y]";
 
-    public class GridMapTransferData
-    {
-        public int idx;
-        public Vector2 pos;
-        public Vector2 size;
+        /// <summary>
+        /// 默认的贴图格子的大小
+        /// </summary>
+        public float TextureSize = 1;
+
+        /// <summary>
+        /// 默认的节点大小
+        /// </summary>
+        public float NodeSize = 1;
+
+
+        private static GridMapConfig _instance;
+
+        public static GridMapConfig Instance
+        {
+            get
+            {
+                if (_instance == null)
+                {
+                    _instance = Resources.Load<GridMapConfig>("GridMapConfig");
+                }
+
+                return _instance;
+            }
+        }
     }
 }

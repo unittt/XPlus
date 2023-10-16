@@ -1,14 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
-using HT.Framework;
-using Pathfinding;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-namespace StandardAssets.GridMap.Editor.ToolBar
+namespace GridMap
 {
-    public class GridMapSceneView : HTFEditorWindow
+    public sealed class GridMapSceneView
     {
         //根节点,黑色条
         private  VisualElement _root;
@@ -25,24 +23,19 @@ namespace StandardAssets.GridMap.Editor.ToolBar
         private  List<VisualElement> _toolVisualElements = new();
 
 
+        private GridMapManager _gridMapManager;
         private MapData _mapData;
-        private GridGraph _graph;
         private Slider _textureSizeSlider;
         private Slider _nodeSizeSlider;
         private SliderInt _nodeWidth;
         private SliderInt _nodeDepth;
-        private GridMapManager _gridMapManager;
-
 
         private static GridMapSceneView _instance;
         public static GridMapSceneView Instance
         {
             get
             {
-                if (_instance == null)
-                {
-                    _instance = new GridMapSceneView();
-                }
+                _instance ??= new GridMapSceneView();
 
                 if (_instance._root == null)
                 {
@@ -60,7 +53,7 @@ namespace StandardAssets.GridMap.Editor.ToolBar
             SceneView.lastActiveSceneView.in2DMode = true;
             //初始化设置
             var sceneView = SceneView.lastActiveSceneView;
-            var toolbarTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/StandardAssets/GridMap/Editor/ToolBar/GridMapSceneView.uxml");
+            var toolbarTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/StandardAssets/GridMap/Editor/GridMapSceneView/GridMapSceneView.uxml");
             _root = toolbarTreeAsset.CloneTree().Children().First();
             sceneView.rootVisualElement.Add(_root);
             _root.style.position = Position.Absolute;
@@ -142,26 +135,25 @@ namespace StandardAssets.GridMap.Editor.ToolBar
             _textureSizeSlider =  _root.Q<Slider>("TextureSizeSlider");
             _textureSizeSlider.RegisterValueChangedCallback((callback) =>
             {
-                _mapData.TexturSize = callback.newValue;
-                GridMapManager.Current.ResetTextureSize( callback.newValue);
+                _gridMapManager.TextureSize = callback.newValue;
             });
             
             _nodeSizeSlider =  _root.Q<Slider>("NodeSizeSlider");
             _nodeSizeSlider.RegisterValueChangedCallback((callback) =>
             {
-                OnGraphParamsValueChanged();
+                _gridMapManager.NodeSize = callback.newValue;
             });
             
             _nodeWidth =  _root.Q<SliderInt>("NodeWidth");
             _nodeWidth.RegisterValueChangedCallback((callback) =>
             {
-                OnGraphParamsValueChanged();
+                _gridMapManager.Width = callback.newValue;
             });
             
             _nodeDepth =  _root.Q<SliderInt>("NodeDepth");
             _nodeDepth.RegisterValueChangedCallback((callback) =>
             {
-                OnGraphParamsValueChanged();
+                _gridMapManager.Depth = callback.newValue;
             });
             
             //监听场景发生改变
@@ -176,22 +168,15 @@ namespace StandardAssets.GridMap.Editor.ToolBar
             sceneView.rootVisualElement.Remove(_root);
             _instance = null;
         }
-
-
-        private void OnGraphParamsValueChanged()
-        {
-            GridMapManager.Current.SetGraph(_graph.center, _nodeSizeSlider.value, _nodeWidth.value, _nodeDepth.value);
-            GridMapManager.Current.Graph.Scan();
-        }
         
-        public void Show(MapData mapData)
+        
+        public void Show(GridMapManager gridMapManager)
         {
-            _mapData = mapData;
-            _graph = AstarPath.active.graphs[0] as GridGraph;
-            _textureSizeSlider.value = mapData.TexturSize;
-            _nodeSizeSlider.value = _graph.nodeSize;
-            _nodeWidth.value = _graph.Width;
-            _nodeDepth.value = _graph.Depth;
+            _gridMapManager = gridMapManager;
+            _textureSizeSlider.value = gridMapManager.TextureSize;
+            _nodeSizeSlider.value =  gridMapManager.NodeSize;
+            _nodeWidth.value =  gridMapManager.Width;
+            _nodeDepth.value =  gridMapManager.Depth;
             
             SetToolbarExpandState(true);
         }
