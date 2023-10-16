@@ -70,31 +70,19 @@ namespace GridMap
         public float NodeSize
         {
             get => _graph.nodeSize;
-            internal set
-            {
-                _graph.nodeSize = value;
-                OnGraphValueChanged(_graph, true);
-            }
+            internal set => SetGraph(_graph,_graph.center, value,Width,Depth,true);
         }
 
         public int Width
         {
             get => _graph.Width;
-            internal set
-            {
-                _graph.Width = value;
-                OnGraphValueChanged(_graph, true);
-            }
+            internal set => SetGraph(_graph,_graph.center, NodeSize,value,Depth,true);
         }
 
         public int Depth
         {
             get => _graph.Depth;
-            internal set
-            {
-                _graph.Depth = value;
-                OnGraphValueChanged(_graph, true);
-            }
+            internal set => SetGraph(_graph,_graph.center, NodeSize,Width,value,true);
         }
 
         /// <summary>
@@ -228,23 +216,14 @@ namespace GridMap
 
         private void SetGraph(GridGraph graph, Vector2 centerPoint, float nodeSize, int width, int depth, bool isScan)
         {
-            graph.nodeSize = nodeSize;
-            graph.Width = width;
-            graph.Depth = depth;
             graph.center = centerPoint;
-            OnGraphValueChanged(graph, isScan);
-        }
-
-        private void OnGraphValueChanged(GridGraph graph, bool isScan)
-        {
-            //更新size 根据 Width 和 Depth
-            graph.UpdateSizeFromWidthDepth();
+            graph.SetDimensions(width, depth, nodeSize);
             if (isScan)
             {
                 Scan();
             }
         }
-
+        
         /// <summary>
         /// 重置贴图尺寸发生改变
         /// </summary>
@@ -299,6 +278,18 @@ namespace GridMap
         #endregion
 
 
+        public void Xxxxxxx(Vector2 position)
+        {
+            
+            var info = AstarPath.active.GetNearest(position);
+            var node = info.node;
+            var closestPoint = info.position;
+            if (node != null)
+            {
+                node.Walkable = true;
+            }
+           
+        }
 
         // var gridSizeX = 10;
         // var gridSizeZ = 10;

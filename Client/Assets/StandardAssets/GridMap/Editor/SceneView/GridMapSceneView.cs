@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 namespace GridMap
@@ -17,14 +19,15 @@ namespace GridMap
         private  VisualElement _hideBarBtn;
         private  VisualElement _ShowBarBtn;
         
-        private  List<VisualElement> _toolVisualElements = new();
-        
         private GridMapManager _gridMapManager;
         private MapData _mapData;
         private Slider _textureSizeSlider;
         private Slider _nodeSizeSlider;
         private SliderInt _nodeWidth;
         private SliderInt _nodeDepth;
+        private SceneView _sceneView;
+        
+        private readonly Dictionary<BrushType, VisualElement> _brushDic = new();
 
         private static GridMapSceneView _instance;
         public static GridMapSceneView Instance
@@ -46,15 +49,17 @@ namespace GridMap
     
         private  void Init()
         {
-            SceneView.lastActiveSceneView.in2DMode = true;
+            _sceneView = SceneView.lastActiveSceneView;
+            _sceneView.in2DMode = true;
+            _sceneView.showGrid = false;
+            
             //初始化设置
-            var sceneView = SceneView.lastActiveSceneView;
             var toolbarTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/StandardAssets/GridMap/Editor/SceneView/GridMapSceneView.uxml");
             _root = toolbarTreeAsset.CloneTree().Children().First();
-            sceneView.rootVisualElement.Add(_root);
+            _sceneView.rootVisualElement.Add(_root);
             _root.style.position = Position.Absolute;
             _root.style.bottom = 0;
-            _root.style.width = sceneView.position.width;
+            _root.style.width = _sceneView.position.width;
             _root.style.flexGrow  = 1;
             _root.BringToFront();
             
@@ -63,32 +68,25 @@ namespace GridMap
             
             var btnWalk = _root.Q<VisualElement>("Walk");
             btnWalk.tooltip = "行走";
-            AddElement(btnWalk);
+            _brushDic.Add(BrushType.Walk,btnWalk);
             btnWalk.RegisterCallback((MouseDownEvent e) =>
             {
-                OnClickElement(btnWalk);
+                SelectBrush(BrushType.Walk);
             });
             
-            var btnFly = _root.Q<VisualElement>("Fly");
-            btnFly.tooltip = "飞行";
-            AddElement(btnFly);
-            btnFly.RegisterCallback((MouseDownEvent e) =>
-            {
-                OnClickElement(btnFly);
-            });
             var btnTransparency= _root.Q<VisualElement>("Transparency");
             btnTransparency.tooltip = "透明区域";
-            AddElement(btnTransparency);
+            _brushDic.Add(BrushType.Transparent,btnTransparency);
             btnTransparency.RegisterCallback((MouseDownEvent e) =>
             {
-                OnClickElement(btnTransparency);
+                SelectBrush(BrushType.Transparent);
             });
             var btnClear = _root.Q<VisualElement>("Clear");
             btnClear.tooltip = "清理";
-            AddElement(btnClear);
+            _brushDic.Add(BrushType.Clear,btnClear);
             btnClear.RegisterCallback((MouseDownEvent e) =>
             {
-                OnClickElement(btnClear);
+                SelectBrush(BrushType.Clear);
             });
             
             var btnSave = _root.Q<VisualElement>("Save");
@@ -135,18 +133,23 @@ namespace GridMap
             });
             
             //监听场景发生改变
-            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+            // EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+            EditorSceneManager.activeSceneChangedInEditMode += OnSceneChanged;
+            SceneView.duringSceneGui += OnSceneGUI; 
         }
 
-        private void OnPlayModeStateChanged(PlayModeStateChange obj)
+        private void OnSceneGUI(SceneView obj)
         {
-            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
-            if (_root == null) return;
-            var sceneView = SceneView.lastActiveSceneView;
-            sceneView.rootVisualElement.Remove(_root);
+           
+            GridMapBrush.Update(_gridMapManager);
+        }
+
+        private void OnSceneChanged(Scene arg0, Scene arg1)
+        {
+            EditorSceneManager.activeSceneChangedInEditMode -= OnSceneChanged;
+            _sceneView.rootVisualElement.Remove(_root);
             _instance = null;
         }
-        
         
         public void Show(GridMapManager gridMapManager)
         {
@@ -157,21 +160,34 @@ namespace GridMap
             _nodeDepth.value =  gridMapManager.Depth;
             
             SetToolbarExpandState(true);
+            SelectBrush(BrushType.Walk);
         }
-
-        private  void AddElement(VisualElement visualElement)
+        
+        private void SelectBrush(BrushType brushType)
         {
-            _toolVisualElements.Add(visualElement);
-        }
-
-        private  void OnClickElement(VisualElement visualElement)
-        {
-            var color = Color.green;
-            foreach (var element in _toolVisualElements)
+            var normalColor = new StyleColor
             {
-                color.a = element == visualElement ?1 : 0;
-                element.style.backgroundColor = new StyleColor(color);
+                value = new Color(0, 0, 0, 0)
+            };
+            var selectedColor = new StyleColor
+            {
+                value = Color.white
+            };
+            foreach (var (key, element) in _brushDic)
+            {
+                if (key == brushType)
+                {
+                    element.style.unityBackgroundImageTintColor = normalColor;
+                    element[0].style.unityBackgroundImageTintColor = selectedColor;
+                }
+                else
+                {
+                    element.style.unityBackgroundImageTintColor = selectedColor;
+                    element[0].style.unityBackgroundImageTintColor = normalColor;
+                }
             }
+
+            GridMapBrush.Bursh = brushType;
         }
         
         private void SetToolbarExpandState(bool expand)
