@@ -12,7 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6c33a93d8269f04b9dd82ab82d141ed, type: 3}
   m_Name: GridMapConfig
   m_EditorClassIdentifier: 
-  ScenePath: Assets/Test.unity
   DataFolderPath: Assets/GraphCaches
   TextureNameRule: tile_[ID]_[X]_[Y]
   TextureSize: 1

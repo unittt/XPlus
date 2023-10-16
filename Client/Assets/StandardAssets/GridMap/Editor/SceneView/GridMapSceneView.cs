@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 namespace GridMap
 {
-    public sealed class GridMapSceneView
+    public sealed class GridMapSceneView: EditorWindow
     {
         //根节点,黑色条
         private  VisualElement _root;
@@ -17,12 +17,8 @@ namespace GridMap
         private  VisualElement _hideBarBtn;
         private  VisualElement _ShowBarBtn;
         
-        private  bool _overToolBarBg;
-        private  bool _overToolBar;
-
         private  List<VisualElement> _toolVisualElements = new();
-
-
+        
         private GridMapManager _gridMapManager;
         private MapData _mapData;
         private Slider _textureSizeSlider;
@@ -35,8 +31,8 @@ namespace GridMap
         {
             get
             {
-                _instance ??= new GridMapSceneView();
-
+                _instance ??= CreateInstance<GridMapSceneView>();
+                
                 if (_instance._root == null)
                 {
                     //初始化
@@ -53,7 +49,7 @@ namespace GridMap
             SceneView.lastActiveSceneView.in2DMode = true;
             //初始化设置
             var sceneView = SceneView.lastActiveSceneView;
-            var toolbarTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/StandardAssets/GridMap/Editor/GridMapSceneView/GridMapSceneView.uxml");
+            var toolbarTreeAsset = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>("Assets/StandardAssets/GridMap/Editor/SceneView/GridMapSceneView.uxml");
             _root = toolbarTreeAsset.CloneTree().Children().First();
             sceneView.rootVisualElement.Add(_root);
             _root.style.position = Position.Absolute;
@@ -112,24 +108,6 @@ namespace GridMap
             {
                 SetToolbarExpandState(true);
             });
-
-            _root.RegisterCallback((PointerOverEvent e) =>
-            {
-                _overToolBarBg = true;
-            });
-            _root.RegisterCallback((PointerOutEvent e) =>
-            {
-                _overToolBarBg = false;
-            });
-            _toolBarPanel.RegisterCallback((PointerOverEvent e) =>
-            {
-                _overToolBar = true;
-            });
-            _toolBarPanel.RegisterCallback((PointerOutEvent e) =>
-            {
-                _overToolBar = false;
-            });
-       
             
             _infoPanel =  _root.Q<VisualElement>("InfoPanel");
             _textureSizeSlider =  _root.Q<Slider>("TextureSizeSlider");

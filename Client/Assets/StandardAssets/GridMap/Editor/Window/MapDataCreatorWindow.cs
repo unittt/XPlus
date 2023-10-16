@@ -18,8 +18,10 @@ namespace GridMap
 
 
         public static Func<int, string, float, int, int, bool> CreateMapData;
-
-        public static void Show()
+        
+        
+        
+        public static void ShowWindow()
         {
             var wnd = GetWindow<MapDataCreatorWindow>();
             wnd.titleContent = new GUIContent("MapDataCreatorWindow");
@@ -41,7 +43,7 @@ namespace GridMap
 
             var visualTree =
                 AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                    "Assets/StandardAssets/GridMap/Editor/GridMapWindow/MapDataCreatorWindow.uxml");
+                    "Assets/StandardAssets/GridMap/Editor/Window/MapDataCreatorWindow.uxml");
             var labelFromUXML = visualTree.Instantiate();
             root.Add(labelFromUXML);
 

@@ -19,7 +19,7 @@ namespace GridMap
         //当前选中的mapData
         private MapData _mapData;
 
-        [MenuItem("Window/UI Toolkit/GridMap")]
+        [MenuItem("Tools/地图编辑")]
         public static void ShowExample()
         {
             var wnd = GetWindow<GridMapWindow>();
@@ -39,7 +39,7 @@ namespace GridMap
             var root = rootVisualElement;
             var visualTree =
                 AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(
-                    "Assets/StandardAssets/GridMap/Editor/GridMapWindow/GridMapWindow.uxml");
+                    "Assets/StandardAssets/GridMap/Editor/Window/GridMapWindow.uxml");
             var labelFromUXML = visualTree.Instantiate();
             root.Add(labelFromUXML);
 
@@ -188,7 +188,7 @@ namespace GridMap
         private void InitMapInfoList()
         {
             _listView = rootVisualElement.Q<ListView>("MapListView");
-            _listView.Q<Button>("unity-list-view__add-button").clickable = new Clickable(MapDataCreatorWindow.Show);
+            _listView.Q<Button>("unity-list-view__add-button").clickable = new Clickable(MapDataCreatorWindow.ShowWindow);
             _listView.makeItem = MakeListItem;
             _listView.bindItem = BindListItem;
             _listView.onSelectionChange += OnSelectItem;
