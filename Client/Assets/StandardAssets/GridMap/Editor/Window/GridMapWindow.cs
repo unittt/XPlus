@@ -75,8 +75,7 @@ namespace GridMap
 
             // 创建并写入文件
             mapData.Save();
-            // 刷新Asset数据库，以便Unity编辑器能够检测到新文件
-            AssetDatabase.Refresh();
+            //刷新数据
             RefreshMapData();
 
             //选中对象
@@ -306,7 +305,7 @@ namespace GridMap
 
             var gridMapManager = gridMapManagerEntity.GetComponent<GridMapManager>();
             gridMapManager.SetGridMapData(_mapData);
-            GridMapSceneView.Instance.Show(gridMapManager);
+            GridMapSceneView.Instance.Show(gridMapManager,_mapData);
         }
 
         #endregion

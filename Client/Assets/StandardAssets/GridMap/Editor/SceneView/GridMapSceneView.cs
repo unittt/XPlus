@@ -93,7 +93,9 @@ namespace GridMap
             btnSave.tooltip = "保存";
             btnSave.RegisterCallback((MouseDownEvent e) =>
             {
-       
+                _mapData.TextureSize = _textureSizeSlider.value;
+                _mapData.GraphData = _gridMapManager.SerializeGraphs();
+                _mapData.Save();
             });
             
             _hideBarBtn = _root.Q<VisualElement>("HideBtn");
@@ -151,9 +153,10 @@ namespace GridMap
             _instance = null;
         }
         
-        public void Show(GridMapManager gridMapManager)
+        public void Show(GridMapManager gridMapManager, MapData mapData)
         {
             _gridMapManager = gridMapManager;
+            _mapData = mapData;
             _textureSizeSlider.value = gridMapManager.TextureSize;
             _nodeSizeSlider.value =  gridMapManager.NodeSize;
             _nodeWidth.value =  gridMapManager.Width;

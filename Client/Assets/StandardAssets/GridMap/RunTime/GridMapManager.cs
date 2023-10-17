@@ -260,7 +260,6 @@ namespace GridMap
         /// <param name="nodeInfoDic"></param>
         // public void SaveGridGraph(int nodeSize, int width, int height, Dictionary<Vector2Int,bool> nodeInfoDic)
         // {
-        //     SetGraph(nodeSize, width, height);
         //     var graph = AstarPath.graphs[0] as GridGraph;
         //     // Save to file
         //     foreach (var nodeInfo in nodeInfoDic)
@@ -275,10 +274,15 @@ namespace GridMap
         //     Pathfinding.Serialization.AstarSerializer.SaveToFile("",graphData);
         // }
 
+        internal byte[] SerializeGraphs()
+        {
+            var c = AstarPath.active.data.SerializeGraphs();
+            return c;
+        }
         #endregion
 
 
-        public void Xxxxxxx(Vector2 position)
+        public void Xxxxxxx(Vector2 position, int brushType)
         {
             
             var info = AstarPath.active.GetNearest(position);
@@ -287,6 +291,8 @@ namespace GridMap
             if (node != null)
             {
                 node.Walkable = true;
+                node.Tag = (uint)brushType;
+                node.
             }
            
         }

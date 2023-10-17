@@ -18,7 +18,7 @@ namespace GridMap
             {
                 // 在鼠标按下时执行操作
                 Ray worldRay = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
-                gridMapManager.Xxxxxxx(worldRay.origin);
+                gridMapManager.Xxxxxxx(worldRay.origin,(int)Bursh);
             }
         }
     }
