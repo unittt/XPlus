@@ -198,7 +198,7 @@ namespace GridMap
             if (mapData.GraphData != null)
             {
                 //反序列化graphs
-                AstarPath.active.data.DeserializeGraphs(mapData.GraphData);
+                AstarPath.data.DeserializeGraphs(mapData.GraphData);
             }
             else
             {
@@ -207,20 +207,19 @@ namespace GridMap
                 var width = (int)(mapData.NumberOfColumns * mapData.TextureSize / nodeSize);
                 var height = (int)(mapData.NumberOfRows * mapData.TextureSize / nodeSize);
                 var graph = AstarPath.graphs[0] as GridGraph;
-                SetGraph(graph, centerPoint, nodeSize, width, height, false);
+                SetGraph(graph, centerPoint, nodeSize, width, height,true);
             }
 
             _graph = AstarPath.graphs[0] as GridGraph;
-            Scan();
         }
 
-        private void SetGraph(GridGraph graph, Vector2 centerPoint, float nodeSize, int width, int depth, bool isScan)
+        private void SetGraph(GridGraph graph, Vector2 centerPoint, float nodeSize, int width, int depth, bool isScan = false)
         {
             graph.center = centerPoint;
             graph.SetDimensions(width, depth, nodeSize);
             if (isScan)
             {
-                Scan();
+                _graph.Scan();
             }
         }
         
@@ -237,64 +236,50 @@ namespace GridMap
 
             //设置中心点
             var centerPoint = GetGraphCenterPoint(newSize);
-            SetGraph(_graph, centerPoint, NodeSize, Width, Depth, false);
+            SetGraph(_graph, centerPoint, NodeSize, Width, Depth);
         }
 
         private Vector2 GetGraphCenterPoint(float textureSize)
         {
             return new Vector2(_mapData.NumberOfColumns, _mapData.NumberOfRows) * (textureSize * 0.5f);
         }
-
-
-        private void Scan()
-        {
-            _graph.Scan();
-        }
-
-        /// <summary>
-        /// 保存SaveGridGraph
-        /// </summary>
-        /// <param name="nodeSize"></param>
-        /// <param name="width"></param>
-        /// <param name="height"></param>
-        /// <param name="nodeInfoDic"></param>
-        // public void SaveGridGraph(int nodeSize, int width, int height, Dictionary<Vector2Int,bool> nodeInfoDic)
-        // {
-        //     var graph = AstarPath.graphs[0] as GridGraph;
-        //     // Save to file
-        //     foreach (var nodeInfo in nodeInfoDic)
-        //     {
-        //         var gridNode =  graph.GetNode(nodeInfo.Key.x, nodeInfo.Key.y);
-        //         gridNode.Walkable = nodeInfo.Value;
-        //     }
-        //     
-        //     //将所有图形设置序列化为字节数组。
-        //     var graphData = AstarPath.active.data.SerializeGraphs();
-        //     //将指定的数据保存在指定的路径
-        //     Pathfinding.Serialization.AstarSerializer.SaveToFile("",graphData);
-        // }
-
+        
         internal byte[] SerializeGraphs()
         {
-            var c = AstarPath.active.data.SerializeGraphs();
-            return c;
+            var settings = new Pathfinding.Serialization.SerializeSettings
+            {
+                nodes = true,
+                editorSettings = true
+            };
+          
+            var bytes =   AstarPath.data.SerializeGraphs(settings);
+            return bytes;
         }
         #endregion
 
 
         public void Xxxxxxx(Vector2 position, int brushType)
         {
-            
-            var info = AstarPath.active.GetNearest(position);
-            var node = info.node;
-            var closestPoint = info.position;
-            if (node != null)
-            {
-                node.Walkable = true;
-                node.Tag = (uint)brushType;
-                node.
-            }
-           
+          
+            AstarPath.AddWorkItem(new AstarWorkItem(() => {
+                var node = AstarPath.active.GetNearest(position).node;
+                
+                node.Walkable = brushType > 0;
+                node.Tag =brushType > 0 ? (uint)(1 << brushType) : 0;
+                if (brushType == 0)
+                {
+                    node.Flags = 0;
+                }
+               
+                node.SetConnectivityDirty();
+            }));
+            _graph.nodes[0].SerializeNode();
+            // var gridGraphNode = graph.nodes[node.NodeIndex];
+            // gridGraphNode.Walkable = true;
+            // gridGraphNode.WalkableErosion = true;
+            // gridGraphNode.Tag = (uint)brushType;
+            // gridGraphNode.SetConnectivityDirty();
+
         }
 
         // var gridSizeX = 10;

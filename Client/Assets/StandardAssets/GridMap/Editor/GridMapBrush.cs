@@ -29,6 +29,10 @@ namespace GridMap
     public enum BrushType
     {
         /// <summary>
+        /// 清理
+        /// </summary>
+        None,
+        /// <summary>
         /// 行走
         /// </summary>
         Walk,
@@ -36,9 +40,5 @@ namespace GridMap
         /// 透明
         /// </summary>
         Transparent,
-        /// <summary>
-        /// 清理
-        /// </summary>
-        Clear
     }
 }

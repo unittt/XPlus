@@ -83,10 +83,10 @@ namespace GridMap
             });
             var btnClear = _root.Q<VisualElement>("Clear");
             btnClear.tooltip = "清理";
-            _brushDic.Add(BrushType.Clear,btnClear);
+            _brushDic.Add(BrushType.None,btnClear);
             btnClear.RegisterCallback((MouseDownEvent e) =>
             {
-                SelectBrush(BrushType.Clear);
+                SelectBrush(BrushType.None);
             });
             
             var btnSave = _root.Q<VisualElement>("Save");
