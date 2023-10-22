@@ -195,10 +195,14 @@ namespace GridMap
 
         public void SetGraph(MapData mapData)
         {
+            
+            AstarPath.graphs[0].Scan();
             if (mapData.GraphData != null)
             {
                 //反序列化graphs
                 AstarPath.data.DeserializeGraphs(mapData.GraphData);
+                // _graph = AstarPath.graphs[0] as GridGraph;
+                // _graph.Scan();
             }
             else
             {
@@ -219,7 +223,7 @@ namespace GridMap
             graph.SetDimensions(width, depth, nodeSize);
             if (isScan)
             {
-                _graph.Scan();
+                _graph?.Scan();
             }
         }
         
@@ -258,28 +262,16 @@ namespace GridMap
         #endregion
 
 
-        public void Xxxxxxx(Vector2 position, int brushType)
+        internal void SetNodeWalkableAndTag(Vector2 position, int brushType)
         {
-          
-            AstarPath.AddWorkItem(new AstarWorkItem(() => {
-                var node = AstarPath.active.GetNearest(position).node;
-                
-                node.Walkable = brushType > 0;
-                node.Tag =brushType > 0 ? (uint)(1 << brushType) : 0;
-                if (brushType == 0)
-                {
-                    node.Flags = 0;
-                }
-               
-                node.SetConnectivityDirty();
-            }));
-            _graph.nodes[0].SerializeNode();
-            // var gridGraphNode = graph.nodes[node.NodeIndex];
-            // gridGraphNode.Walkable = true;
-            // gridGraphNode.WalkableErosion = true;
-            // gridGraphNode.Tag = (uint)brushType;
-            // gridGraphNode.SetConnectivityDirty();
-
+            var node = AstarPath.active.GetNearest(position).node;
+            if (node == null)
+            {
+                return;
+            }
+            node.Walkable = brushType > 0;
+            node.Tag =brushType > 0 ? (uint)(1 << brushType) : 0;
+            node.SetConnectivityDirty();
         }
 
         // var gridSizeX = 10;

@@ -157,15 +157,18 @@ namespace GridMap
         {
             _gridMapManager = gridMapManager;
             _mapData = mapData;
-            _textureSizeSlider.value = gridMapManager.TextureSize;
-            _nodeSizeSlider.value =  gridMapManager.NodeSize;
-            _nodeWidth.value =  gridMapManager.Width;
-            _nodeDepth.value =  gridMapManager.Depth;
+      
+            
+            _textureSizeSlider.SetValueWithoutNotify(gridMapManager.TextureSize);
+            _nodeSizeSlider.SetValueWithoutNotify( gridMapManager.NodeSize);
+            _nodeWidth.SetValueWithoutNotify(gridMapManager.Width);
+            _nodeDepth.SetValueWithoutNotify(gridMapManager.Depth);
             
             SetToolbarExpandState(true);
             SelectBrush(BrushType.Walk);
         }
         
+
         private void SelectBrush(BrushType brushType)
         {
             var normalColor = new StyleColor

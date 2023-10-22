@@ -61,7 +61,7 @@ MonoBehaviour:
   unwalkableNodeDebugSize: 0.9
   logPathResults: 0
   maxNearestNodeDistance: 100
-  scanOnStartup: 0
+  scanOnStartup: 1
   fullGetNearestSearch: 0
   prioritizeGraphs: 0
   prioritizeGraphsLimit: 1
@@ -73,8 +73,11 @@ MonoBehaviour:
     _ConnectionHighLerp: {r: 1, g: 0, b: 0, a: 0.5}
     _MeshEdgeColor: {r: 0, g: 0, b: 0, a: 0.5}
     _AreaColors:
-    - {r: 0.11764706, g: 0.4, b: 0.7882353, a: 1}
-    - {r: 1, g: 0.65503174, b: 0.06132078, a: 1}
+    - {r: 0, g: 0.4210527, b: 1, a: 1}
+    - {r: 0.37386128, g: 0.31216627, b: 0.5754717, a: 1}
+    - {r: 0.25, g: 0.5, b: 0.25, a: 0.78431374}
+    - {r: 0.25, g: 0.5, b: 0.5, a: 1}
+    - {r: 0.82028925, g: 0.8301887, b: 0.090067655, a: 0.78431374}
   tagNames:
   - Basic Ground
   - Sky
