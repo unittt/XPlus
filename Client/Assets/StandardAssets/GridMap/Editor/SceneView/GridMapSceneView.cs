@@ -142,8 +142,7 @@ namespace GridMap
 
         private void OnSceneGUI(SceneView obj)
         {
-           
-            GridMapBrush.Update(_gridMapManager);
+            GridMapBrush.Update();
         }
 
         private void OnSceneChanged(Scene arg0, Scene arg1)
@@ -157,7 +156,6 @@ namespace GridMap
         {
             _gridMapManager = gridMapManager;
             _mapData = mapData;
-      
             
             _textureSizeSlider.SetValueWithoutNotify(gridMapManager.TextureSize);
             _nodeSizeSlider.SetValueWithoutNotify( gridMapManager.NodeSize);
@@ -166,6 +164,7 @@ namespace GridMap
             
             SetToolbarExpandState(true);
             SelectBrush(BrushType.Walk);
+            GridMapBrush.GridMapManager = gridMapManager;
         }
         
 

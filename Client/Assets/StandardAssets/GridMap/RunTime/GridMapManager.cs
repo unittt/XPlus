@@ -274,6 +274,18 @@ namespace GridMap
             node.SetConnectivityDirty();
         }
 
+        public bool GetTileIndexByWorldPos(Vector3 position, out int x, out int y)
+        {
+            var localPosition = transform.worldToLocalMatrix.MultiplyPoint(position);
+            x = (int)(localPosition.x / NodeSize);
+            y = (int)(localPosition.y / NodeSize);
+     
+            var isInside = x >= 0 && x < Width && y >= 0 && y < Depth;
+            x = Mathf.Clamp(x, 0, Width - 1);
+            y = Mathf.Clamp(y, 0, Depth - 1);
+            return isInside;
+        }
+
         // var gridSizeX = 10;
         // var gridSizeZ = 10;
         // var nodeSize = 1;
