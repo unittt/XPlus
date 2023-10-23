@@ -22,6 +22,9 @@ namespace GridMap
 
        public static GridMapManager GridMapManager;
 
+       private static Vector2Int _mouseDownPoint;
+       private static bool _isMouseDown;
+
         public static void Update()
         {
       
@@ -82,16 +85,48 @@ namespace GridMap
             //     cursorY0 = cursorY;
             // }
 
-            // var controlEventType = Event.current.GetTypeForControl(controlID);
-            var e = Event.current.type;
-            if (e == EventType.MouseDown)
+        
+            //鼠标按下 并且在 范围内
+            if (controlEventType == EventType.MouseDown && IsInside(out var point))
             {
-                Debug.Log("鼠标按下");
+                _mouseDownPoint = point;
+                _isMouseDown = true;
             }
 
-            if (e == EventType.Used)
+            if (Input.GetMouseButtonDown(0))
             {
                 Debug.Log("鼠标抬起");
+            }
+
+            else if (_isMouseDown && controlEventType == EventType.MouseUp)
+            {
+                _isMouseDown = false;
+                
+                var worldRay = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
+                // GridMapManager.GetTileIndexByWorldPos(worldRay.origin, out var x, out var y);
+                IsInside(out var upPoint);
+                Debug.Log(_mouseDownPoint + "     "  +upPoint);
+                if (_mouseDownPoint == upPoint)
+                {
+                    GridMapManager.SetNodeWalkableAndTag(worldRay.origin,(int)Bursh);
+                }
+                else
+                {
+                  
+                    int x0 = Mathf.Min(_mouseDownPoint.x, upPoint.x);
+                    int x1 = Mathf.Max(_mouseDownPoint.x, upPoint.x);
+                    int y0 = Mathf.Min(_mouseDownPoint.y, upPoint.y);
+                    int y1 = Mathf.Max(_mouseDownPoint.y,upPoint.y);
+
+
+                    for (int i = x0; i < x1; i++)
+                    {
+                        for (int j = y0; j < y1; j++)
+                        {
+                            GridMapManager.SetNodeWalkableAndTag(new Vector2(i,j),(int)Bursh);
+                        }
+                    }
+                }
             }
           
 
@@ -189,10 +224,11 @@ namespace GridMap
        }
 
 
-       private static bool UpdateCursorPosition()
+       private static bool IsInside(out Vector2Int point)
         {
             var worldRay = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
-            var isInside = GridMapManager.GetTileIndexByWorldPos(worldRay.origin, out cursorX, out cursorY);
+            var isInside = GridMapManager.GetTileIndexByWorldPos(worldRay.origin, out var x, out var y);
+            point = new Vector2Int(x, y);
             return isInside;
         }
     }
