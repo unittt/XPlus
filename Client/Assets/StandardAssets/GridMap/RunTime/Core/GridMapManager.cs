@@ -20,13 +20,17 @@ namespace GridMap
         /// <summary>
         /// A*寻路系统的核心组件
         /// </summary>
-        public AstarPath AstarPath;
-
+        [SerializeField]
+        private AstarPath AstarPath;
         /// <summary>
         /// 场景指定的根目录
         /// </summary>
-        public GameObject SceneRoot;
-        
+        [SerializeField]
+        private GameObject SceneRoot;
+        /// <summary>
+        /// 预制件
+        /// </summary>
+        [SerializeField]
         public GameObject GridPrefab;
 
         private MapData _mapData;
