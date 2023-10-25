@@ -137,7 +137,7 @@ namespace GridMap
                 var path = EditorUtility.OpenFolderPanel("选择数据存储目录", Application.dataPath, "");
                 if (string.IsNullOrEmpty(path)) return;
 
-                path = MapGlobal.AbsoluteToRelativePath(path);
+                path = EditorGlobalTools.AbsoluteToRelativePath(path);
                 mapDataFolderTextField.value = path;
                 GridMapConfig.Instance.DataFolderPath = path;
 
@@ -246,7 +246,7 @@ namespace GridMap
                 var path = EditorUtility.OpenFolderPanel("选择瓦片资源目录", Application.dataPath, "");
                 if (string.IsNullOrEmpty(path) || _mapData == null) return;
 
-                path = MapGlobal.AbsoluteToRelativePath(path);
+                path = EditorGlobalTools.AbsoluteToRelativePath(path);
                 pathTextField.value = path;
                 _mapData.TextureFolder = path;
                 //保存数据
@@ -293,9 +293,8 @@ namespace GridMap
             }
 
             if (!EditorUtility.DisplayDialog("提示", "需要打开2d编辑场景才能生成2d场景寻路数据,是否继续?", "Yes", "No")) return;
-
-            //保存编辑的关卡编号
-            EditorPrefs.SetInt(MapGlobal.EDITOR_MAP_ID_KEY, _mapData.ID);
+            
+            //创建场景
             EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
 
             //加载GridMapManager
@@ -304,6 +303,8 @@ namespace GridMap
             gridMapManagerEntity.name = "GridMapManager";
 
             var gridMapManager = gridMapManagerEntity.GetComponent<GridMapManager>();
+            gridMapManager.GridTextFunc = EditorGlobalTools.GetGridTexture;
+            //设置网格数据
             gridMapManager.SetGridMapData(_mapData);
             GridMapSceneView.Instance.Show(gridMapManager,_mapData);
         }

@@ -78,7 +78,7 @@ namespace GridMap
         /// <summary>
         /// 运行时获取格子贴图
         /// </summary>
-        public static Func<int, int, int, Texture> GridTextFunc;
+        public Func<MapData, int, int, Texture> GridTextFunc;
 
         void Awake()
         {
@@ -158,12 +158,12 @@ namespace GridMap
 
             SetGridTransform(grid.transform, x, y, scale);
 
-            var texture = GetGridTexture(id, x, y);
+            var texture = GridTextFunc(_mapData, x, y);
             if (texture == null) return;
             var mr = grid.GetComponent<MeshRenderer>();
             var propertyBlock = new MaterialPropertyBlock();
             mr.GetPropertyBlock(propertyBlock);
-            propertyBlock.SetTexture("_MainTex", GetGridTexture(id, x, y));
+            propertyBlock.SetTexture("_MainTex", texture);
             mr.SetPropertyBlock(propertyBlock);
         }
 
@@ -173,12 +173,6 @@ namespace GridMap
             var position = new Vector3((x + 0.5f) * scale, (y + 0.5f) * scale, 0);
             grid.SetLocalPositionAndRotation(position, Quaternion.identity);
         }
-
-        private Texture GetGridTexture(int id, int x, int y)
-        {
-            return GridTextFunc != null ? GridTextFunc(id, x, y) : MapGlobal.GetGridTexture(_mapData.TextureFolder, id, x, y);
-        }
-
         #endregion
 
         #region 生成A*节点

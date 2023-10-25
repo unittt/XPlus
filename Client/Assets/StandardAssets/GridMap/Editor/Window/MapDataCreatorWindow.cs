@@ -57,7 +57,7 @@ namespace GridMap
                 var path = EditorUtility.OpenFolderPanel("选择瓦片资源目录", Application.dataPath, "");
                 if (string.IsNullOrEmpty(path)) return;
 
-                path = MapGlobal.AbsoluteToRelativePath(path);
+                path = EditorGlobalTools.AbsoluteToRelativePath(path);
                 _pathTextField.value = path;
             };
 

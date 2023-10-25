@@ -88,8 +88,8 @@ namespace GridMap
             *               bottomRight
             */
            
-           var bottomRight = MousePositionToWorld(_selectionRect.min);
-           var topLeft = MousePositionToWorld(_selectionRect.max);
+           var bottomRight = EditorGlobalTools.GUIPointToWorldOrigin(_selectionRect.min);
+           var topLeft =  EditorGlobalTools.GUIPointToWorldOrigin(_selectionRect.max);
            
            //判断
            var rect1 = new Rect(
@@ -106,7 +106,7 @@ namespace GridMap
            };
            
            //如果相交
-           if (Overlaps(rect1, rect2, out var overlapRect))
+           if (EditorGlobalTools.TryGetOverlapsArea(rect1, rect2, out var overlapRect))
            {
                GetTileIndexByWorldPos(overlapRect.min, out var x0, out var y0);
                GetTileIndexByWorldPos( overlapRect.max, out var x1, out var y1);
@@ -121,27 +121,13 @@ namespace GridMap
            }
            else
            {
-               var mousePos = MousePositionToWorld(current.mousePosition);
+               var mousePos =  EditorGlobalTools.GUIPointToWorldOrigin(current.mousePosition);
                if (rect2.Contains(mousePos))
                {
                    _gridMapManager.SetNodeWalkableAndTag(mousePos,(int)_bursh);
                }
            }
        }
-       
-       private bool Overlaps(Rect a, Rect b, out Rect overlapsArea)
-       {
-           var min = Vector2.Max(a.min, b.min);
-           var max = Vector2.Min(a.max, b.max);
-           if (min.x < max.x && min.y < max.y)
-           {
-               overlapsArea = new Rect(min, max - min);
-               return true;
-           }
-           overlapsArea = Rect.zero;
-           return false;
-       }
-
        
        private bool GetTileIndexByWorldPos(Vector3 position, out int x, out int y)
        {
@@ -153,13 +139,6 @@ namespace GridMap
            x = Mathf.Clamp(x, 0,  _gridMapManager.Width - 1);
            y = Mathf.Clamp(y, 0,  _gridMapManager.Depth - 1);
            return isInside;
-       }
-       
-
-       private Vector2 MousePositionToWorld(Vector2 mousePosition)
-       {
-           var worldRay = HandleUtility.GUIPointToWorldRay(mousePosition);
-           return worldRay.origin;
        }
     }
 
