@@ -1,0 +1,16 @@
+{
+    "name": "GridMap.Samples",
+    "rootNamespace": "",
+    "references": [
+        "GUID:878e980651f9c7c4e8ec8bcc550b5a32"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

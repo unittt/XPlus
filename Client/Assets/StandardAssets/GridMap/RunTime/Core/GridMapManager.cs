@@ -100,7 +100,7 @@ namespace GridMap
         private GameObject OnCreateGridObj()
         {
             var result = Instantiate(GridPrefab);
-            result.hideFlags = HideFlags.HideAndDontSave;
+            // result.hideFlags = HideFlags.HideAndDontSave;
             return result;
         }
 
@@ -114,7 +114,7 @@ namespace GridMap
 
             _mapData = mapData;
             //生成地图
-            GenerateGridMap(mapData.ID, mapData.NumberOfRows, mapData.NumberOfColumns, mapData.TextureSize);
+            GenerateGridMap(mapData);
             //初始化A*
             SetGraph(mapData);
         }
@@ -136,13 +136,13 @@ namespace GridMap
         /// <summary>
         /// 生成格子拼接的地图
         /// </summary>
-        private void GenerateGridMap(int mapID, int rows, int columns, float scale)
+        private void GenerateGridMap(MapData mapData)
         {
-            for (var y = 0; y < rows; y++)
+            for (var y = 0; y <  mapData.NumberOfRows; y++)
             {
-                for (var x = 0; x < columns; x++)
+                for (var x = 0; x < mapData.NumberOfColumns; x++)
                 {
-                    InstantiateGrid(mapID, x, y, scale);
+                    InstantiateGrid(mapData,x, y, mapData.TextureSize);
                 }
             }
         }
@@ -154,7 +154,7 @@ namespace GridMap
         /// <param name="x"></param>
         /// <param name="y"></param>
         /// <param name="scale"></param>
-        private void InstantiateGrid(int id, int x, int y, float scale)
+        private void InstantiateGrid(MapData mapData,int x, int y, float scale)
         {
             var grid = _gridObjectPool.Get();
             grid.transform.SetParent(SceneRoot.transform);
@@ -162,7 +162,7 @@ namespace GridMap
 
             SetGridTransform(grid.transform, x, y, scale);
 
-            var texture = GridTextFunc(_mapData, x, y);
+            var texture = GridTextFunc.Invoke(mapData, x, y);
             if (texture == null) return;
             var mr = grid.GetComponent<MeshRenderer>();
             var propertyBlock = new MaterialPropertyBlock();
@@ -181,10 +181,13 @@ namespace GridMap
 
         #region 生成A*节点
 
-        public void SetGraph(MapData mapData)
+        private void SetGraph(MapData mapData)
         {
-            
-            AstarPath.graphs[0].Scan();
+            if (Application.isEditor)
+            {
+                AstarPath.graphs[0].Scan();
+            }
+           
             if (mapData.GraphData != null)
             {
                 //反序列化graphs
