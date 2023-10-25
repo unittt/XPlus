@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
@@ -9,7 +8,7 @@ using UnityEngine.UIElements;
 
 namespace GridMap
 {
-    public sealed class GridMapSceneView: EditorWindow
+    public sealed partial class GridMapSceneView: EditorWindow
     {
         //根节点,黑色条
         private  VisualElement _root;
@@ -48,7 +47,7 @@ namespace GridMap
         }
 
     
-        private  void Init()
+        private void Init()
         {
             _sceneView = SceneView.lastActiveSceneView;
             _sceneView.in2DMode = true;
@@ -138,18 +137,15 @@ namespace GridMap
             //监听场景发生改变
             // EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
             EditorSceneManager.activeSceneChangedInEditMode += OnSceneChanged;
-            SceneView.duringSceneGui += OnSceneGUI; 
         }
 
-        private void OnSceneGUI(SceneView obj)
-        {
-            GridMapBrush.Update();
-        }
-
+        
         private void OnSceneChanged(Scene arg0, Scene arg1)
         {
             EditorSceneManager.activeSceneChangedInEditMode -= OnSceneChanged;
             _sceneView.rootVisualElement.Remove(_root);
+            
+            OnHide();
             _instance = null;
         }
         
@@ -165,7 +161,7 @@ namespace GridMap
             
             SetToolbarExpandState(true);
             SelectBrush(BrushType.Walk);
-            GridMapBrush.GridMapManager = gridMapManager;
+            OnShow();
         }
         
 
@@ -193,7 +189,7 @@ namespace GridMap
                 }
             }
 
-            GridMapBrush.Bursh = brushType;
+            _bursh = brushType;
         }
         
         private void SetToolbarExpandState(bool expand)

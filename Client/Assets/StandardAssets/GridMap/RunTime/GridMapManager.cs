@@ -26,17 +26,10 @@ namespace GridMap
         /// 场景指定的根目录
         /// </summary>
         public GameObject SceneRoot;
-
-        /// <summary>
-        /// 场景相机
-        /// </summary>
-        public GameObject SceneCam;
-
+        
         public GameObject GridPrefab;
 
         private MapData _mapData;
-
-
 
         private ObjectPool<GameObject> _gridObjectPool;
         private Dictionary<GameObject, Vector2Int> _girdEnities;

@@ -6,27 +6,26 @@ namespace GridMap
     /// <summary>
     /// 笔刷
     /// </summary>
-    public static class GridMapBrush
+    public sealed partial class GridMapSceneView
     {
-
-        private static int GridMapBrushHashCode = "GridMapBrush".GetHashCode();
-        public static BrushType Bursh;
-        private static Vector3 mouseDownPosition;
-        private static Vector3 mouseUpPosition;
         
-       public static GridMapManager GridMapManager;
-       
-       private static bool isSelecting;
-       private static Vector2 startMousePosition;
-       private static Rect selectionRect;
-       
-
-       public static void Update()
+        private BrushType _bursh; 
+        private bool _isSelecting;
+        private  Vector2 _startMousePosition;
+        private  Rect _selectionRect;
+        
+       private void OnShow()
        {
-           UpdateMouse();
+           _isSelecting = false;
+           SceneView.duringSceneGui += OnSceneGUI; 
        }
 
-       private static void UpdateMouse()
+       private void OnHide()
+       {
+           SceneView.duringSceneGui -= OnSceneGUI; 
+       }
+
+       private void OnSceneGUI(SceneView obj)
        {
            var e = Event.current;
            var controlID = GUIUtility.GetControlID(FocusType.Passive);
@@ -36,7 +35,7 @@ namespace GridMap
                OnMouseUp(e);
                GUIUtility.hotControl = controlID;
                e.Use();
-               isSelecting = false;
+               _isSelecting = false;
            }
            else if (eventType == EventType.MouseDrag && e.button == 0)
            {
@@ -51,38 +50,37 @@ namespace GridMap
            }
            
            // 绘制选择框
-           if (!isSelecting) return;
+           if (!_isSelecting) return;
            Handles.BeginGUI();
-           GUI.Box(selectionRect, "");
+           GUI.Box(_selectionRect, "");
 
            Handles.EndGUI();
        }
 
-
-
-       private static void OnMouseDown(Event current)
+       
+       private void OnMouseDown(Event current)
        {
-           isSelecting = true;
-           startMousePosition = current.mousePosition;
-           selectionRect = new Rect(startMousePosition, Vector2.zero);
+           _isSelecting = true;
+           _startMousePosition = current.mousePosition;
+           _selectionRect = new Rect(_startMousePosition, Vector2.zero);
        }
 
-       private static void OnMouseDrag(Event current)
+       private void OnMouseDrag(Event current)
        {
            // 更新选择框的位置和大小
-           selectionRect.size = current.mousePosition - startMousePosition;
+           _selectionRect.size = current.mousePosition - _startMousePosition;
        }
 
-       private static Vector2 GetWorldPosition(Vector2 mousePosition)
+       private Vector2 GetWorldPosition(Vector2 mousePosition)
        {
            var worldRay = HandleUtility.GUIPointToWorldRay(mousePosition);
            return worldRay.origin;
        }
        
 
-       private static void OnMouseUp(Event current)
+       private void OnMouseUp(Event current)
        {
-           if (!isSelecting)return;
+           if (!_isSelecting)return;
            /* topLeft
             *       #########
             *       #########
@@ -90,8 +88,8 @@ namespace GridMap
             *               bottomRight
             */
            
-           var bottomRight = MousePositionToWorld(selectionRect.min);
-           var topLeft = MousePositionToWorld(selectionRect.max);
+           var bottomRight = MousePositionToWorld(_selectionRect.min);
+           var topLeft = MousePositionToWorld(_selectionRect.max);
            
            //判断
            var rect1 = new Rect(
@@ -103,8 +101,8 @@ namespace GridMap
 
            var rect2 = new Rect
            {
-               size = new Vector2(GridMapManager.Width, GridMapManager.Depth) * GridMapManager.NodeSize,
-               center = GridMapManager.GraphCenter
+               size = new Vector2(_gridMapManager.Width, _gridMapManager.Depth) * _gridMapManager.NodeSize,
+               center = _gridMapManager.GraphCenter
            };
            
            //如果相交
@@ -117,7 +115,7 @@ namespace GridMap
                {
                    for (var j = y0; j <= y1; j++)
                    {
-                       GridMapManager.SetNodeWalkableAndTag(i,j,(int)Bursh);
+                       _gridMapManager.SetNodeWalkableAndTag(i,j,(int)_bursh);
                    }
                }
            }
@@ -126,12 +124,12 @@ namespace GridMap
                var mousePos = MousePositionToWorld(current.mousePosition);
                if (rect2.Contains(mousePos))
                {
-                   GridMapManager.SetNodeWalkableAndTag(mousePos,(int)Bursh);
+                   _gridMapManager.SetNodeWalkableAndTag(mousePos,(int)_bursh);
                }
            }
        }
        
-       private static bool Overlaps(Rect a, Rect b, out Rect overlapsArea)
+       private bool Overlaps(Rect a, Rect b, out Rect overlapsArea)
        {
            var min = Vector2.Max(a.min, b.min);
            var max = Vector2.Min(a.max, b.max);
@@ -145,20 +143,20 @@ namespace GridMap
        }
 
        
-       private static bool GetTileIndexByWorldPos(Vector3 position, out int x, out int y)
+       private bool GetTileIndexByWorldPos(Vector3 position, out int x, out int y)
        {
-           var localPosition = GridMapManager.transform.worldToLocalMatrix.MultiplyPoint(position);
-           x = (int)(localPosition.x / GridMapManager.NodeSize);
-           y = (int)(localPosition.y / GridMapManager.NodeSize);
+           var localPosition = _gridMapManager.transform.worldToLocalMatrix.MultiplyPoint(position);
+           x = (int)(localPosition.x / _gridMapManager.NodeSize);
+           y = (int)(localPosition.y / _gridMapManager.NodeSize);
        
-           var isInside = x >= 0 && x < GridMapManager.Width && y >= 0 && y < GridMapManager.Depth;
-           x = Mathf.Clamp(x, 0,  GridMapManager.Width - 1);
-           y = Mathf.Clamp(y, 0,  GridMapManager.Depth - 1);
+           var isInside = x >= 0 && x < _gridMapManager.Width && y >= 0 && y < _gridMapManager.Depth;
+           x = Mathf.Clamp(x, 0,  _gridMapManager.Width - 1);
+           y = Mathf.Clamp(y, 0,  _gridMapManager.Depth - 1);
            return isInside;
        }
        
 
-       private static Vector2 MousePositionToWorld(Vector2 mousePosition)
+       private Vector2 MousePositionToWorld(Vector2 mousePosition)
        {
            var worldRay = HandleUtility.GUIPointToWorldRay(mousePosition);
            return worldRay.origin;
