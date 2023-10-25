@@ -34,11 +34,6 @@ namespace GridMap
 
         public GameObject GridPrefab;
 
-        /// <summary>
-        /// 是否为运行时
-        /// </summary>
-        public bool IsRuntime = false;
-
         private MapData _mapData;
 
 
@@ -70,21 +65,23 @@ namespace GridMap
         public float NodeSize
         {
             get => _graph.nodeSize;
-            internal set => SetGraph(_graph,_graph.center, value,Width,Depth,true);
+            internal set => SetGraph(_graph, value,Width,Depth,true);
         }
 
         public int Width
         {
             get => _graph.Width;
-            internal set => SetGraph(_graph,_graph.center, NodeSize,value,Depth,true);
+            internal set => SetGraph(_graph, NodeSize,value,Depth,true);
         }
 
         public int Depth
         {
             get => _graph.Depth;
-            internal set => SetGraph(_graph,_graph.center, NodeSize,Width,value,true);
+            internal set => SetGraph(_graph, NodeSize,Width,value,true);
         }
 
+        public Vector2 GraphCenter => _graph.center;
+        
         /// <summary>
         /// 运行时获取格子贴图
         /// </summary>
@@ -186,7 +183,7 @@ namespace GridMap
 
         private Texture GetGridTexture(int id, int x, int y)
         {
-            return IsRuntime ? GridTextFunc(id, x, y) : MapGlobal.GetGridTexture(_mapData.TextureFolder, id, x, y);
+            return GridTextFunc != null ? GridTextFunc(id, x, y) : MapGlobal.GetGridTexture(_mapData.TextureFolder, id, x, y);
         }
 
         #endregion
@@ -207,19 +204,18 @@ namespace GridMap
             else
             {
                 var nodeSize = GridMapConfig.Instance.NodeSize;
-                var centerPoint = GetGraphCenterPoint(mapData.TextureSize);
                 var width = (int)(mapData.NumberOfColumns * mapData.TextureSize / nodeSize);
                 var height = (int)(mapData.NumberOfRows * mapData.TextureSize / nodeSize);
                 var graph = AstarPath.graphs[0] as GridGraph;
-                SetGraph(graph, centerPoint, nodeSize, width, height,true);
+                SetGraph(graph, nodeSize, width, height,true);
             }
 
             _graph = AstarPath.graphs[0] as GridGraph;
         }
 
-        private void SetGraph(GridGraph graph, Vector2 centerPoint, float nodeSize, int width, int depth, bool isScan = false)
+        private void SetGraph(GridGraph graph, float nodeSize, int width, int depth, bool isScan = false)
         {
-            graph.center = centerPoint;
+            graph.center = new Vector3(width * nodeSize * 0.5f, depth * nodeSize * 0.5f, 0);
             graph.SetDimensions(width, depth, nodeSize);
             if (isScan)
             {
@@ -237,15 +233,6 @@ namespace GridMap
             {
                 SetGridTransform(keyValue.Key.transform, keyValue.Value.x, keyValue.Value.y, newSize);
             }
-
-            //设置中心点
-            var centerPoint = GetGraphCenterPoint(newSize);
-            SetGraph(_graph, centerPoint, NodeSize, Width, Depth);
-        }
-
-        private Vector2 GetGraphCenterPoint(float textureSize)
-        {
-            return new Vector2(_mapData.NumberOfColumns, _mapData.NumberOfRows) * (textureSize * 0.5f);
         }
         
         internal byte[] SerializeGraphs()
@@ -262,6 +249,18 @@ namespace GridMap
         #endregion
 
 
+        internal void SetNodeWalkableAndTag(int x,int y, int brushType)
+        {
+            var node = _graph.GetNode(x, y);
+            if (node == null)
+            {
+                return;
+            }
+            node.Walkable = brushType > 0;
+            node.Tag = brushType > 0 ? (uint)(1 << brushType) : 0;
+            node.SetConnectivityDirty();
+        }
+        
         internal void SetNodeWalkableAndTag(Vector2 position, int brushType)
         {
             var node = AstarPath.active.GetNearest(position).node;
@@ -270,49 +269,8 @@ namespace GridMap
                 return;
             }
             node.Walkable = brushType > 0;
-            node.Tag =brushType > 0 ? (uint)(1 << brushType) : 0;
+            node.Tag = brushType > 0 ? (uint)(1 << brushType) : 0;
             node.SetConnectivityDirty();
         }
-
-        public bool GetTileIndexByWorldPos(Vector3 position, out int x, out int y)
-        {
-            var localPosition = transform.worldToLocalMatrix.MultiplyPoint(position);
-            x = (int)(localPosition.x / NodeSize);
-            y = (int)(localPosition.y / NodeSize);
-     
-            var isInside = x >= 0 && x < Width && y >= 0 && y < Depth;
-            x = Mathf.Clamp(x, 0, Width - 1);
-            y = Mathf.Clamp(y, 0, Depth - 1);
-            return isInside;
-        }
-
-        // var gridSizeX = 10;
-        // var gridSizeZ = 10;
-        // var nodeSize = 1;
-        // // 创建一个新的GridGraph
-        // GridGraph gridGraph = AstarData.active.data.AddGraph(typeof(GridGraph)) as GridGraph;
-        // gridGraph.width = gridSizeX; // 设置网格的宽度
-        // gridGraph.depth = gridSizeZ; // 设置网格的深度
-        // //格子的宽度 和 深度
-        // //设置可行走区域
-        // //grid的scale
-        //
-        // // 添加节点
-        // for (int x = 0; x < gridSizeX; x++)
-        // {
-        //     for (int z = 0; z < gridSizeZ; z++)
-        //     {
-        //         int nodeIndex = x + z * gridSizeX;
-        //         bool walkable = true;
-        //         Int3 nodePosition = new Int3(x * nodeSize, 0, z * nodeSize); // 节点坐标
-        //
-        //         // gridGraph.nodes[nodeIndex] = gridGraph.CreateNodes(typeof(GridNode), 1)[0];
-        //
-        //         var gridGraphNode = gridGraph.nodes[nodeIndex];
-        //         gridGraphNode.position = nodePosition;
-        //         gridGraphNode.Walkable = walkable;
-        //
-        //     }
-        // }
     }
 }

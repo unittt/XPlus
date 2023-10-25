@@ -13,125 +13,64 @@ namespace GridMap
         public static BrushType Bursh;
         private static Vector3 mouseDownPosition;
         private static Vector3 mouseUpPosition;
-        private static bool isMouseDragging = false;
-
-        private static int cursorX0 = 0, cursorY0 = 0;
-        private static int cursorX = 0,cursorY = 0;
         
-       private static bool pencilDragActive;
-
        public static GridMapManager GridMapManager;
-
-       private static Vector2 _mouseDownPosition;
-       private static bool _isMouseDown;
        
+       private static bool isSelecting;
+       private static Vector2 startMousePosition;
+       private static Rect selectionRect;
        
 
        public static void Update()
        {
-
            UpdateMouse();
        }
 
        private static void UpdateMouse()
        {
-            var controlID = GridMapBrushHashCode;
-           var controlEventType = Event.current.GetTypeForControl(controlID);
-           switch (controlEventType)
+           var e = Event.current;
+           var controlID = GUIUtility.GetControlID(FocusType.Passive);
+           var eventType = e.GetTypeForControl(controlID);
+           if (eventType == EventType.MouseUp && e.button == 0)
            {
-               case EventType.MouseDown:
-               case EventType.MouseDrag:
-                   if ((controlEventType == EventType.MouseDrag && GUIUtility.hotControl != controlID) ||
-                       (Event.current.button != 0 && Event.current.button != 1))
-                   {
-                       return;
-                   }
-
-                   if (controlEventType == EventType.MouseDown)
-                   {
-                       _mouseDownPosition = Event.current.mousePosition;
-                       OnMouseDown(Event.current);
-                   }
-                   
-                   bool inhibitMouseDown = false;
-                   if (Application.platform == RuntimePlatform.OSXEditor)
-                   {
-                       if (Event.current.command && Event.current.alt)
-                       {
-                           // pan combination on mac
-                           inhibitMouseDown = true;
-                       }
-                   }
-
-                   if (Event.current.type == EventType.MouseDown && !inhibitMouseDown)
-                   {
-                       if (!Event.current.shift)
-                       {
-                           GUIUtility.hotControl = controlID;
-                           PencilDrag();
-                         
-                       }
-                   }
-
-                   if (Event.current.type == EventType.MouseDrag && GUIUtility.hotControl == controlID)
-                   {
-                       PencilDrag();
-                       OnMouseDrag(Event.current);
-                   }
-
-                   break;
-
-               case EventType.MouseUp:
-                   if ((Event.current.button == 0 || Event.current.button == 1) && GUIUtility.hotControl == controlID)
-                   {
-                       GUIUtility.hotControl = 0;
-                       // RectangleDragEnd();
-
-                       cursorX0 = cursorX;
-                       cursorY0 = cursorY;
-
-
-                       OnMouseUp(Event.current);
-                       HandleUtility.Repaint();
-                   }
-
-                   break;
-
-               case EventType.Layout:
-                   //HandleUtility.AddDefaultControl(controlID);
-                   break;
-
-               case EventType.MouseMove:
-                   // UpdateCursorPosition();
-                   cursorX0 = cursorX;
-                   cursorY0 = cursorY;
-                   break;
+               OnMouseUp(e);
+               GUIUtility.hotControl = controlID;
+               e.Use();
+               isSelecting = false;
            }
+           else if (eventType == EventType.MouseDrag && e.button == 0)
+           {
+               OnMouseDrag(e);
+               e.Use();
+           }
+           else if (eventType == EventType.MouseDown && e.button == 0)
+           {
+               OnMouseDown(e);
+               GUIUtility.hotControl = 0;
+               e.Use();
+           }
+           
+           // 绘制选择框
+           if (!isSelecting) return;
+           Handles.BeginGUI();
+           GUI.Box(selectionRect, "");
+
+           Handles.EndGUI();
        }
-       private static void PencilDrag()
-       {
-           pencilDragActive = true;
-       }
+
 
 
        private static void OnMouseDown(Event current)
        {
-           _mouseDownPosition = current.mousePosition;
+           isSelecting = true;
+           startMousePosition = current.mousePosition;
+           selectionRect = new Rect(startMousePosition, Vector2.zero);
        }
 
        private static void OnMouseDrag(Event current)
        {
-           var mousePosition = current.mousePosition;
-           var pos0 = GetWorldPosition(_mouseDownPosition);
-           var pos1 = GetWorldPosition(mousePosition);
-
-           Vector3[] v = new Vector3[4];
-           v[0] = new Vector3(pos0.x, pos0.y, 0);
-           v[1] = new Vector3(pos1.x, pos0.y, 0);
-           v[2] = new Vector3(pos1.x, pos1.y, 0);
-           v[3] = new Vector3(pos0.x, pos1.y, 0);
-           Handles.DrawPolyLine(v);
-           Debug.Log("拖拽中");
+           // 更新选择框的位置和大小
+           selectionRect.size = current.mousePosition - startMousePosition;
        }
 
        private static Vector2 GetWorldPosition(Vector2 mousePosition)
@@ -143,165 +82,87 @@ namespace GridMap
 
        private static void OnMouseUp(Event current)
        {
-           var mousePosition = current.mousePosition;
+           if (!isSelecting)return;
+           /* topLeft
+            *       #########
+            *       #########
+            *       #########
+            *               bottomRight
+            */
+           
+           var bottomRight = MousePositionToWorld(selectionRect.min);
+           var topLeft = MousePositionToWorld(selectionRect.max);
+           
+           //判断
+           var rect1 = new Rect(
+               Mathf.Min(bottomRight.x, topLeft.x),  // 左上角的x坐标
+               Mathf.Min(bottomRight.y, topLeft.y),  // 左上角的y坐标
+               Mathf.Abs(bottomRight.x - topLeft.x), // 宽度
+               Mathf.Abs(bottomRight.y - topLeft.y)  // 高度
+           );
 
-    
+           var rect2 = new Rect
+           {
+               size = new Vector2(GridMapManager.Width, GridMapManager.Depth) * GridMapManager.NodeSize,
+               center = GridMapManager.GraphCenter
+           };
+           
+           //如果相交
+           if (Overlaps(rect1, rect2, out var overlapRect))
+           {
+               GetTileIndexByWorldPos(overlapRect.min, out var x0, out var y0);
+               GetTileIndexByWorldPos( overlapRect.max, out var x1, out var y1);
+               
+               for (var i = x0; i <= x1; i++)
+               {
+                   for (var j = y0; j <= y1; j++)
+                   {
+                       GridMapManager.SetNodeWalkableAndTag(i,j,(int)Bursh);
+                   }
+               }
+           }
+           else
+           {
+               var mousePos = MousePositionToWorld(current.mousePosition);
+               if (rect2.Contains(mousePos))
+               {
+                   GridMapManager.SetNodeWalkableAndTag(mousePos,(int)Bursh);
+               }
+           }
        }
        
-       
-       // var controlID = GridMapBrushHashCode;
-          //   var current = Event.current;
-          //   var controlEventType = Event.current.GetTypeForControl(controlID);
-          //
-          //   switch (controlEventType)
-          //   {
-          //       case EventType.MouseDown:
-          //           if (controlEventType == EventType.MouseDown && IsInside(out var point))
-          //           {
-          //               _mouseDownPoint = point;
-          //               _isMouseDown = true;
-          //               Debug.Log("鼠标按下");
-          //           }
-          //           break;
-          //       
-          //       case EventType.MouseUp:
-          //
-          //           if (_isMouseDown)
-          //           {
-          //               _isMouseDown = false;
-          //
-          //               var worldRay = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
-          //               GridMapManager.GetTileIndexByWorldPos(worldRay.origin, out var x, out var y);
-          //               IsInside(out var upPoint);
-          //               Debug.Log(_mouseDownPoint + "     " + upPoint);
-          //               if (_mouseDownPoint == upPoint)
-          //               {
-          //                   GridMapManager.SetNodeWalkableAndTag(worldRay.origin, (int)Bursh);
-          //               }
-          //               else
-          //               {
-          //                   int x0 = Mathf.Min(_mouseDownPoint.x, upPoint.x);
-          //                   int x1 = Mathf.Max(_mouseDownPoint.x, upPoint.x);
-          //                   int y0 = Mathf.Min(_mouseDownPoint.y, upPoint.y);
-          //                   int y1 = Mathf.Max(_mouseDownPoint.y, upPoint.y);
-          //
-          //
-          //                   for (int i = x0; i < x1; i++)
-          //                   {
-          //                       for (int j = y0; j < y1; j++)
-          //                       {
-          //                           GridMapManager.SetNodeWalkableAndTag(new Vector2(i, j), (int)Bursh);
-          //                       }
-          //                   }
-          //               }
-          //           }
-          //
-          //
-          //           // current.Use();
-          //           break;
-          //
-          //       case EventType.Layout:
-          //           HandleUtility.AddDefaultControl(controlID);
-          //           break;
-          //   }
-        
-        
-        
-     
-       static  void RectangleDragEnd()
-    {
-        if (!pencilDragActive)
-            return;
-
-        // if (RectangleDragSize() > 50)
-        // {
-        //     Undo.RegisterCompleteObjectUndo(tileMap.GridRefTemp, "Edit tile map");
-        // }
-        // else
-        // {
-        //     Undo.RecordObject(tileMap.GridRefTemp, "Edit tile map");
-        // }
-
-        if ((cursorX == cursorX0) && (cursorY == cursorY0))
-        {
-            // if (brushMode == BrushMode.WalkableBrush)
-            // {
-            //     tileMap.SetColorChannel(cursorX, cursorY, clickColorValue, GridMapBrushTool.ColorChannel.R);
-            // }
-            // else if (brushMode == BrushMode.FlyableBrush)
-            // {
-            //     //行走区域是飞行区域的子集,所以飞行区域填充黄色
-            //     tileMap.SetColorChannel(cursorX, cursorY, clickColorValue, GridMapBrushTool.ColorChannel.G);
-            // }
-            // else if (brushMode == BrushMode.Transparent)
-            // {
-            //     tileMap.SetColorChannel(cursorX, cursorY, clickColorValue, GridMapBrushTool.ColorChannel.B);
-            // }
-            // else if (brushMode == BrushMode.Erase)
-            // {
-            //     tileMap.SetColor(cursorX, cursorY, Color.black);
-            // }
-            
-            GridMapManager.SetNodeWalkableAndTag(new Vector2(cursorX,cursorY),(int)Bursh);
-        }
-        else
-        {
-            int x0 = Mathf.Min(cursorX, cursorX0);
-            int x1 = Mathf.Max(cursorX, cursorX0);
-            int y0 = Mathf.Min(cursorY, cursorY0);
-            int y1 = Mathf.Max(cursorY, cursorY0);
-
-
-            for (int i = x0; i < x1; i++)
-            {
-                for (int j = y0; j < y1; j++)
-                {
-                    GridMapManager.SetNodeWalkableAndTag(new Vector2(i,j),(int)Bursh);
-                }
-            }
-            
-            // if (brushMode == BrushMode.WalkableBrush)
-            // {
-            //     tileMap.SetRectColorChannel(x0, y0, x1, y1, clickColorValue, GridMapBrushTool.ColorChannel.R);
-            // }
-            // else if (brushMode == BrushMode.FlyableBrush)
-            // {
-            //     tileMap.SetRectColorChannel(x0, y0, x1, y1, clickColorValue, GridMapBrushTool.ColorChannel.G);
-            // }
-            // else if (brushMode == BrushMode.Transparent)
-            // {
-            //     tileMap.SetRectColorChannel(x0, y0, x1, y1, clickColorValue, GridMapBrushTool.ColorChannel.B);
-            // }
-            // else if (brushMode == BrushMode.Erase)
-            // {
-            //     tileMap.SetRectColor(x0, y0, x1, y1, Color.black);
-            // }
-        }
-
-        pencilDragActive = false;
-    }
-
-       private static int RectangleDragSize()
+       private static bool Overlaps(Rect a, Rect b, out Rect overlapsArea)
        {
-           if (!pencilDragActive)
-               return 0;
-
-           int x0 = Mathf.Min(cursorX, cursorX0);
-           int x1 = Mathf.Max(cursorX, cursorX0);
-           int y0 = Mathf.Min(cursorY, cursorY0);
-           int y1 = Mathf.Max(cursorY, cursorY0);
-
-           return (x1 - x0) * (y1 - y0);
+           var min = Vector2.Max(a.min, b.min);
+           var max = Vector2.Min(a.max, b.max);
+           if (min.x < max.x && min.y < max.y)
+           {
+               overlapsArea = new Rect(min, max - min);
+               return true;
+           }
+           overlapsArea = Rect.zero;
+           return false;
        }
 
+       
+       private static bool GetTileIndexByWorldPos(Vector3 position, out int x, out int y)
+       {
+           var localPosition = GridMapManager.transform.worldToLocalMatrix.MultiplyPoint(position);
+           x = (int)(localPosition.x / GridMapManager.NodeSize);
+           y = (int)(localPosition.y / GridMapManager.NodeSize);
+       
+           var isInside = x >= 0 && x < GridMapManager.Width && y >= 0 && y < GridMapManager.Depth;
+           x = Mathf.Clamp(x, 0,  GridMapManager.Width - 1);
+           y = Mathf.Clamp(y, 0,  GridMapManager.Depth - 1);
+           return isInside;
+       }
+       
 
-       private static bool IsInside(out Vector2Int point)
-        {
-            var worldRay = HandleUtility.GUIPointToWorldRay(Event.current.mousePosition);
-            var isInside = GridMapManager.GetTileIndexByWorldPos(worldRay.origin, out var x, out var y);
-            point = new Vector2Int(x, y);
-            return isInside;
-        }
+       private static Vector2 MousePositionToWorld(Vector2 mousePosition)
+       {
+           var worldRay = HandleUtility.GUIPointToWorldRay(mousePosition);
+           return worldRay.origin;
+       }
     }
 
     /// <summary>
