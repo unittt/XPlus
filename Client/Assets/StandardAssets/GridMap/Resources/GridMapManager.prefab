@@ -30,7 +30,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8034797549076895697}
-  m_RootOrder: 1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8034797547144737123
 MonoBehaviour:
@@ -46,7 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   version: 1
   data:
-    dataString: UEsDBBQAAAgIAABAIexMogv3rgIAALkFAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFtVNty2jAQ/RVGzyVjyAXoWwuEtDNJmNBOHuo8CGmNNciSR5cAyfDvWck2dkifrNk9u3vOXvxOhLIlMKfNwgh+rzmQ7z0S3uRbr3XewZ5utFqJN2gwz4K7PIBoxDxRJzTaByHM6gKcEeyH2sgATtDolci0KeZ8A1NtnUVzRqUFdBntQrRC03uP7PHTn4SQA76Go/B6w9ck6R3xyUA5MC20ATawCuUVk7QogQfKHfDFdQO/uI5AhXJqTOVkWkphazbEHcqodkpL61ELArigqC5SCGJzEJvcBabd4Mcss+BqWoYeZsJgk6qs5KeuOldQu624vVLp4US+Snn/xdsfRHdmdHHXVB0koYLLBds+0QOj1nUa2zXPPtP2akfllq4lPOegHvTCaK84Op3xIdRbGM46qU7KpjmwbYuruJ4Zffl1PoOL0Xg8uJzcXM77yageVlB0jJ3YT6Uo1nEKV5VhJXXsfVwFMDinX0g/Loqt86I1UPpr4Q/ddDeqdtwKYx26as0qcF1rbwKUzGMHgzTvptooiOZaQQmKSndYYhp3Ps4zX6fsmeeWhtupi9e+5iTOQqK5xSfJmWupd+3oLPz2RbnUQrkVUMPyTj6b69092PzROykUtIqC4wGbONVKVato/xO28iajrBPmYO+8gRl1NB4EcsKd4d1QbGiMUF7KsJ5RRUj+D1Ug4eQlNDmnWFdGM3nQKp5S832uV3FZKSYvYSc2XvDP+09u+PBqsl7DZTJORmzE+tmEjdb8akjHN0m2ptckHohQ2H4qm2zV1HCZVCtL4TE0f7rewtAyHiQ3dLcQb4XubIJQmV4xA6Aeqwwn3WCwCP46+JwLVLwC54SKa0jeUyI12wJPT4nS2OP53hmatllSUopX7YIlJdP4a0tJMJ/ubWngVcAuFG+SHcnxA1BLAwQUAAAICAAAQCHswWW7Um0AAAB4AAAACQAkAG1ldGEuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAatWKkstKs7Mz1OyUjDRM9IztNBRUEovSizIKAaKGII4pZkpIHa0klmKkYllUlKqsYGFgXmyebJummWyeVKKiVGihZlBWlKiqVIsUH1JZUGqX2JuKkRPQGJJRlpmXkpmXrqee1FmijvIaKXYWgBQSwECLQAUAAAICAAAQCHsTKIL964CAAC5BQAACwAkAAAAAAAAAAAAAAAAAAAAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFQSwECLQAUAAAICAAAQCHswWW7Um0AAAB4AAAACQAkAAAAAAAAAAAAAAD7AgAAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsFBgAAAAACAAIAuAAAALMDAAAAAA==
+    dataString: UEsDBBQAAAgIAABAIezKyKAwrwIAALoFAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFtVNty2jAQ/RVGzyVjyAXoWwuEtDNJmNBOHuo8CGmNNciSR5cAyfDvWck2dkifrNk9u3vOXvxOhLIlMKfNwgh+rzmQ7z0S3uRbr3XewZ5utFqJN2gwz4K7PIBoxDxRJzTaByHM6gKcEeyH2sgATtDolci0KeZ8A1NtnUVzRqUFdBntQrRC03uP7PHTn4SQA76Go/B6w9ck6R3xyUA5MC20ATawCuUVk7QogQfKHfDFdQO/uI5AhXJqTOVkWkphazbEHcqodkpL61ELArigqC5SCGJzEJvcBabd4Mcss+BqWoYeZsJgk6qs5KeuOldQu624vVLp4US+Snn/xdsfRHdmdHHXVB0koYLLBds+0QOj1nUa2zXPPtP2akfllq4lPOegHvTCaK84Op3xIdRbGM46qU7KpjmwbYuruDbGBu3LrwMaXIzG48Hl5OZy3k9G9bSCpGNsxX4qRbGOY7iqDCupY/PjLoDBQf1C/nFTbJ0XrYHTXwt/6Ka7UrXjVhjr0FWLVoHsWnsToGQeWxi0eTfVRkE017pKUFS6wxLTuPN5nvk6Zc88tzQcT1289jU3cRYSzS0+Sc5cS71rZ2fhty/KpRbKrYAalnfy2Vzv7sHmj95JoaBVFBwP2MSpVqraRfufsJU3GWWdMAd75w3MqKPxIpATLg3vhmJDY4TyUob9jCpC8n+oAgknL6HJOcW6MprJg1bxlprvc72Ly0oxeQk7sfGCfz4AcsOHV5P1Gi6TcTJiI9bPJmy05ldDOr5JsjW9JvFChML2U9lkq6aGy6RaWQqvofnV9RaGlvEiuaG7hXgrdGcThMr0ihkA9VhlOOkGg0Xw38HnXKDiFTgnVFxD8p4SqdkWeHpKlMYez/fO0LTNkpJSvGoXLCmZxn9bSoL5dHBLA68CdqF4k+xIjh9QSwMEFAAACAgAAEAh7MFlu1JtAAAAeAAAAAkAJABtZXRhLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQGrVipLLSrOzM9TslIw0TPSM7TQUVBKL0osyCgGihiCOKWZKSB2tJJZipGJZVJSqrGBhYF5snmybpplsnlSiolRooWZQVpSoqlSLFB9SWVBql9ibipET0BiSUZaZl5KZl66nntRZoo7yGil2FoAUEsBAi0AFAAACAgAAEAh7MrIoDCvAgAAugUAAAsAJAAAAAAAAAAAAAAAAAAAAGdyYXBoMC5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsBAi0AFAAACAgAAEAh7MFlu1JtAAAAeAAAAAkAJAAAAAAAAAAAAAAA/AIAAG1ldGEuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAVBLBQYAAAAAAgACALgAAAC0AwAAAAA=
     upgradeData: 
     file_cachedStartup: {fileID: 0}
     data_cachedStartup: 
@@ -123,81 +123,6 @@ MonoBehaviour:
     pivotPointRoot: {fileID: 0}
     spreadOutCount: 1
   showGraphs: 1
---- !u!1 &8034797547540557103
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8034797547540557101}
-  - component: {fileID: 8034797547540557100}
-  m_Layer: 0
-  m_Name: Camera
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8034797547540557101
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8034797547540557103}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 30.72, y: 16.64, z: -500}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 8034797549076895697}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!20 &8034797547540557100
-Camera:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8034797547540557103}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_ClearFlags: 3
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
-  m_projectionMatrixMode: 1
-  m_GateFitMode: 2
-  m_FOVAxisMode: 0
-  m_SensorSize: {x: 36, y: 24}
-  m_LensShift: {x: 0, y: 0}
-  m_FocalLength: 50
-  m_NormalizedViewPortRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
-  orthographic: 1
-  orthographic size: 5
-  m_Depth: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_RenderingPath: -1
-  m_TargetTexture: {fileID: 0}
-  m_TargetDisplay: 0
-  m_TargetEye: 3
-  m_HDR: 1
-  m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
-  m_StereoConvergence: 10
-  m_StereoSeparation: 0.022
 --- !u!1 &8034797548909343874
 GameObject:
   m_ObjectHideFlags: 0
@@ -227,7 +152,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8034797549076895697}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8034797549076895696
 GameObject:
@@ -258,7 +183,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 8034797547540557101}
   - {fileID: 8034797547144737120}
   - {fileID: 8034797548909343875}
   m_Father: {fileID: 0}

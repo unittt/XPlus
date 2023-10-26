@@ -54,6 +54,7 @@ namespace Pathfinding {
 				newPosition = cam.ScreenToWorldPoint(Input.mousePosition);
 				newPosition.z = 0;
 				positionFound = true;
+				
 			} else {
 				// Fire a ray through the scene at the mouse position and place the target where it hits
 				RaycastHit hit;
