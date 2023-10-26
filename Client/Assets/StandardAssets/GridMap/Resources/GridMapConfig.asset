@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DataFolderPath: Assets/GraphCaches
   TextureNameRule: tile_[ID]_[X]_[Y]
-  TextureSize: 1
-  NodeSize: 1
+  TextureSize: 2.56
+  NodeSize: 0.32
