@@ -99,23 +99,25 @@ namespace GridMap
                Mathf.Abs(bottomRight.y - topLeft.y)  // 高度
            );
 
+           var nodeSize = _gridMapManager.NodeSize;
            var rect2 = new Rect
            {
-               size = new Vector2(_gridMapManager.Width, _gridMapManager.Depth) * _gridMapManager.NodeSize,
+               size = new Vector2(_gridMapManager.Depth, _gridMapManager.Width) * nodeSize,
                center = _gridMapManager.GraphCenter
            };
            
            //如果相交
            if (EditorGlobalTools.TryGetOverlapsArea(rect1, rect2, out var overlapRect))
            {
-               GetTileIndexByWorldPos(overlapRect.min, out var x0, out var y0);
-               GetTileIndexByWorldPos( overlapRect.max, out var x1, out var y1);
-               
-               for (var i = x0; i <= x1; i++)
+               var width = (int)(overlapRect.size.x /nodeSize);
+               var high =(int)(overlapRect.size.y / nodeSize);
+
+               for (var i = 0; i <= width; i++)
                {
-                   for (var j = y0; j <= y1; j++)
+                   for (var j = 0; j <= high; j++)
                    {
-                       _gridMapManager.SetNodeWalkableAndTag(i,j,(int)_bursh);
+                       var pos = overlapRect.min + new Vector2(_gridMapManager.NodeSize * i, _gridMapManager.NodeSize * j);
+                       _gridMapManager.SetNodeWalkableAndTag(pos, (int)_bursh);
                    }
                }
            }
@@ -127,18 +129,6 @@ namespace GridMap
                    _gridMapManager.SetNodeWalkableAndTag(mousePos,(int)_bursh);
                }
            }
-       }
-       
-       private bool GetTileIndexByWorldPos(Vector3 position, out int x, out int y)
-       {
-           var localPosition = _gridMapManager.transform.worldToLocalMatrix.MultiplyPoint(position);
-           x = (int)(localPosition.x / _gridMapManager.NodeSize);
-           y = (int)(localPosition.y / _gridMapManager.NodeSize);
-       
-           var isInside = x >= 0 && x < _gridMapManager.Width && y >= 0 && y < _gridMapManager.Depth;
-           x = Mathf.Clamp(x, 0,  _gridMapManager.Width - 1);
-           y = Mathf.Clamp(y, 0,  _gridMapManager.Depth - 1);
-           return isInside;
        }
     }
 

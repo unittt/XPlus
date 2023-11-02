@@ -65,15 +65,21 @@ namespace GridMap
             internal set => SetGraph(_graph, value,Width,Depth,true);
         }
 
+        /// <summary>
+        /// 格子宽个数(由于旋转了270° 所有Width 应该是其高度)
+        /// </summary>
         public int Width
         {
-            get => _graph.Width;
+            get => _graph.width;
             internal set => SetGraph(_graph, NodeSize,value,Depth,true);
         }
 
+        /// <summary>
+        /// 格子高个数(由于旋转了270° Depth 是其宽度)
+        /// </summary>
         public int Depth
         {
-            get => _graph.Depth;
+            get => _graph.depth;
             internal set => SetGraph(_graph, NodeSize,Width,value,true);
         }
 
@@ -209,7 +215,7 @@ namespace GridMap
 
         private void SetGraph(GridGraph graph, float nodeSize, int width, int depth, bool isScan = false)
         {
-            graph.center = new Vector3(width * nodeSize * 0.5f, depth * nodeSize * 0.5f, 0);
+            graph.center = new Vector3(depth * nodeSize * 0.5f, width * nodeSize * 0.5f, 0);
             graph.SetDimensions(width, depth, nodeSize);
             if (isScan)
             {
@@ -241,23 +247,11 @@ namespace GridMap
             return bytes;
         }
         #endregion
-
-
-        internal void SetNodeWalkableAndTag(int x,int y, int brushType)
-        {
-            var node = _graph.GetNode(x, y);
-            if (node == null)
-            {
-                return;
-            }
-            node.Walkable = brushType > 0;
-            node.Tag = brushType > 0 ? (uint)(1 << brushType) : 0;
-            node.SetConnectivityDirty();
-        }
         
         internal void SetNodeWalkableAndTag(Vector2 position, int brushType)
         {
             var node = AstarPath.active.GetNearest(position).node;
+          
             if (node == null)
             {
                 return;

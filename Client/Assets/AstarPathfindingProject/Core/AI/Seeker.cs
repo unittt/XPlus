@@ -174,23 +174,22 @@ namespace Pathfinding {
 		}
 
 		/// <summary>
-		/// Stop calculating the current path request.
-		/// If this Seeker is currently calculating a path it will be canceled.
-		/// The callback (usually to a method named OnPathComplete) will soon be called
-		/// with a path that has the 'error' field set to true.
-		///
-		/// This does not stop the character from moving, it just aborts
-		/// the path calculation.
+		///停止计算当前路径请求。
+		///如果该搜索器当前正在计算路径，则会被取消。
+		///回调（通常指向名为OnPathComplete的方法）将很快被调用
+		///路径的“error”字段设置为true。
+		///这并不能阻止角色移动，它只是中止
+		///路径计算。
 		/// </summary>
-		/// <param name="pool">If true then the path will be pooled when the pathfinding system is done with it.</param>
+		/// <param name="pool">如果为true，则当寻路系统使用该路径时，该路径将被合并.</param>
 		public void CancelCurrentPathRequest (bool pool = true) {
 			if (!IsDone()) {
 				path.FailWithError("Canceled by script (Seeker.CancelCurrentPathRequest)");
 				if (pool) {
-					// Make sure the path has had its reference count incremented and decremented once.
-					// If this is not done the system will think no pooling is used at all and will not pool the path.
-					// The particular object that is used as the parameter (in this case 'path') doesn't matter at all
-					// it just has to be *some* object.
+					// 请确保路径的引用计数已递增和递减一次。
+					//如果不这样做，系统将认为根本没有使用池，并且不会对路径进行池化。
+					//用作参数的特定对象（在本例中为“path”）根本不重要
+					//它必须是某个对象。
 					path.Claim(path);
 					path.Release(path);
 				}
@@ -410,24 +409,24 @@ namespace Pathfinding {
 		}
 
 		/// <summary>
-		/// Call this function to start calculating a path.
+		/// 调用此函数开始计算路径。
 		///
-		/// The callback will be called when the path has been calculated (which may be several frames into the future).
-		/// The callback will not be called if a new path request is started before this path request has been calculated.
+		/// 回调将在计算路径时调用（这可能是未来的几帧）。
+		/// 如果在计算此路径请求之前启动了新的路径请求，则不会调用回调。
 		///
-		/// Version: Since 3.8.3 this method works properly if a MultiTargetPath is used.
-		/// It now behaves identically to the StartMultiTargetPath(MultiTargetPath) method.
+		/// 自3.8.3起，如果使用MultiTargetPath，此方法可以正常工作。
+		/// 它现在的行为与StartMultiTargetPath（MultiTargetPath）方法相同。
 		///
-		/// Version: Since 4.1.x this method will no longer overwrite the graphMask on the path unless it is explicitly passed as a parameter (see other overloads of this method).
+		/// 版本：自4.1.x以来，此方法将不再覆盖路径上的graphMask，除非它作为参数显式传递（请参阅此方法的其他重载）。
 		/// </summary>
-		/// <param name="p">The path to start calculating</param>
-		/// <param name="callback">The function to call when the path has been calculated</param>
+		/// <param name="p">开始计算的路径</param>
+		/// <param name="callback">计算路径时要调用的函数</param>
 		public Path StartPath (Path p, OnPathDelegate callback = null) {
-			// Set the graph mask only if the user has not changed it from the default value.
-			// This is not perfect as the user may have wanted it to be precisely -1
-			// however it is the best detection that I can do.
-			// The non-default check is primarily for compatibility reasons to avoid breaking peoples existing code.
-			// The StartPath overloads with an explicit graphMask field should be used instead to set the graphMask.
+			//仅当用户未将图形掩码从默认值更改时，才设置图形掩码。
+			//这并不完美，因为用户可能希望它精确到-1
+			//然而，这是我能做的最好的检测。
+			// 非默认检查主要是出于兼容性的原因，以避免破坏人们现有的代码。
+			// 应该使用带有显式graphMask字段的StartPath重载来设置graphMask。
 			if (p.nnConstraint.graphMask == -1) p.nnConstraint.graphMask = graphMask;
 			StartPathInternal(p, callback);
 			return p;

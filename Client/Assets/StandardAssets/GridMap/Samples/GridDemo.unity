@@ -233,6 +233,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8034797547144737123, guid: 978b4e912ac739f4288bac84a253b8de, type: 3}
+      propertyPath: data.dataString
+      value: UEsDBBQAAAgIAABAIeyZD4XhrgIAALsFAAALACQAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFtVMty2jAU/RVG65Ix5AF01xpC2pkkTGgnizoLWb7GGmTJo0eAZPj3XMk2dkhXiHvOfZz78Dvh0lTArNJLzbN7lQH5PiD+Tb4NOvAO9nSj5Jq/Qct55pktPIkGzhO1XKF95N2MKsFqzn7IjfDkCI1O8lzpcpFtIFbGGjTnVBhASCvrvSWa3gdkjz/DmXc54Gs88a83fM2iwRGfDKQF3VFbYkurWU4yQcsKMl9yj3xx3dIvrgNRopyGU4NMCcFNUw2xhyqojWllHGpBQsYpqgsleLEF8E1hfaV958c8N2CbsjQ9zLnGJtVRyU9Vd66kZlvX9kqFg1Pxdcj7L+hwFOBcq/KuzTqKfAZbcLZ9ogdGje01tm+efy7byR0VW5oKeC5APqilVk5mPV9nYDzv/T9Jiwtg2x5QV9tarXbBu/o6odHFZDodXc5uLhfDaNKMy2s6hl7sY8HLNMzhqjashQrdD8sAGif1CwWEVTFNXLT6mv4a+EM3/Z1qgFuujUWoUS19raly2lPJIvTQa3M2VlpCMDcKKpBU2MMKw9jzgZ5hvbRnyC3119Mkb7D2KM5cgrnjR9EZtFK7bngGfruyWiku7RqoZkUvninU7h5M8eis4BI6RR54wCbGSsp6Gc1/3NZO55T13CzsrdMwp5aGk8CacGv6q2KwocFDOiH8ggYVPvg/VIEFRy++yQXFvCKYyYOS4Zja3+dmGVe1YvLid2LjePb5AshNNr6apSlcRtNowiZsmM/YJM2uxnR6E+UpvSbhRLjE9lPRRqunhsskO1kSz6H91g2WmlbhJDNNd0v+VqreJnCZqzXTAPKxjnDSDRqT4McjW2QcFa/BWi7DGpL3hAjFtpAlp0BJ6PFibzVNuigJqfirst6SkDh83BLizaeDW2l45bDzydtgR3L8AFBLAwQUAAAICAAAQCHswWW7Um0AAAB4AAAACQAkAG1ldGEuanNvbgoAIAAAAAAAAQAYAACAPtXesZ0BAIA+1d6xnQEAgD7V3rGdAatWKkstKs7Mz1OyUjDRM9IztNBRUEovSizIKAaKGII4pZkpIHa0klmKkYllUlKqsYGFgXmyebJummWyeVKKiVGihZlBWlKiqVIsUH1JZUGqX2JuKkRPQGJJRlpmXkpmXrqee1FmijvIaKXYWgBQSwECLQAUAAAICAAAQCHsmQ+F4a4CAAC7BQAACwAkAAAAAAAAAAAAAAAAAAAAZ3JhcGgwLmpzb24KACAAAAAAAAEAGAAAgD7V3rGdAQCAPtXesZ0BAIA+1d6xnQFQSwECLQAUAAAICAAAQCHswWW7Um0AAAB4AAAACQAkAAAAAAAAAAAAAAD7AgAAbWV0YS5qc29uCgAgAAAAAAABABgAAIA+1d6xnQEAgD7V3rGdAQCAPtXesZ0BUEsFBgAAAAACAAIAuAAAALMDAAAAAA==
+      objectReference: {fileID: 0}
     - target: {fileID: 8034797549076895696, guid: 978b4e912ac739f4288bac84a253b8de, type: 3}
       propertyPath: m_Name
       value: GridMapManager
@@ -404,7 +408,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 605497873}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.5833335, y: 10, z: -10}
+  m_LocalPosition: {x: 8.679668, y: 10, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -441,14 +441,16 @@ namespace Pathfinding {
 			SearchPath();
 		}
 
-		/// <summary>Requests a path to the target.</summary>
-		public virtual void SearchPath () {
+		/// <summary>请求到目标的路径.</summary>
+		public virtual void SearchPath () 
+		{
 			if (float.IsPositiveInfinity(destination.x)) return;
 			if (onSearchPath != null) onSearchPath();
 
-			// This is where the path should start to search from
+			// 路径应该从这里开始搜索
 			var currentPosition = GetFeetPosition();
 
+	
 			// If we are following a path, start searching from the node we will
 			// reach next this can prevent odd turns right at the start of the path
 			/*if (interpolator.valid) {
@@ -462,10 +464,11 @@ namespace Pathfinding {
 
 			canSearchAgain = false;
 
-			// Create a new path request
-			// The OnPathComplete method will later be called with the result
+			// 创建新路径请求
+			// 稍后将使用结果调用OnPathComplete方法
 			SetPath(ABPath.Construct(currentPosition, destination, null), false);
 		}
+		
 
 		/// <summary>
 		/// The end of the path has been reached.
@@ -570,7 +573,7 @@ namespace Pathfinding {
 			if (path == null) {
 				ClearPath();
 			} else if (path.PipelineState == PathState.Created) {
-				// Path has not started calculation yet
+				// 路径尚未开始计算
 				canSearchAgain = false;
 				seeker.CancelCurrentPathRequest();
 				seeker.StartPath(path);

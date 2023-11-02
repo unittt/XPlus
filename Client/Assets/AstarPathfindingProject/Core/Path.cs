@@ -108,21 +108,21 @@ namespace Pathfinding {
 		public string errorLog { get; private set; }
 
 		/// <summary>
-		/// Holds the path as a Node array. All nodes the path traverses.
-		/// This may not be the same nodes as the post processed path traverses.
+		///将路径保存为节点数组。路径经过的所有节点。
+		///这可能与后处理路径所经过的节点不同。
 		/// </summary>
 		public List<GraphNode> path;
 
 		/// <summary>Holds the (possibly post processed) path as a Vector3 list</summary>
 		public List<Vector3> vectorPath;
 
-		/// <summary>The node currently being processed</summary>
+		/// <summary>当前正在处理的节点</summary>
 		protected PathNode currentR;
 
 		/// <summary>How long it took to calculate this path in milliseconds</summary>
 		public float duration;
 
-		/// <summary>Number of nodes this path has searched</summary>
+		/// <summary>此路径已搜索的节点数</summary>
 		public int searchedNodes { get; protected set; }
 
 		/// <summary>
@@ -363,19 +363,25 @@ namespace Pathfinding {
 		}
 
 		/// <summary>
-		/// Returns if the node can be traversed.
-		/// This per default equals to if the node is walkable and if the node's tag is included in <see cref="enabledTags"/>
+		/// 返回是否可以遍历节点。
+		/// 默认情况下，这等于节点是否可行走以及节点的标记是否包含在 <see cref="enabledTags"/>
 		/// </summary>
 		public bool CanTraverse (GraphNode node) {
-			// Use traversal provider if set, otherwise fall back on default behaviour
-			// This method is hot, but this branch is extremely well predicted so it
-			// doesn't affect performance much (profiling indicates it is just above
-			// the noise level, somewhere around 0%-0.3%)
+			// 如果已设置，请使用遍历提供程序，否则返回默认行为
+			//这个方法很热门，但这个分支预测得非常好，所以它
+			// 不会对性能产生太大影响（评测表明它刚好高于
+			// 噪声水平，大约0%-0.3%）
 			if (traversalProvider != null)
+			{
 				return traversalProvider.CanTraverse(this, node);
+			}
+				
 
 			// Manually inlined code from DefaultITraversalProvider
-			unchecked { return node.Walkable && (enabledTags >> (int)node.Tag & 0x1) != 0; }
+			// unchecked { return node.Walkable && (enabledTags >> (int)node.Tag & 0x1) != 0; }
+			
+			unchecked 
+			{ return node.Walkable && (enabledTags >> (int)node.Tag & 0x1) != 0; }
 		}
 
 		/// <summary>Returns the cost of traversing the given node</summary>

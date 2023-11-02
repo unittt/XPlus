@@ -102,7 +102,7 @@ namespace Pathfinding {
 			lastRepathTime = float.NegativeInfinity;
 		}
 
-		/// <summary>Must be called when a path request has been scheduled</summary>
+		/// <summary>必须在计划路径请求时调用</summary>
 		public virtual void DidRecalculatePath (Vector3 destination) {
 			lastRepathTime = Time.time;
 			lastDestination = destination;
