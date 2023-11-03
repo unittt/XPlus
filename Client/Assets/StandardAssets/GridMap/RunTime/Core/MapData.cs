@@ -17,14 +17,13 @@ namespace GridMap
         public int ID;
 
         /// <summary>
-        /// 高度
+        /// 块宽高度
         /// </summary>
         public int BlockHeight = 1;
         /// <summary>
-        /// 宽度
+        /// 块宽数量
         /// </summary>
         public int BlockWidth = 1;
-
         /// <summary>
         ///贴图格子的大小
         /// </summary>
