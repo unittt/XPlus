@@ -66,7 +66,7 @@ namespace GridMap
         }
 
         /// <summary>
-        /// 格子宽个数(由于旋转了270° 所有Width 应该是其高度)
+        /// 格子宽个数
         /// </summary>
         public int Width
         {
@@ -75,7 +75,7 @@ namespace GridMap
         }
 
         /// <summary>
-        /// 格子高个数(由于旋转了270° Depth 是其宽度)
+        /// 格子高个数
         /// </summary>
         public int Depth
         {
@@ -215,11 +215,15 @@ namespace GridMap
 
         private void SetGraph(GridGraph graph, float nodeSize, int width, int depth, bool isScan = false)
         {
-            graph.center = new Vector3(depth * nodeSize * 0.5f, width * nodeSize * 0.5f, 0);
+            graph.center = new Vector3(width * nodeSize * 0.5f, depth * nodeSize * 0.5f, 0);
             graph.SetDimensions(width, depth, nodeSize);
-            if (isScan)
+            if (!isScan) return;
+            _graph?.Scan();
+                
+            //重置GraphNode 为不可行走
+            foreach (var graphNode in graph.nodes)
             {
-                _graph?.Scan();
+                graphNode.Walkable = false;
             }
         }
         

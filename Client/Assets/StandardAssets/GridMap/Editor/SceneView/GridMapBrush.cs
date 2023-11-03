@@ -102,7 +102,7 @@ namespace GridMap
            var nodeSize = _gridMapManager.NodeSize;
            var rect2 = new Rect
            {
-               size = new Vector2(_gridMapManager.Depth, _gridMapManager.Width) * nodeSize,
+               size = new Vector2(_gridMapManager.Width, _gridMapManager.Depth) * nodeSize,
                center = _gridMapManager.GraphCenter
            };
            
