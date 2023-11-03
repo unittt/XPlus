@@ -54,7 +54,7 @@ namespace GridMap
             textureName = textureName.Replace("[ID]", mapData.ID.ToString());
             textureName = textureName.Replace("[X]", x.ToString());
             textureName = textureName.Replace("[Y]", y.ToString());
-            var path = $"{mapData.TextureFolder}/{textureName}.png";
+            var path = $"{mapData.BlockTextureFolder}/{textureName}.png";
             return AssetDatabase.LoadAssetAtPath<Texture>(path);
         }
         

@@ -66,11 +66,11 @@ namespace GridMap
             var mapData = new MapData
             {
                 ID = id,
-                TextureFolder = textureFolder,
+                BlockTextureFolder = textureFolder,
                 AssetPath = GetMapDataPath(id),
-                TextureSize = size,
-                NumberOfColumns = w,
-                NumberOfRows = h
+                BlockSize = size,
+                BlockWidth = w,
+                BlockHeight = h
             };
 
             // 创建并写入文件
@@ -248,7 +248,7 @@ namespace GridMap
 
                 path = EditorGlobalTools.AbsoluteToRelativePath(path);
                 pathTextField.value = path;
-                _mapData.TextureFolder = path;
+                _mapData.BlockTextureFolder = path;
                 //保存数据
                 _mapData.Save();
             };
@@ -276,12 +276,12 @@ namespace GridMap
             rootVisualElement.Q("MapDataContainer").visible = _mapData != null;
             if (_mapData == null) return;
             rootVisualElement.Q<TextField>("TextFieldID").value = mapData.ID.ToString();
-            rootVisualElement.Q<TextField>("TileFolderTextField").value = mapData.TextureFolder;
+            rootVisualElement.Q<TextField>("TileFolderTextField").value = mapData.BlockTextureFolder;
             rootVisualElement.Q<TextField>("AssetPath").value = mapData.AssetPath;
 
-            rootVisualElement.Q<FloatField>("TextureSize").value = mapData.TextureSize;
-            rootVisualElement.Q<IntegerField>("TextureW").value = mapData.NumberOfColumns;
-            rootVisualElement.Q<IntegerField>("TextureH").value = mapData.NumberOfColumns;
+            rootVisualElement.Q<FloatField>("TextureSize").value = mapData.BlockSize;
+            rootVisualElement.Q<IntegerField>("TextureW").value = mapData.BlockWidth;
+            rootVisualElement.Q<IntegerField>("TextureH").value = mapData.BlockHeight;
         }
 
         private void OnClickEditor()
@@ -302,10 +302,10 @@ namespace GridMap
             var gridMapManagerEntity = Instantiate(gridMapPrefab);
             gridMapManagerEntity.name = "GridMapManager";
 
-            var gridMapManager = gridMapManagerEntity.GetComponent<GridMapManager>();
+            var gridMapManager = gridMapManagerEntity.GetComponent<MapManager>();
             gridMapManager.GridTextFunc = EditorGlobalTools.GetGridTexture;
             //设置网格数据
-            gridMapManager.SetGridMapData(_mapData);
+            gridMapManager.SetMapData(_mapData);
             GridMapSceneView.Instance.Show(gridMapManager,_mapData);
         }
 

@@ -1,18 +1,19 @@
 using GridMap;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class GridDemo : MonoBehaviour
 {
 
-    public GridMapManager GridMapManager;
+    [FormerlySerializedAs("GridMapManager")] public MapManager mapManager;
     public TextAsset DataAsset;
     
     void Start()
     {
         var mapData = MapData.Deserialize(DataAsset.bytes);
-        GridMapManager.GridTextFunc = GetGridTexture;
-        GridMapManager.SetGridMapData(mapData);
+        mapManager.GridTextFunc = GetGridTexture;
+        mapManager.SetMapData(mapData);
     }
     
     private Texture GetGridTexture(MapData mapData, int x, int y)
@@ -21,7 +22,7 @@ public class GridDemo : MonoBehaviour
         textureName = textureName.Replace("[ID]", mapData.ID.ToString());
         textureName = textureName.Replace("[X]", x.ToString());
         textureName = textureName.Replace("[Y]", y.ToString());
-        var path = $"{mapData.TextureFolder}/{textureName}.png";
+        var path = $"{mapData.BlockTextureFolder}/{textureName}.png";
         return AssetDatabase.LoadAssetAtPath<Texture>(path);
     }
 }

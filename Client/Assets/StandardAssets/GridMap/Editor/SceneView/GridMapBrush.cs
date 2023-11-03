@@ -99,11 +99,11 @@ namespace GridMap
                Mathf.Abs(bottomRight.y - topLeft.y)  // 高度
            );
 
-           var nodeSize = _gridMapManager.NodeSize;
+           var nodeSize = mapManager.NodeSize;
            var rect2 = new Rect
            {
-               size = new Vector2(_gridMapManager.Width, _gridMapManager.Depth) * nodeSize,
-               center = _gridMapManager.GraphCenter
+               size = new Vector2(mapManager.NodeWidth, mapManager.NodeDepth) * nodeSize,
+               center = mapManager.GraphCenter
            };
            
            //如果相交
@@ -116,8 +116,8 @@ namespace GridMap
                {
                    for (var j = 0; j <= high; j++)
                    {
-                       var pos = overlapRect.min + new Vector2(_gridMapManager.NodeSize * i, _gridMapManager.NodeSize * j);
-                       _gridMapManager.SetNodeWalkableAndTag(pos, (int)_bursh);
+                       var pos = overlapRect.min + new Vector2(mapManager.NodeSize * i, mapManager.NodeSize * j);
+                       mapManager.SetNodeWalkableAndTag(pos, (int)_bursh);
                    }
                }
            }
@@ -126,7 +126,7 @@ namespace GridMap
                var mousePos =  EditorGlobalTools.GUIPointToWorldOrigin(current.mousePosition);
                if (rect2.Contains(mousePos))
                {
-                   _gridMapManager.SetNodeWalkableAndTag(mousePos,(int)_bursh);
+                   mapManager.SetNodeWalkableAndTag(mousePos,(int)_bursh);
                }
            }
        }

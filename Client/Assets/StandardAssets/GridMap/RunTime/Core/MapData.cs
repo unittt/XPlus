@@ -17,24 +17,23 @@ namespace GridMap
         public int ID;
 
         /// <summary>
-        /// 行数
+        /// 高度
         /// </summary>
-        public int NumberOfRows = 1;
-
+        public int BlockHeight = 1;
         /// <summary>
-        /// 列数
+        /// 宽度
         /// </summary>
-        public int NumberOfColumns = 1;
+        public int BlockWidth = 1;
 
         /// <summary>
         ///贴图格子的大小
         /// </summary>
-        public float TextureSize = 1;
+        public float BlockSize = 1;
 
         /// <summary>
         /// 贴图资源文件夹
         /// </summary>
-        public string TextureFolder;
+        public string BlockTextureFolder;
 
         /// <summary>
         /// 格网图数据
