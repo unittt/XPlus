@@ -10,27 +10,37 @@ namespace GridMap
     /// </summary>
     internal class BlockHelper : MapHelper
     {
-        private GameObject BlockPrefab;
-        private Transform BlockEntityParent;
-        
         private ObjectPool<GameObject> _blockEntityPool;
         private ObjectPool<ChunkData> _blockPool;
         private List<ChunkData> _blocks;
+        private MapData _mapData;
         
         internal override void OnInit()
         {
-            _blockEntityPool = new ObjectPool<GameObject>(OnCreateBlockEntity);
+            _blockEntityPool = new ObjectPool<GameObject>(OnCreateBlockEntity, OnGetBlockEntity, OnReleaseBlockEntity);
             _blockPool = new ObjectPool<ChunkData>(OnCreateBlock);
             _blocks = new List<ChunkData>();
         }
         
         private GameObject OnCreateBlockEntity()
         {
-            var result = GameObject.Instantiate(BlockPrefab);
-            result.transform.SetParent(BlockEntityParent);
+            var result = GameObject.Instantiate(MapManager.BlockPrefab);
+            result.transform.SetParent(MapManager.BlockContainer.transform);
+            result.hideFlags = HideFlags.HideAndDontSave;
             return result;
         }
-
+        
+        private void OnGetBlockEntity(GameObject obj)
+        {
+            obj.SetActive(true);
+        }
+        
+        private void OnReleaseBlockEntity(GameObject obj)
+        {
+            obj.SetActive(false);
+        }
+        
+        
         private static ChunkData OnCreateBlock()
         {
             var block = new ChunkData();
@@ -39,6 +49,7 @@ namespace GridMap
 
         internal override void OnSetMapData(MapData mapData)
         {
+            _mapData = mapData;
             ResetBlock(mapData.BlockWidth, mapData.BlockHeight,mapData.BlockSize);
         }
         
@@ -60,7 +71,7 @@ namespace GridMap
                 }
             }
 
-            if (Map.IsDynamics) return;
+            if (MapManager.IsDynamics) return;
             foreach (var chunkData in _blocks)
             {
                 InstantiateBlockEntity(chunkData);
@@ -76,10 +87,12 @@ namespace GridMap
         /// <returns></returns>
         private ChunkData InitBlock(int x, int y, float scale)
         {
-            var block = _blockPool.Get();
+            var chunkData = _blockPool.Get();
             var center = new Vector3((x + 0.5f) * scale, (y + 0.5f) * scale, 0);
-            block.Bounds = new Rect(center, new Vector2(scale, scale));
-            return block;
+            chunkData.X = x;
+            chunkData.Y = y;
+            chunkData.Bounds = new Rect(center, new Vector2(scale, scale));
+            return chunkData;
         }
 
         /// <summary>
@@ -88,7 +101,7 @@ namespace GridMap
         /// <param name="cameraRect"></param>
         private void OnCameraMove(Rect cameraRect)
         {
-            if (!Map.IsDynamics)
+            if (!MapManager.IsDynamics)
             {
                 return;
             }
@@ -122,15 +135,24 @@ namespace GridMap
             entity.transform.localScale = Vector3.one * chunkData.Bounds.size.x;
             
             //加载贴图
-            Texture texture = null;
-            if (texture == null) return;
+            var texture = MapManager.LoadBlockTexture(chunkData.X, chunkData.Y);
+       
             var mr = entity.GetComponent<MeshRenderer>();
             var propertyBlock = new MaterialPropertyBlock();
             mr.GetPropertyBlock(propertyBlock);
-            propertyBlock.SetTexture("_MainTex", texture);
+
+            if (texture != null)
+            {
+                propertyBlock.SetTexture("_MainTex", texture);
+            }
+            else
+            {
+                propertyBlock.Clear();
+            }
+            
             mr.SetPropertyBlock(propertyBlock);
         }
-
+        
 
         /// <summary>
         /// 释放

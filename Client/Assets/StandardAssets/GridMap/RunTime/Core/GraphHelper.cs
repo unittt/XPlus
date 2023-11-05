@@ -70,11 +70,8 @@ namespace GridMap
             }
             else
             {
-                var nodeSize = GridMapConfig.Instance.NodeSize;
-                var width = (int)(mapData.BlockWidth * mapData.BlockSize / nodeSize);
-                var height = (int)(mapData.BlockHeight * mapData.BlockSize / nodeSize);
                 _gridGraph= _astarPath.graphs[0] as GridGraph;
-                SetDimensions(_gridGraph, nodeSize, width, height);
+                SetDimensions(_gridGraph, mapData.NodeSize, mapData.NodeWidth, mapData.NodeHeight);
             }
         }
         

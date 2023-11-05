@@ -70,7 +70,8 @@ namespace GridMap
                 AssetPath = GetMapDataPath(id),
                 BlockSize = size,
                 BlockWidth = w,
-                BlockHeight = h
+                BlockHeight = h,
+                NodeSize = GridMapConfig.Instance.NodeSize
             };
 
             // 创建并写入文件
@@ -268,6 +269,7 @@ namespace GridMap
             };
 
             rootVisualElement.Q<Button>("EditorBtn").clicked += OnClickEditor;
+            rootVisualElement.Q<Button>("RunBtn").clicked += OnClickRun;
         }
 
         private void SelectGridMapData(MapData mapData)
@@ -282,6 +284,10 @@ namespace GridMap
             rootVisualElement.Q<FloatField>("TextureSize").value = mapData.BlockSize;
             rootVisualElement.Q<IntegerField>("TextureW").value = mapData.BlockWidth;
             rootVisualElement.Q<IntegerField>("TextureH").value = mapData.BlockHeight;
+            
+            rootVisualElement.Q<FloatField>("NodeSize").value = mapData.NodeSize;
+            rootVisualElement.Q<IntegerField>("NodeW").value = mapData.NodeWidth;
+            rootVisualElement.Q<IntegerField>("NodeH").value = mapData.NodeHeight;
         }
 
         private void OnClickEditor()
@@ -303,12 +309,29 @@ namespace GridMap
             gridMapManagerEntity.name = "GridMapManager";
 
             var gridMapManager = gridMapManagerEntity.GetComponent<MapManager>();
-            gridMapManager.GridTextFunc = EditorGlobalTools.GetGridTexture;
             //设置网格数据
-            gridMapManager.SetMapData(_mapData);
+            gridMapManager.SetMapData(_mapData,false);
             GridMapSceneView.Instance.Show(gridMapManager,_mapData);
         }
 
+        private void OnClickRun()
+        {
+            if (_mapData == null)
+            {
+                EditorUtility.DisplayDialog("警告", "未选择地图", "Yes");
+                return;
+            }
+            
+            //创建场景
+            EditorSceneManager.NewScene(NewSceneSetup.EmptyScene, NewSceneMode.Single);
+            var gridMapPrefab = Resources.Load<GameObject>("GridMapManager");
+            var gridMapManagerEntity = Instantiate(gridMapPrefab);
+            gridMapManagerEntity.name = "GridMapManager";
+            
+            var gridMapManager = gridMapManagerEntity.GetComponent<MapManager>();
+            //设置网格数据
+            gridMapManager.SetMapData(_mapData);
+        }
         #endregion
     }
 }

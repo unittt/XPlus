@@ -10,6 +10,9 @@ namespace GridMap
 {
     public sealed partial class GridMapSceneView: EditorWindow
     {
+        private MapManager _mapManager;
+        private MapData _mapData;
+        
         //根节点,黑色条
         private  VisualElement _root;
         //toolbar面板
@@ -19,17 +22,19 @@ namespace GridMap
         private  VisualElement _hideBarBtn;
         private  VisualElement _ShowBarBtn;
         
-        private MapManager mapManager;
-        private MapData _mapData;
-        private Slider _textureSizeSlider;
+      
+        private Slider _blockSizeSlider;
+        private SliderInt _blockWidth;
+        private SliderInt _blockDepth;
+        
         private Slider _nodeSizeSlider;
         private SliderInt _nodeWidth;
         private SliderInt _nodeDepth;
         private SceneView _sceneView;
         
         private readonly Dictionary<BrushType, VisualElement> _brushDic = new();
-
         private static GridMapSceneView _instance;
+        
         public static GridMapSceneView Instance
         {
             get
@@ -93,8 +98,7 @@ namespace GridMap
             btnSave.tooltip = "保存";
             btnSave.RegisterCallback((MouseDownEvent e) =>
             {
-                _mapData.BlockSize = _textureSizeSlider.value;
-                _mapData.GraphData = mapManager.SerializeGraphs;
+                _mapData.GraphData = _mapManager.SerializeGraphs;
                 _mapData.Save();
             });
             
@@ -110,30 +114,50 @@ namespace GridMap
             });
             
             _infoPanel =  _root.Q<VisualElement>("InfoPanel");
-            _textureSizeSlider =  _root.Q<Slider>("TextureSizeSlider");
-            _textureSizeSlider.RegisterValueChangedCallback((callback) =>
+
+            #region 数值变动
+            _blockSizeSlider =  _root.Q<Slider>("BlockSizeSlider");
+            _blockSizeSlider.RegisterValueChangedCallback((callback) =>
             {
-                mapManager.BlockSize = callback.newValue;
+                _mapData.BlockSize = callback.newValue;
+                _mapManager.BlockParamsChanged(_mapData);
+            });
+            
+            _blockWidth =  _root.Q<SliderInt>("BlockWidth");
+            _blockWidth.RegisterValueChangedCallback((callback) =>
+            {
+                _mapData.BlockWidth = callback.newValue;
+                _mapManager.BlockParamsChanged(_mapData);
+            });
+            
+            _blockDepth =  _root.Q<SliderInt>("BlockDepth");
+            _blockDepth.RegisterValueChangedCallback((callback) =>
+            {
+                _mapData.BlockHeight = callback.newValue;
+                _mapManager.BlockParamsChanged(_mapData);
             });
             
             _nodeSizeSlider =  _root.Q<Slider>("NodeSizeSlider");
             _nodeSizeSlider.RegisterValueChangedCallback((callback) =>
             {
-                mapManager.NodeSize = callback.newValue;
+                _mapData.NodeSize = callback.newValue;
+                _mapManager.GridGraphParamsChanged(_mapData);
             });
             
             _nodeWidth =  _root.Q<SliderInt>("NodeWidth");
             _nodeWidth.RegisterValueChangedCallback((callback) =>
             {
-                mapManager.NodeWidth = callback.newValue;
+                _mapData.NodeWidth = callback.newValue;
+                _mapManager.GridGraphParamsChanged(_mapData);
             });
             
             _nodeDepth =  _root.Q<SliderInt>("NodeDepth");
             _nodeDepth.RegisterValueChangedCallback((callback) =>
             {
-                mapManager.NodeDepth = callback.newValue;
+                _mapData.NodeHeight = callback.newValue;
+                _mapManager.GridGraphParamsChanged(_mapData);
             });
-            
+            #endregion
             //监听场景发生改变
             // EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
             EditorSceneManager.activeSceneChangedInEditMode += OnSceneChanged;
@@ -151,17 +175,24 @@ namespace GridMap
         
         public void Show(MapManager mapManager, MapData mapData)
         {
-            this.mapManager = mapManager;
+            this._mapManager = mapManager;
             _mapData = mapData;
-            
-            _textureSizeSlider.SetValueWithoutNotify(mapManager.BlockSize);
-            _nodeSizeSlider.SetValueWithoutNotify( mapManager.NodeSize);
-            _nodeWidth.SetValueWithoutNotify(mapManager.NodeWidth);
-            _nodeDepth.SetValueWithoutNotify(mapManager.NodeDepth);
-            
+
+            SetValueWithoutNotify(mapData);
             SetToolbarExpandState(true);
             SelectBrush(BrushType.Walk);
             OnShow();
+        }
+
+        private void SetValueWithoutNotify(MapData mapData)
+        {
+            _blockSizeSlider.SetValueWithoutNotify(mapData.BlockSize);
+            _blockWidth.SetValueWithoutNotify(mapData.BlockWidth);
+            _blockDepth.SetValueWithoutNotify(mapData.BlockHeight);
+            
+            _nodeSizeSlider.SetValueWithoutNotify( mapData.NodeSize);
+            _nodeWidth.SetValueWithoutNotify(mapData.NodeWidth);
+            _nodeDepth.SetValueWithoutNotify(mapData.NodeHeight);
         }
         
 

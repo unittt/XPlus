@@ -39,26 +39,6 @@ namespace GridMap
             return false;
         }
         
-        
-        /// <summary>
-        /// 获取格子贴图
-        /// </summary>
-        /// <param name="textureFolder"></param>
-        /// <param name="id"></param>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <returns></returns>
-        public static Texture GetGridTexture(MapData mapData, int x, int y)
-        {
-            var textureName = GridMapConfig.Instance.TextureNameRule;
-            textureName = textureName.Replace("[ID]", mapData.ID.ToString());
-            textureName = textureName.Replace("[X]", x.ToString());
-            textureName = textureName.Replace("[Y]", y.ToString());
-            var path = $"{mapData.BlockTextureFolder}/{textureName}.png";
-            return AssetDatabase.LoadAssetAtPath<Texture>(path);
-        }
-        
-        
         /// <summary>
         ///  将绝对路径转换为相对于 Application.dataPath 的路径
         /// </summary>

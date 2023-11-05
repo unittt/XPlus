@@ -12,11 +12,15 @@ namespace GridMap
         /// </summary>
         public bool IsLoaded;
 
+        
+        public int X;
+        public int Y;
+        
         /// <summary>
         /// 界限
         /// </summary>
         public Rect Bounds;
-
+        
         /// <summary>
         /// 实体
         /// </summary>
@@ -25,6 +29,7 @@ namespace GridMap
         public void Release()
         {
             IsLoaded = false;
+            Entity = null;
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine;
 
 namespace GridMap
 {
@@ -28,12 +29,25 @@ namespace GridMap
         ///贴图格子的大小
         /// </summary>
         public float BlockSize = 1;
-
         /// <summary>
         /// 贴图资源文件夹
         /// </summary>
         public string BlockTextureFolder;
 
+        
+        /// <summary>
+        /// 节点高数量
+        /// </summary>
+        public int NodeHeight = 1;
+        /// <summary>
+        /// 节点宽
+        /// </summary>
+        public int NodeWidth = 1;
+        /// <summary>
+        /// 节点大小
+        /// </summary>
+        public float NodeSize = 1;
+        
         /// <summary>
         /// 格网图数据
         /// </summary>
@@ -44,6 +58,12 @@ namespace GridMap
         /// </summary>
         public string AssetPath;
 
+
+        public Vector2 GraphCenter()
+        {
+            return new Vector2(NodeWidth * NodeSize * 0.5f, NodeHeight * NodeSize * 0.5f);
+        }
+        
         public byte[] Serialize()
         {
             using var memoryStream = new MemoryStream();

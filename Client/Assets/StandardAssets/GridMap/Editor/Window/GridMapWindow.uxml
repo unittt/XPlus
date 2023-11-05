@@ -28,10 +28,16 @@
                 </ui:VisualElement>
                 <ui:Foldout text="基础数据" name="Foldout" style="margin-left: 1px; margin-right: 1px; margin-top: 1px; margin-bottom: 1px; padding-left: 1px; padding-right: 1px; padding-top: 1px; padding-bottom: 1px; -unity-slice-left: 1; -unity-slice-top: 1; -unity-slice-right: 1; -unity-slice-bottom: 1; border-left-width: 1px; border-right-width: 1px; border-top-width: 1px; border-bottom-width: 1px; border-left-color: rgb(108, 108, 108); border-right-color: rgb(108, 108, 108); border-top-color: rgb(108, 108, 108); border-bottom-color: rgb(108, 108, 108);">
                     <uie:FloatField label="贴图尺寸" value="42.2" readonly="true" name="TextureSize" />
-                    <uie:IntegerField label="贴图高" value="42" name="TextureW" readonly="true" />
-                    <uie:IntegerField label="贴图宽" value="42" name="TextureH" readonly="true" />
+                    <uie:IntegerField label="贴图宽数量" value="42" name="TextureW" readonly="true" />
+                    <uie:IntegerField label="贴图高数量" value="42" name="TextureH" readonly="true" />
+                    <uie:FloatField label="Node尺寸" value="42.2" readonly="true" name="NodeSize" />
+                    <uie:IntegerField label="Node宽数量" value="42" name="NodeW" readonly="true" />
+                    <uie:IntegerField label="Node高数量" value="42" name="NodeH" readonly="true" />
                 </ui:Foldout>
-                <ui:Button text="编辑" display-tooltip-when-elided="true" name="EditorBtn" style="justify-content: flex-end; flex-grow: 0; align-items: auto; flex-shrink: 0; height: auto; width: auto; flex-direction: column; margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; font-size: 20px;" />
+                <ui:VisualElement style="flex-grow: 0; flex-direction: row; height: auto; justify-content: flex-end; align-items: center;">
+                    <ui:Button text="编辑" display-tooltip-when-elided="true" name="EditorBtn" style="justify-content: flex-end; flex-grow: 0; align-items: auto; flex-shrink: 0; height: auto; width: auto; flex-direction: column; margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; font-size: 20px;" />
+                    <ui:Button text="运行" display-tooltip-when-elided="true" name="RunBtn" style="justify-content: flex-end; flex-grow: 0; align-items: auto; flex-shrink: 0; height: auto; width: auto; flex-direction: column; margin-left: 5px; margin-right: 5px; margin-top: 5px; margin-bottom: 5px; padding-left: 0; padding-right: 0; padding-top: 0; padding-bottom: 0; font-size: 20px;" />
+                </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

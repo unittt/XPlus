@@ -5,7 +5,7 @@ namespace GridMap
     /// </summary>
     internal abstract class MapHelper
     {
-        public MapManager Map;
+        public MapManager MapManager;
 
 
         internal virtual void OnInit()
