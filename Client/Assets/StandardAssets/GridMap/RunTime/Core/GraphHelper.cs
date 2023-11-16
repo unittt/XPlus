@@ -30,19 +30,22 @@ namespace GridMap
         /// <summary>
         /// 序列化数据
         /// </summary>
-        internal byte[] SerializeGraphs
+        internal GridNodeBase[] Nodes
         {
             get
             {
-                var settings = new Pathfinding.Serialization.SerializeSettings
-                {
-                    nodes = true,
-                    editorSettings = true
-                };
-
-                return _astarPath.data.SerializeGraphs(settings);
+                // var settings = new Pathfinding.Serialization.SerializeSettings
+                // {
+                //     nodes = true,
+                //     editorSettings = true
+                // };
+                //
+                // return _astarPath.data.SerializeGraphs(settings);
+                return _gridGraph.nodes;
             }
         }
+        
+ 
         
         internal override void OnInit()
         {
@@ -62,16 +65,33 @@ namespace GridMap
             //     AstarPath.graphs[0].Scan();
             // }
             
-            if (mapData.GraphData != null)
+            
+         
+            
+            // if (mapData.GraphData != null)
+            // {
+            //     //反序列化graphs
+            //     _astarPath.data.DeserializeGraphs(mapData.GraphData);
+            //     _gridGraph = _astarPath.graphs[0] as GridGraph;
+            // }
+            // else
+            // {
+            //     // _gridGraph.nodes[0].Walkable
+            //     _gridGraph= _astarPath.graphs[0] as GridGraph;
+            //     SetDimensions(_gridGraph, mapData.NodeSize, mapData.NodeWidth, mapData.NodeHeight);
+            // }
+            
+            
+            _gridGraph= _astarPath.graphs[0] as GridGraph;
+            SetDimensions(_gridGraph, mapData.NodeSize, mapData.NodeWidth, mapData.NodeHeight);
+
+            if (mapData.Nodes is { Length: > 0 } )
             {
-                //反序列化graphs
-                _astarPath.data.DeserializeGraphs(mapData.GraphData);
-                _gridGraph = _astarPath.graphs[0] as GridGraph;
-            }
-            else
-            {
-                _gridGraph= _astarPath.graphs[0] as GridGraph;
-                SetDimensions(_gridGraph, mapData.NodeSize, mapData.NodeWidth, mapData.NodeHeight);
+                var length = mapData.Nodes.Length;
+                for (var i = 0; i < length; i++)
+                {
+                    SetNodeTag(i, mapData.Nodes[i]);
+                }
             }
         }
         
@@ -100,15 +120,23 @@ namespace GridMap
             }
         }
         
-        internal void SetNodeWalkableAndTag(Vector2 position, int tag)
+        internal void SetNodeTag(Vector2 position, uint tag)
         {
             var node =_astarPath.GetNearest(position).node;
-            if (node == null)
-            {
-                return;
-            }
+            if (node == null)return;
+            SetNodeTag(node,tag);
+        }
+
+        private void SetNodeTag(int index, uint tag)
+        {
+           var node = _gridGraph.nodes[index];
+           SetNodeTag(node, tag);
+        }
+
+        private void SetNodeTag(GraphNode node, uint tag)
+        {
             node.Walkable = tag > 0;
-            node.Tag = tag > 0 ? (uint)(1 << tag) : 0;
+            node.Tag = tag;
             node.SetConnectivityDirty();
         }
     }

@@ -1,6 +1,5 @@
 using System;
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
+using Pathfinding;
 using UnityEngine;
 
 namespace GridMap
@@ -49,34 +48,28 @@ namespace GridMap
         public float NodeSize = 1;
         
         /// <summary>
-        /// 格网图数据
-        /// </summary>
-        public byte[] GraphData;
-
-        /// <summary>
         /// 文件地址
         /// </summary>
         public string AssetPath;
 
-
+        /// <summary>
+        /// 节点信息
+        /// </summary>
+        public uint[] Nodes;
+        
         public Vector2 GraphCenter()
         {
             return new Vector2(NodeWidth * NodeSize * 0.5f, NodeHeight * NodeSize * 0.5f);
         }
         
-        public byte[] Serialize()
+        public void WriteNodes(GridNodeBase[] gridNodeBases)
         {
-            using var memoryStream = new MemoryStream();
-            var binaryFormatter = new BinaryFormatter();
-            binaryFormatter.Serialize(memoryStream, this);
-            return memoryStream.ToArray();
-        }
-
-        public static MapData Deserialize(byte[] serializedData)
-        {
-            using var memoryStream = new MemoryStream(serializedData);
-            var binaryFormatter = new BinaryFormatter();
-            return (MapData)binaryFormatter.Deserialize(memoryStream);
+            var length = gridNodeBases.Length;
+            Nodes = new uint[length];
+            for (var i = 0; i < length; i++)
+            {
+                Nodes[i] = gridNodeBases[i].Tag;
+            }
         }
     }
 }

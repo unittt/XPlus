@@ -91,7 +91,7 @@ namespace GridMap
         /// <returns></returns>
         private string GetMapDataPath(int id)
         {
-            var fileName = $"mapdata_{id}.bytes"; // 指定文件名
+            var fileName = $"mapdata_{id}.json"; // 指定文件名
 
             return Path.Combine(GridMapConfig.Instance.DataFolderPath, fileName);
         }
@@ -104,12 +104,13 @@ namespace GridMap
             var files = Directory.GetFiles(GridMapConfig.Instance.DataFolderPath);
             foreach (var file in files)
             {
-                // 检查文件扩展名是否为 .bytes
-                if (!Path.GetExtension(file).Equals(".bytes", System.StringComparison.OrdinalIgnoreCase)) continue;
+                // 检查文件扩展名是否为 .jso
+                if (!Path.GetExtension(file).Equals(".json", System.StringComparison.OrdinalIgnoreCase)) continue;
                 var textAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(file);
 
                 if (textAsset == null) continue;
-                var mapData = MapData.Deserialize(textAsset.bytes);
+              
+                var mapData = JsonUtility.FromJson<MapData>(textAsset.text);
                 _mapDatas.Add(mapData);
             }
 

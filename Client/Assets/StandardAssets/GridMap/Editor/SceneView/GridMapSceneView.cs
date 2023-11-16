@@ -32,7 +32,7 @@ namespace GridMap
         private SliderInt _nodeDepth;
         private SceneView _sceneView;
         
-        private readonly Dictionary<BrushType, VisualElement> _brushDic = new();
+        private readonly Dictionary<NodeTag, VisualElement> _brushDic = new();
         private static GridMapSceneView _instance;
         
         public static GridMapSceneView Instance
@@ -73,32 +73,32 @@ namespace GridMap
             
             var btnWalk = _root.Q<VisualElement>("Walk");
             btnWalk.tooltip = "行走";
-            _brushDic.Add(BrushType.Walk,btnWalk);
+            _brushDic.Add(NodeTag.WALK,btnWalk);
             btnWalk.RegisterCallback((MouseDownEvent e) =>
             {
-                SelectBrush(BrushType.Walk);
+                SelectBrush(NodeTag.WALK);
             });
             
             var btnTransparency= _root.Q<VisualElement>("Transparency");
             btnTransparency.tooltip = "透明区域";
-            _brushDic.Add(BrushType.Transparent,btnTransparency);
+            _brushDic.Add(NodeTag.Transparent,btnTransparency);
             btnTransparency.RegisterCallback((MouseDownEvent e) =>
             {
-                SelectBrush(BrushType.Transparent);
+                SelectBrush(NodeTag.Transparent);
             });
             var btnClear = _root.Q<VisualElement>("Clear");
-            btnClear.tooltip = "清理";
-            _brushDic.Add(BrushType.None,btnClear);
+            btnClear.tooltip = "障碍区域";
+            _brushDic.Add(NodeTag.Obstacle,btnClear);
             btnClear.RegisterCallback((MouseDownEvent e) =>
             {
-                SelectBrush(BrushType.None);
+                SelectBrush(NodeTag.Obstacle);
             });
             
             var btnSave = _root.Q<VisualElement>("Save");
             btnSave.tooltip = "保存";
             btnSave.RegisterCallback((MouseDownEvent e) =>
             {
-                _mapData.GraphData = _mapManager.SerializeGraphs;
+                _mapData.WriteNodes(_mapManager.Nodes);
                 _mapData.Save();
             });
             
@@ -180,7 +180,7 @@ namespace GridMap
 
             SetValueWithoutNotify(mapData);
             SetToolbarExpandState(true);
-            SelectBrush(BrushType.Walk);
+            SelectBrush(NodeTag.WALK);
             OnShow();
         }
 
@@ -196,7 +196,7 @@ namespace GridMap
         }
         
 
-        private void SelectBrush(BrushType brushType)
+        private void SelectBrush(NodeTag brushType)
         {
             var normalColor = new StyleColor
             {

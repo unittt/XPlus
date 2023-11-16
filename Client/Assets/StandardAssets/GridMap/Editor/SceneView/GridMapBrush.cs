@@ -9,7 +9,7 @@ namespace GridMap
     public sealed partial class GridMapSceneView
     {
         
-        private BrushType _bursh; 
+        private NodeTag _bursh; 
         private bool _isSelecting;
         private  Vector2 _startMousePosition;
         private  Rect _selectionRect;
@@ -117,7 +117,7 @@ namespace GridMap
                    for (var j = 0; j <= high; j++)
                    {
                        var pos = overlapRect.min + new Vector2(nodeSize * i, nodeSize * j);
-                       _mapManager.SetNodeWalkableAndTag(pos, (int)_bursh);
+                       _mapManager.SetNodeWalkableAndTag(pos,(uint)_bursh);
                    }
                }
            }
@@ -126,28 +126,9 @@ namespace GridMap
                var mousePos =  EditorGlobalTools.GUIPointToWorldOrigin(current.mousePosition);
                if (rect2.Contains(mousePos))
                {
-                   _mapManager.SetNodeWalkableAndTag(mousePos,(int)_bursh);
+                   _mapManager.SetNodeWalkableAndTag(mousePos,(uint)_bursh);
                }
            }
        }
-    }
-
-    /// <summary>
-    /// 笔刷类似
-    /// </summary>
-    public enum BrushType
-    {
-        /// <summary>
-        /// 清理
-        /// </summary>
-        None,
-        /// <summary>
-        /// 行走
-        /// </summary>
-        Walk,
-        /// <summary>
-        /// 透明
-        /// </summary>
-        Transparent,
     }
 }

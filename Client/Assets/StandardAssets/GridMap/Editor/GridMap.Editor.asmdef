@@ -2,7 +2,8 @@
     "name": "GridMap.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:878e980651f9c7c4e8ec8bcc550b5a32"
+        "GUID:878e980651f9c7c4e8ec8bcc550b5a32",
+        "GUID:efa45043feb7e4147a305b73b5cea642"
     ],
     "includePlatforms": [
         "Editor"

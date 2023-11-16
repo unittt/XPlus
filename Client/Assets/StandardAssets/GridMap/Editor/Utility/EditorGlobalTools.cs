@@ -73,7 +73,8 @@ namespace GridMap
         /// </summary>
         public static void Save(this MapData mapData)
         {
-            File.WriteAllBytes(mapData.AssetPath, mapData.Serialize());
+            var json = JsonUtility.ToJson(mapData);
+            File.WriteAllText(mapData.AssetPath, json);
             // 刷新Asset数据库，以便Unity编辑器能够检测到新文件
             AssetDatabase.Refresh();
             Debug.Log("MapData保存成功");

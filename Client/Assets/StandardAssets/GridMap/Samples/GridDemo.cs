@@ -11,8 +11,8 @@ public class GridDemo : MonoBehaviour
     
     void Start()
     {
-        var mapData = MapData.Deserialize(DataAsset.bytes);
-        // mapManager.BlockTextureFunc = GetGridTexture;
-        mapManager.SetMapData(mapData);
+        // var mapData = MapData.Deserialize(DataAsset.bytes);
+        // // mapManager.BlockTextureFunc = GetGridTexture;
+        // mapManager.SetMapData(mapData);
     }
 }

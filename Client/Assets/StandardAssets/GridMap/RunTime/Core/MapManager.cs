@@ -59,7 +59,7 @@ namespace GridMap
         /// <summary>
         /// 序列话数据
         /// </summary>
-        internal byte[] SerializeGraphs => GraphHelper.SerializeGraphs;
+        internal GridNodeBase[] Nodes => GraphHelper.Nodes;
         
         /// <summary>
         /// 运行时获取格子贴图
@@ -126,9 +126,9 @@ namespace GridMap
             }
         }
         
-        internal void SetNodeWalkableAndTag(Vector2 position, int tag)
+        internal void SetNodeWalkableAndTag(Vector2 position, uint tag)
         {
-            GraphHelper.SetNodeWalkableAndTag(position,tag);
+            GraphHelper.SetNodeTag(position,tag);
         }
         
         /// <summary>
