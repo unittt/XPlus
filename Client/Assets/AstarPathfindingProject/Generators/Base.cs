@@ -78,6 +78,17 @@ namespace Pathfinding {
 		internal bool exists { get { return active != null; } }
 
 		/// <summary>
+		/// True if the graph has been scanned and contains nodes.
+		///
+		/// Graphs are typically scanned when the game starts, but they can also be scanned manually.
+		///
+		/// If a graph has not been scanned, it does not contain any nodes and it not possible to use it for pathfinding.
+		///
+		/// See: <see cref="AstarPath.Scan(NavGraph)"/>
+		/// </summary>
+		public abstract bool isScanned { get; }
+
+		/// <summary>
 		/// Number of nodes in the graph.
 		/// Note that this is, unless the graph type has overriden it, an O(n) operation.
 		///
@@ -128,6 +139,11 @@ namespace Pathfinding {
 		/// See: <see cref="Pathfinding.AstarData.GetNodes"/>
 		/// </summary>
 		public abstract void GetNodes(System.Action<GraphNode> action);
+
+		/// <summary>True if the point is inside the bounding box of this graph</summary>
+		public virtual bool IsInsideBounds (Vector3 point) {
+			return true;
+		}
 
 		/// <summary>
 		/// A matrix for translating/rotating/scaling the graph.
@@ -382,7 +398,6 @@ namespace Pathfinding {
 		}
 
 		protected void DrawUnwalkableNodes (float size) {
-			
 			Gizmos.color = AstarColor.UnwalkableNode;
 			GetNodes(node => {
 				if (!node.Walkable) Gizmos.DrawCube((Vector3)node.position, Vector3.one*size);
