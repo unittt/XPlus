@@ -3,12 +3,18 @@ namespace GameScript.RunTime.Network
     public enum ModuleCmd
     {
         /// <summary>
+        /// 相对通用的模块
+        /// </summary>
+        CommandCmd = 0,
+
+        /// <summary>
         /// 登录注册模块
         /// </summary>
-        Login_module_cmd = 1,
+        LoginCmd = 1,
+
         /// <summary>
-        /// 玩家行动模块
+        /// 背包
         /// </summary>
-        Player_action = 2,
+        BagCmd = 7,
     }
 }

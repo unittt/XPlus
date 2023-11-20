@@ -4,7 +4,6 @@ namespace GameScript.RunTime.Network
 {
     public static class PackageUtils
     {
-        
         /// <summary>
         /// 接收服务器是java 需要特殊处理
         /// </summary>
@@ -19,7 +18,7 @@ namespace GameScript.RunTime.Network
             data[0] = (byte)(num >> 24 & 0xff);
             return data;
         }
-        
+
         /// <summary>
         /// 按字节数组反序列化
         /// </summary>
@@ -32,18 +31,6 @@ namespace GameScript.RunTime.Network
             var msg = new T();
             msg.MergeFrom(stream);
             return msg;
-        }
-        
-        /// <summary>
-        /// 获取消息体
-        /// </summary>
-        /// <param name="gameNetworkMessage"></param>
-        /// <typeparam name="T"></typeparam>
-        /// <returns></returns>
-        public static T GetMessage<T>(this GameNetworkMessage gameNetworkMessage) where T : IMessage, new()
-        {
-            var t = DeserializeByByteArray<T>(gameNetworkMessage.MsgByteString.ToByteArray());
-            return t;
         }
     }
 }

@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Google.Protobuf;
+using Cysharp.Threading.Tasks;
 using HT.Framework;
 
 namespace GameScript.RunTime.Network
@@ -9,29 +9,50 @@ namespace GameScript.RunTime.Network
     /// </summary>
     public static class GameNetManager
     {
-        private static readonly Dictionary<int, HTFAction<GameNetworkMessage>> _msgEventHandlerList = new();
+        public static int MsgIdSeq;
+
+        /// <summary>
+        /// 请求回调
+        /// </summary>
+        public static readonly Dictionary<int, CallbackDelegate> CallbackDictionary = new();
+
+        /// <summary>
+        /// 异步等待回调
+        /// </summary>
+        public static readonly Dictionary<int, UniTaskCompletionSource <CommandResult>> CommandResultDictionary = new();
         
+        /// <summary>
+        /// 广播监听
+        /// </summary>
+        public static readonly Dictionary<int, CommandListenBroadcast> ListenBroadcastDictionary = new();
+
+
         /// <summary>
         /// 开始连接服务器事件
         /// </summary>
         public static event HTFAction<GameTcpChannel> BeginConnectServerEvent;
+
         /// <summary>
         /// 连接服务器成功事件
         /// </summary>
         public static event HTFAction<GameTcpChannel> ConnectServerSuccessEvent;
+
         /// <summary>
         /// 连接服务器失败事件
         /// </summary>
         public static event HTFAction<GameTcpChannel> ConnectServerFailEvent;
+
         /// <summary>
         /// 与服务器断开连接事件
         /// </summary>
         public static event HTFAction<GameTcpChannel> DisconnectServerEvent;
+
         /// <summary>
         /// 发送消息成功事件
         /// </summary>
         public static event HTFAction<GameTcpChannel> SendMessageEvent;
 
+        // ReSharper disable Unity.PerformanceAnalysis
         /// <summary>
         /// 连接服务器
         /// </summary>
@@ -46,113 +67,101 @@ namespace GameScript.RunTime.Network
             Main.m_Network.ConnectServer<GameTcpChannel>();
         }
 
-        /// <summary>
-        /// 发送消息
-        /// </summary>
-        /// <param name="cmd"></param>
-        /// <param name="subCmd"></param>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        public static bool SendMessage(int cmd, int subCmd, IMessage message)
-        {
-            var networkMessage = new GameNetworkMessage(cmd,subCmd,message);
-            var isSend = Main.m_Network.SendMessage<GameTcpChannel>(networkMessage);
-            return isSend;
-        }
-        
-        
-        /// <summary>
-        /// 注册消息监听
-        /// </summary>
-        /// <param name="cmd"></param>
-        /// <param name="subCmd"></param>
-        /// <param name="handler"></param>
-        public static void Subscribe(int cmd, int subCmd, HTFAction<GameNetworkMessage> handler)
-        {
-            var mergeCmd = CmdMgr.GetMergeCmd(cmd, subCmd);
 
-            if (!_msgEventHandlerList.ContainsKey(mergeCmd))
-            {
-                _msgEventHandlerList.Add(mergeCmd, null);
-            }
-            _msgEventHandlerList[mergeCmd] += handler;
-        }
-
-        /// <summary>
-        /// 移除消息监听
-        /// </summary>
-        /// <param name="cmd"></param>
-        /// <param name="subCmd"></param>
-        /// <param name="handler"></param>
-        public static void Unsubscribe(int cmd, int subCmd,HTFAction<GameNetworkMessage> handler)
-        {
-            var mergeCmd = CmdMgr.GetMergeCmd(cmd, subCmd);
-            if (_msgEventHandlerList.ContainsKey(mergeCmd))
-            {
-                _msgEventHandlerList[mergeCmd] -= handler;
-            }
-        }
-        
         #region Event
+
         /// <summary>
         /// 开始连接服务器
         /// </summary>
-        /// <param name="arg"></param>
         private static void OnBeginConnectServerEvent(ProtocolChannelBase channelBase)
         {
             BeginConnectServerEvent?.Invoke(channelBase.Cast<GameTcpChannel>());
         }
-        
+
         /// <summary>
         /// 服务器连接成功
         /// </summary>
-        /// <param name="arg"></param>
         private static void OnConnectServerSuccessEvent(ProtocolChannelBase channelBase)
         {
             ConnectServerSuccessEvent?.Invoke(channelBase.Cast<GameTcpChannel>());
         }
-        
+
         /// <summary>
         /// 服务器连接失败
         /// </summary>
-        /// <param name="arg"></param>
         private static void OnConnectServerFailEvent(ProtocolChannelBase channelBase)
         {
             ConnectServerFailEvent?.Invoke(channelBase.Cast<GameTcpChannel>());
         }
-        
+
         /// <summary>
         /// 当发送消息成功
         /// </summary>
-        /// <param name="arg"></param>
         private static void OnSendMessageEvent(ProtocolChannelBase channelBase)
         {
             SendMessageEvent?.Invoke(channelBase.Cast<GameTcpChannel>());
         }
 
         /// <summary>
-        /// 接受到消息
+        /// 接收消息成功事件
         /// </summary>
-        /// <param name="channel"></param>
+        /// <param name="channelBase"></param>
         /// <param name="networkMessage"></param>
         private static void OnReceiveMessage(ProtocolChannelBase channelBase, INetworkMessage networkMessage)
         {
-            var gameNetworkMessage = networkMessage.Cast<GameNetworkMessage>();
-            //广播消息
-            if (_msgEventHandlerList.ContainsKey(gameNetworkMessage.CmdMerge))
+            var result = networkMessage.Cast<CommandResult>();
+            var externalMessage = result.ExternalMessage;
+            
+            if (externalMessage.CmdCode == 0)
             {
-                _msgEventHandlerList[gameNetworkMessage.CmdMerge].Invoke(gameNetworkMessage);
+                // 心跳不处理
+                return;
+            }
+            
+            var msgId = externalMessage.MsgId;
+            var responseStatus = externalMessage.ResponseStatus;
+            if (responseStatus == 0)
+            {
+                $"接收消息 - [msgId:{msgId.ToString()}]{result.CmdToString()} - [响应状态:{externalMessage.ResponseStatus.ToString()}] ".Info();
+            }
+            else
+            {
+                $"接收消息 - [msgId:{msgId.ToString()}]{result.CmdToString()} - [响应状态:{externalMessage.ResponseStatus.ToString()}] - [消息:{externalMessage.ValidMsg}]".Warning();
+            }
+          
+            //1. 如果有 callback ，优先交给 callback 处理
+            if (CallbackDictionary.TryGetValue(msgId, out var callBack))
+            {
+                callBack.Invoke(result);
+                CallbackDictionary.Remove(msgId);
+            }
+            
+            //2. 异步等待 设置结果
+            if (CommandResultDictionary.TryGetValue(msgId, out  var  taskCompletionSource))
+            {
+                taskCompletionSource.TrySetResult(result);
+                CommandResultDictionary.Remove(msgId);
+            }
+
+            // 广播监听
+            if (!ListenBroadcastDictionary.TryGetValue(result.CmdMerge, out var broadcast)) return;
+            {
+                var cmdToString = result.CmdToString();
+                $"广播监听回调[{broadcast.Title}]通知 {cmdToString}".Info();
+
+                var callbackDelegate = broadcast.Callback;
+                callbackDelegate.Invoke(result);
             }
         }
 
         /// <summary>
         /// 断开了服务器
         /// </summary>
-        /// <param name="arg"></param>
         private static void OnDisconnectServerEvent(ProtocolChannelBase channelBase)
         {
             DisconnectServerEvent?.Invoke(channelBase.Cast<GameTcpChannel>());
         }
+
         #endregion
     }
 }

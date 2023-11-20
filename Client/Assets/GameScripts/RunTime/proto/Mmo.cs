@@ -43,54 +43,56 @@ namespace Pb.Mmo {
             "CgtkZXNjcmlwdGlvbhgDIAEoCSI2CgxMZXZlbE1lc3NhZ2USCgoCaWQYASAB",
             "KAMSCwoDZXhwGAIgASgDEg0KBWxldmVsGAMgASgFImEKD0xvY2F0aW9uTWVz",
             "c2FnZRIJCgF4GAEgASgFEgkKAXkYAiABKAUSEgoKZGlyZWN0aW9uSBgDIAEo",
-            "BRISCgpkaXJlY3Rpb25WGAQgASgFEhAKCHBsYXllcklkGAUgASgDIhoKC0xv",
-            "Z2luVmVyaWZ5EgsKA2p3dBgBIAEoCSJJChVNYWlsQXR0YWNobWVudE1lc3Nh",
-            "Z2USCgoCaWQYASABKAkSEgoKaXRlbVR5cGVJZBgCIAEoCRIQCghxdWFudGl0",
-            "eRgDIAEoBSKAAgoLTWFpbE1lc3NhZ2USCgoCaWQYASABKAkSEgoKc2VuZGVy",
-            "TmFtZRgCIAEoCRIUCgxzZW5kZXJVc2VySWQYAyABKAMSDwoHc3ViamVjdBgE",
-            "IAEoCRIMCgRib2R5GAUgASgJEhQKDG1pbGxpc2Vjb25kcxgGIAEoAxIbChNl",
-            "eHBpcmVkTWlsbGlzZWNvbmRzGAcgASgDEjEKCm1haWxTdGF0dXMYCCABKA4y",
-            "HS5wYi5tbW8uTWFpbFN0YXR1c01lc3NhZ2VFbnVtEjYKD21haWxBdHRhY2ht",
-            "ZW50cxgJIAMoCzIdLnBiLm1tby5NYWlsQXR0YWNobWVudE1lc3NhZ2UiWwoQ",
-            "TWFwUGxheWVyTWVzc2FnZRIKCgJpZBgBIAEoAxIQCghuaWNrbmFtZRgCIAEo",
-            "CRIpCghsb2NhdGlvbhgDIAEoCzIXLnBiLm1tby5Mb2NhdGlvbk1lc3NhZ2Ui",
-            "ygEKDVBlcnNvbk1lc3NhZ2USDgoGdXNlcklkGAEgASgDEiMKBWxldmVsGAIg",
-            "ASgLMhQucGIubW1vLkxldmVsTWVzc2FnZRIzCg1iYXNpY1Byb3BlcnR5GAMg",
-            "ASgLMhwucGIubW1vLkJhc2ljUHJvcGVydHlNZXNzYWdlEiUKCGhlcm9MaXN0",
-            "GAQgAygLMhMucGIubW1vLkhlcm9NZXNzYWdlEigKC2N1cnJlbnRIZXJvGAUg",
-            "ASgLMhMucGIubW1vLkhlcm9NZXNzYWdlIoUDCgpQZXRNZXNzYWdlEgoKAmlk",
-            "GAEgASgJEhUKDXBldFRlbXBsYXRlSWQYAiABKAkSEAoIbmlja25hbWUYAyAB",
-            "KAkSEwoLbXV0YXRpb25FeHAYBCABKAUSEgoKbXV0YXRpb25ObxgFIAEoBRIU",
-            "CgxtdXRhdGlvblNraW4YBiABKAkSGAoQcHJvcGVydHlQb2ludE51bRgHIAEo",
-            "BRIUCgxjb25zdGl0dXRpb24YCCABKAUSEgoKbWFnaWNQb3dlchgJIAEoBRIN",
-            "CgVwb3dlchgKIAEoBRIRCgllbmR1cmFuY2UYCyABKAUSDQoFYWdpbGUYDCAB",
-            "KAUSEAoIbWF4U2tpbGwYDSABKAUSMgoIc2tpbGxNYXAYDiADKAsyIC5wYi5t",
-            "bW8uUGV0TWVzc2FnZS5Ta2lsbE1hcEVudHJ5GkgKDVNraWxsTWFwRW50cnkS",
-            "CwoDa2V5GAEgASgFEiYKBXZhbHVlGAIgASgLMhcucGIubW1vLlBldFNraWxs",
-            "TWVzc2FnZToCOAEiLwoPUGV0U2tpbGxNZXNzYWdlEg0KBWluZGV4GAEgASgF",
-            "Eg0KBXNraWxsGAIgASgJIksKF1BldFNraWxsVGVtcGxhdGVNZXNzYWdlEg0K",
-            "BXNraWxsGAEgASgJEgwKBG5hbWUYAiABKAkSEwoLZGVzY3JpcHRpb24YAyAB",
-            "KAkiiQEKElBldFRlbXBsYXRlTWVzc2FnZRIKCgJpZBgBIAEoCRIMCgRuYW1l",
-            "GAIgASgJEhMKC2Rlc2NyaXB0aW9uGAMgASgJEkQKEnRyYW5zZm9ybWF0aW9u",
-            "TGlzdBgEIAMoCzIoLnBiLm1tby5QZXRUcmFuc2Zvcm1hdGlvblRlbXBsYXRl",
-            "TWVzc2FnZSK3AQogUGV0VHJhbnNmb3JtYXRpb25UZW1wbGF0ZU1lc3NhZ2US",
-            "FAoMbXV0YXRpb25OYW1lGAEgASgJEhIKCm11dGF0aW9uTm8YAiABKAUSFAoM",
-            "bXV0YXRpb25Ta2luGAMgASgJEjkKEHBldFZhbHVlVGVtcGxhdGUYBCABKAsy",
-            "Hy5wYi5tbW8uUGV0VmFsdWVUZW1wbGF0ZU1lc3NhZ2USGAoQcHJvcGVydHlQ",
-            "b2ludE51bRgFIAEoBSKaAQoXUGV0VmFsdWVUZW1wbGF0ZU1lc3NhZ2USCgoC",
-            "aHAYASABKAUSDQoFc3BlZWQYAiABKAUSCgoCbXAYAyABKAUSFQoNcGh5c2lj",
-            "c0F0dGFjaxgEIAEoBRIWCg5waHlzaWNzRGVmZW5zZRgFIAEoBRITCgttYWdp",
-            "Y0F0dGFjaxgGIAEoBRIUCgxtYWdpY0RlZmVuc2UYByABKAUiNwoPU2hvd0l0",
-            "ZW1NZXNzYWdlEhIKCml0ZW1UeXBlSWQYASABKAkSEAoIcXVhbnRpdHkYAiAB",
-            "KAUihAEKGFVwZGF0ZVBldFByb3BlcnR5TWVzc2FnZRINCgVwZXRJZBgBIAEo",
-            "CRIUCgxjb25zdGl0dXRpb24YAiABKAUSEgoKbWFnaWNQb3dlchgDIAEoBRIN",
-            "CgVwb3dlchgEIAEoBRIRCgllbmR1cmFuY2UYBSABKAUSDQoFYWdpbGUYBiAB",
-            "KAUiQgoOVXNlSXRlbU1lc3NhZ2USCgoCaWQYASABKAkSEgoKaXRlbVR5cGVJ",
-            "ZBgCIAEoCRIQCghxdWFudGl0eRgDIAEoBSJFCgpVc2VNZXNzYWdlEg0KBXNj",
-            "ZW5lGAEgASgJEigKCHVzZUl0ZW1zGAIgAygLMhYucGIubW1vLlVzZUl0ZW1N",
-            "ZXNzYWdlIigKCFVzZXJJbmZvEgoKAmlkGAEgASgDEhAKCG5pY2tuYW1lGAIg",
-            "ASgJKisKFU1haWxTdGF0dXNNZXNzYWdlRW51bRIICgRTRUFMEAASCAoET1BF",
-            "ThABYgZwcm90bzM="));
+            "BRISCgpkaXJlY3Rpb25WGAQgASgFEhAKCHBsYXllcklkGAUgASgDIj0KC0xv",
+            "Z2luVmVyaWZ5EgsKA2p3dBgBIAEoCRIPCgdhY2NvdW50GAIgASgJEhAKCHBh",
+            "c3N3b3JkGAMgASgJIkkKFU1haWxBdHRhY2htZW50TWVzc2FnZRIKCgJpZBgB",
+            "IAEoCRISCgppdGVtVHlwZUlkGAIgASgJEhAKCHF1YW50aXR5GAMgASgFIoAC",
+            "CgtNYWlsTWVzc2FnZRIKCgJpZBgBIAEoCRISCgpzZW5kZXJOYW1lGAIgASgJ",
+            "EhQKDHNlbmRlclVzZXJJZBgDIAEoAxIPCgdzdWJqZWN0GAQgASgJEgwKBGJv",
+            "ZHkYBSABKAkSFAoMbWlsbGlzZWNvbmRzGAYgASgDEhsKE2V4cGlyZWRNaWxs",
+            "aXNlY29uZHMYByABKAMSMQoKbWFpbFN0YXR1cxgIIAEoDjIdLnBiLm1tby5N",
+            "YWlsU3RhdHVzTWVzc2FnZUVudW0SNgoPbWFpbEF0dGFjaG1lbnRzGAkgAygL",
+            "Mh0ucGIubW1vLk1haWxBdHRhY2htZW50TWVzc2FnZSJbChBNYXBQbGF5ZXJN",
+            "ZXNzYWdlEgoKAmlkGAEgASgDEhAKCG5pY2tuYW1lGAIgASgJEikKCGxvY2F0",
+            "aW9uGAMgASgLMhcucGIubW1vLkxvY2F0aW9uTWVzc2FnZSLKAQoNUGVyc29u",
+            "TWVzc2FnZRIOCgZ1c2VySWQYASABKAMSIwoFbGV2ZWwYAiABKAsyFC5wYi5t",
+            "bW8uTGV2ZWxNZXNzYWdlEjMKDWJhc2ljUHJvcGVydHkYAyABKAsyHC5wYi5t",
+            "bW8uQmFzaWNQcm9wZXJ0eU1lc3NhZ2USJQoIaGVyb0xpc3QYBCADKAsyEy5w",
+            "Yi5tbW8uSGVyb01lc3NhZ2USKAoLY3VycmVudEhlcm8YBSABKAsyEy5wYi5t",
+            "bW8uSGVyb01lc3NhZ2UihQMKClBldE1lc3NhZ2USCgoCaWQYASABKAkSFQoN",
+            "cGV0VGVtcGxhdGVJZBgCIAEoCRIQCghuaWNrbmFtZRgDIAEoCRITCgttdXRh",
+            "dGlvbkV4cBgEIAEoBRISCgptdXRhdGlvbk5vGAUgASgFEhQKDG11dGF0aW9u",
+            "U2tpbhgGIAEoCRIYChBwcm9wZXJ0eVBvaW50TnVtGAcgASgFEhQKDGNvbnN0",
+            "aXR1dGlvbhgIIAEoBRISCgptYWdpY1Bvd2VyGAkgASgFEg0KBXBvd2VyGAog",
+            "ASgFEhEKCWVuZHVyYW5jZRgLIAEoBRINCgVhZ2lsZRgMIAEoBRIQCghtYXhT",
+            "a2lsbBgNIAEoBRIyCghza2lsbE1hcBgOIAMoCzIgLnBiLm1tby5QZXRNZXNz",
+            "YWdlLlNraWxsTWFwRW50cnkaSAoNU2tpbGxNYXBFbnRyeRILCgNrZXkYASAB",
+            "KAUSJgoFdmFsdWUYAiABKAsyFy5wYi5tbW8uUGV0U2tpbGxNZXNzYWdlOgI4",
+            "ASIvCg9QZXRTa2lsbE1lc3NhZ2USDQoFaW5kZXgYASABKAUSDQoFc2tpbGwY",
+            "AiABKAkiSwoXUGV0U2tpbGxUZW1wbGF0ZU1lc3NhZ2USDQoFc2tpbGwYASAB",
+            "KAkSDAoEbmFtZRgCIAEoCRITCgtkZXNjcmlwdGlvbhgDIAEoCSKJAQoSUGV0",
+            "VGVtcGxhdGVNZXNzYWdlEgoKAmlkGAEgASgJEgwKBG5hbWUYAiABKAkSEwoL",
+            "ZGVzY3JpcHRpb24YAyABKAkSRAoSdHJhbnNmb3JtYXRpb25MaXN0GAQgAygL",
+            "MigucGIubW1vLlBldFRyYW5zZm9ybWF0aW9uVGVtcGxhdGVNZXNzYWdlIrcB",
+            "CiBQZXRUcmFuc2Zvcm1hdGlvblRlbXBsYXRlTWVzc2FnZRIUCgxtdXRhdGlv",
+            "bk5hbWUYASABKAkSEgoKbXV0YXRpb25ObxgCIAEoBRIUCgxtdXRhdGlvblNr",
+            "aW4YAyABKAkSOQoQcGV0VmFsdWVUZW1wbGF0ZRgEIAEoCzIfLnBiLm1tby5Q",
+            "ZXRWYWx1ZVRlbXBsYXRlTWVzc2FnZRIYChBwcm9wZXJ0eVBvaW50TnVtGAUg",
+            "ASgFIpoBChdQZXRWYWx1ZVRlbXBsYXRlTWVzc2FnZRIKCgJocBgBIAEoBRIN",
+            "CgVzcGVlZBgCIAEoBRIKCgJtcBgDIAEoBRIVCg1waHlzaWNzQXR0YWNrGAQg",
+            "ASgFEhYKDnBoeXNpY3NEZWZlbnNlGAUgASgFEhMKC21hZ2ljQXR0YWNrGAYg",
+            "ASgFEhQKDG1hZ2ljRGVmZW5zZRgHIAEoBSI0Cg9SZWdpc3RlckFjY291bnQS",
+            "DwoHYWNjb3VudBgBIAEoCRIQCghwYXNzd29yZBgCIAEoCSI3Cg9TaG93SXRl",
+            "bU1lc3NhZ2USEgoKaXRlbVR5cGVJZBgBIAEoCRIQCghxdWFudGl0eRgCIAEo",
+            "BSKEAQoYVXBkYXRlUGV0UHJvcGVydHlNZXNzYWdlEg0KBXBldElkGAEgASgJ",
+            "EhQKDGNvbnN0aXR1dGlvbhgCIAEoBRISCgptYWdpY1Bvd2VyGAMgASgFEg0K",
+            "BXBvd2VyGAQgASgFEhEKCWVuZHVyYW5jZRgFIAEoBRINCgVhZ2lsZRgGIAEo",
+            "BSJCCg5Vc2VJdGVtTWVzc2FnZRIKCgJpZBgBIAEoCRISCgppdGVtVHlwZUlk",
+            "GAIgASgJEhAKCHF1YW50aXR5GAMgASgFIkUKClVzZU1lc3NhZ2USDQoFc2Nl",
+            "bmUYASABKAkSKAoIdXNlSXRlbXMYAiADKAsyFi5wYi5tbW8uVXNlSXRlbU1l",
+            "c3NhZ2UiNwoIVXNlckluZm8SCgoCaWQYASABKAMSEAoIbmlja25hbWUYAiAB",
+            "KAkSDQoFdG9rZW4YAyABKAkqKwoVTWFpbFN0YXR1c01lc3NhZ2VFbnVtEggK",
+            "BFNFQUwQABIICgRPUEVOEAFiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Pb.Mmo.MailStatusMessageEnum), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -104,7 +106,7 @@ namespace Pb.Mmo {
             new pbr::GeneratedClrTypeInfo(typeof(global::Pb.Mmo.ItemMessage), global::Pb.Mmo.ItemMessage.Parser, new[]{ "ItemTypeId", "Name", "Description" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Pb.Mmo.LevelMessage), global::Pb.Mmo.LevelMessage.Parser, new[]{ "Id", "Exp", "Level" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Pb.Mmo.LocationMessage), global::Pb.Mmo.LocationMessage.Parser, new[]{ "X", "Y", "DirectionH", "DirectionV", "PlayerId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Pb.Mmo.LoginVerify), global::Pb.Mmo.LoginVerify.Parser, new[]{ "Jwt" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Pb.Mmo.LoginVerify), global::Pb.Mmo.LoginVerify.Parser, new[]{ "Jwt", "Account", "Password" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Pb.Mmo.MailAttachmentMessage), global::Pb.Mmo.MailAttachmentMessage.Parser, new[]{ "Id", "ItemTypeId", "Quantity" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Pb.Mmo.MailMessage), global::Pb.Mmo.MailMessage.Parser, new[]{ "Id", "SenderName", "SenderUserId", "Subject", "Body", "Milliseconds", "ExpiredMilliseconds", "MailStatus", "MailAttachments" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Pb.Mmo.MapPlayerMessage), global::Pb.Mmo.MapPlayerMessage.Parser, new[]{ "Id", "Nickname", "Location" }, null, null, null, null),
@@ -115,11 +117,12 @@ namespace Pb.Mmo {
             new pbr::GeneratedClrTypeInfo(typeof(global::Pb.Mmo.PetTemplateMessage), global::Pb.Mmo.PetTemplateMessage.Parser, new[]{ "Id", "Name", "Description", "TransformationList" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Pb.Mmo.PetTransformationTemplateMessage), global::Pb.Mmo.PetTransformationTemplateMessage.Parser, new[]{ "MutationName", "MutationNo", "MutationSkin", "PetValueTemplate", "PropertyPointNum" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Pb.Mmo.PetValueTemplateMessage), global::Pb.Mmo.PetValueTemplateMessage.Parser, new[]{ "Hp", "Speed", "Mp", "PhysicsAttack", "PhysicsDefense", "MagicAttack", "MagicDefense" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Pb.Mmo.RegisterAccount), global::Pb.Mmo.RegisterAccount.Parser, new[]{ "Account", "Password" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Pb.Mmo.ShowItemMessage), global::Pb.Mmo.ShowItemMessage.Parser, new[]{ "ItemTypeId", "Quantity" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Pb.Mmo.UpdatePetPropertyMessage), global::Pb.Mmo.UpdatePetPropertyMessage.Parser, new[]{ "PetId", "Constitution", "MagicPower", "Power", "Endurance", "Agile" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Pb.Mmo.UseItemMessage), global::Pb.Mmo.UseItemMessage.Parser, new[]{ "Id", "ItemTypeId", "Quantity" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Pb.Mmo.UseMessage), global::Pb.Mmo.UseMessage.Parser, new[]{ "Scene", "UseItems" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Pb.Mmo.UserInfo), global::Pb.Mmo.UserInfo.Parser, new[]{ "Id", "Nickname" }, null, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Pb.Mmo.UserInfo), global::Pb.Mmo.UserInfo.Parser, new[]{ "Id", "Nickname", "Token" }, null, null, null, null)
           }));
     }
     #endregion
@@ -2998,6 +3001,8 @@ namespace Pb.Mmo {
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public LoginVerify(LoginVerify other) : this() {
       jwt_ = other.jwt_;
+      account_ = other.account_;
+      password_ = other.password_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -3022,6 +3027,30 @@ namespace Pb.Mmo {
       }
     }
 
+    /// <summary>Field number for the "account" field.</summary>
+    public const int AccountFieldNumber = 2;
+    private string account_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Account {
+      get { return account_; }
+      set {
+        account_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "password" field.</summary>
+    public const int PasswordFieldNumber = 3;
+    private string password_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Password {
+      get { return password_; }
+      set {
+        password_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -3038,6 +3067,8 @@ namespace Pb.Mmo {
         return true;
       }
       if (Jwt != other.Jwt) return false;
+      if (Account != other.Account) return false;
+      if (Password != other.Password) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -3046,6 +3077,8 @@ namespace Pb.Mmo {
     public override int GetHashCode() {
       int hash = 1;
       if (Jwt.Length != 0) hash ^= Jwt.GetHashCode();
+      if (Account.Length != 0) hash ^= Account.GetHashCode();
+      if (Password.Length != 0) hash ^= Password.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -3068,6 +3101,14 @@ namespace Pb.Mmo {
         output.WriteRawTag(10);
         output.WriteString(Jwt);
       }
+      if (Account.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Account);
+      }
+      if (Password.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(Password);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -3082,6 +3123,14 @@ namespace Pb.Mmo {
         output.WriteRawTag(10);
         output.WriteString(Jwt);
       }
+      if (Account.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Account);
+      }
+      if (Password.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(Password);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -3094,6 +3143,12 @@ namespace Pb.Mmo {
       int size = 0;
       if (Jwt.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Jwt);
+      }
+      if (Account.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Account);
+      }
+      if (Password.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Password);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -3109,6 +3164,12 @@ namespace Pb.Mmo {
       }
       if (other.Jwt.Length != 0) {
         Jwt = other.Jwt;
+      }
+      if (other.Account.Length != 0) {
+        Account = other.Account;
+      }
+      if (other.Password.Length != 0) {
+        Password = other.Password;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -3129,6 +3190,14 @@ namespace Pb.Mmo {
             Jwt = input.ReadString();
             break;
           }
+          case 18: {
+            Account = input.ReadString();
+            break;
+          }
+          case 26: {
+            Password = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -3146,6 +3215,14 @@ namespace Pb.Mmo {
             break;
           case 10: {
             Jwt = input.ReadString();
+            break;
+          }
+          case 18: {
+            Account = input.ReadString();
+            break;
+          }
+          case 26: {
+            Password = input.ReadString();
             break;
           }
         }
@@ -6883,6 +6960,235 @@ namespace Pb.Mmo {
   }
 
   /// <summary>
+  /// 注册账号
+  /// </summary>
+  public sealed partial class RegisterAccount : pb::IMessage<RegisterAccount>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<RegisterAccount> _parser = new pb::MessageParser<RegisterAccount>(() => new RegisterAccount());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<RegisterAccount> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Pb.Mmo.MmoReflection.Descriptor.MessageTypes[21]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public RegisterAccount() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public RegisterAccount(RegisterAccount other) : this() {
+      account_ = other.account_;
+      password_ = other.password_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public RegisterAccount Clone() {
+      return new RegisterAccount(this);
+    }
+
+    /// <summary>Field number for the "account" field.</summary>
+    public const int AccountFieldNumber = 1;
+    private string account_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Account {
+      get { return account_; }
+      set {
+        account_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "password" field.</summary>
+    public const int PasswordFieldNumber = 2;
+    private string password_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Password {
+      get { return password_; }
+      set {
+        password_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as RegisterAccount);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(RegisterAccount other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Account != other.Account) return false;
+      if (Password != other.Password) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Account.Length != 0) hash ^= Account.GetHashCode();
+      if (Password.Length != 0) hash ^= Password.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Account.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Account);
+      }
+      if (Password.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Password);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Account.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Account);
+      }
+      if (Password.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Password);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (Account.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Account);
+      }
+      if (Password.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Password);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(RegisterAccount other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Account.Length != 0) {
+        Account = other.Account;
+      }
+      if (other.Password.Length != 0) {
+        Password = other.Password;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            Account = input.ReadString();
+            break;
+          }
+          case 18: {
+            Password = input.ReadString();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            Account = input.ReadString();
+            break;
+          }
+          case 18: {
+            Password = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  /// <summary>
   /// 显示的物品消息
   /// </summary>
   public sealed partial class ShowItemMessage : pb::IMessage<ShowItemMessage>
@@ -6899,7 +7205,7 @@ namespace Pb.Mmo {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Pb.Mmo.MmoReflection.Descriptor.MessageTypes[21]; }
+      get { return global::Pb.Mmo.MmoReflection.Descriptor.MessageTypes[22]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7134,7 +7440,7 @@ namespace Pb.Mmo {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Pb.Mmo.MmoReflection.Descriptor.MessageTypes[22]; }
+      get { return global::Pb.Mmo.MmoReflection.Descriptor.MessageTypes[23]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7529,7 +7835,7 @@ namespace Pb.Mmo {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Pb.Mmo.MmoReflection.Descriptor.MessageTypes[23]; }
+      get { return global::Pb.Mmo.MmoReflection.Descriptor.MessageTypes[24]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7804,7 +8110,7 @@ namespace Pb.Mmo {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Pb.Mmo.MmoReflection.Descriptor.MessageTypes[24]; }
+      get { return global::Pb.Mmo.MmoReflection.Descriptor.MessageTypes[25]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -8028,7 +8334,7 @@ namespace Pb.Mmo {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Pb.Mmo.MmoReflection.Descriptor.MessageTypes[25]; }
+      get { return global::Pb.Mmo.MmoReflection.Descriptor.MessageTypes[26]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -8050,6 +8356,7 @@ namespace Pb.Mmo {
     public UserInfo(UserInfo other) : this() {
       id_ = other.id_;
       nickname_ = other.nickname_;
+      token_ = other.token_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -8089,6 +8396,18 @@ namespace Pb.Mmo {
       }
     }
 
+    /// <summary>Field number for the "token" field.</summary>
+    public const int TokenFieldNumber = 3;
+    private string token_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string Token {
+      get { return token_; }
+      set {
+        token_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -8106,6 +8425,7 @@ namespace Pb.Mmo {
       }
       if (Id != other.Id) return false;
       if (Nickname != other.Nickname) return false;
+      if (Token != other.Token) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -8115,6 +8435,7 @@ namespace Pb.Mmo {
       int hash = 1;
       if (Id != 0L) hash ^= Id.GetHashCode();
       if (Nickname.Length != 0) hash ^= Nickname.GetHashCode();
+      if (Token.Length != 0) hash ^= Token.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -8141,6 +8462,10 @@ namespace Pb.Mmo {
         output.WriteRawTag(18);
         output.WriteString(Nickname);
       }
+      if (Token.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(Token);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -8159,6 +8484,10 @@ namespace Pb.Mmo {
         output.WriteRawTag(18);
         output.WriteString(Nickname);
       }
+      if (Token.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(Token);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -8174,6 +8503,9 @@ namespace Pb.Mmo {
       }
       if (Nickname.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Nickname);
+      }
+      if (Token.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Token);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -8192,6 +8524,9 @@ namespace Pb.Mmo {
       }
       if (other.Nickname.Length != 0) {
         Nickname = other.Nickname;
+      }
+      if (other.Token.Length != 0) {
+        Token = other.Token;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -8216,6 +8551,10 @@ namespace Pb.Mmo {
             Nickname = input.ReadString();
             break;
           }
+          case 26: {
+            Token = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -8237,6 +8576,10 @@ namespace Pb.Mmo {
           }
           case 18: {
             Nickname = input.ReadString();
+            break;
+          }
+          case 26: {
+            Token = input.ReadString();
             break;
           }
         }

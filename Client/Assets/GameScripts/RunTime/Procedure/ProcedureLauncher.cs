@@ -1,5 +1,4 @@
-﻿using Cysharp.Threading.Tasks;
-using UnityEngine;
+﻿using UnityEngine;
 using HT.Framework;
 
 namespace GameScript.RunTime.Procedure
@@ -7,7 +6,7 @@ namespace GameScript.RunTime.Procedure
     /// <summary>
     /// 启动流程
     /// </summary>
-    public sealed class ProcedureLauncher : ProcedureBase
+    public class ProcedureLauncher : ProcedureBase
     {
         /// <summary>
         /// 流程初始化
@@ -26,20 +25,10 @@ namespace GameScript.RunTime.Procedure
         }
 
         /// <summary>
-        /// 进入流程
+        /// 流程帧刷新
         /// </summary>
-        /// <param name="lastProcedure">上一个离开的流程</param>
-        public override void OnEnter(ProcedureBase lastProcedure)
+        public override void OnUpdate()
         {
-            base.OnEnter(lastProcedure);
-            //监听资源管理器初始化完成
-            Main.m_Resource.InitializationCompleted += (result) => OnInitializationCompleted(result).Forget();
-        }
-
-        private async UniTaskVoid OnInitializationCompleted(bool arg)
-        {
-            if (!arg) return;
-            await TableGlobal.Init();
             Main.m_Procedure.SwitchProcedure<ProcedureLogin>();
         }
     }

@@ -11,7 +11,6 @@ namespace GameScript.RunTime.Network
     /// </summary>
     public sealed class GameTcpChannel : ProtocolChannelBase
     {
-        
         /// <summary>
         /// 是否是断开连接请求
         /// </summary>
@@ -21,7 +20,7 @@ namespace GameScript.RunTime.Network
         {
             return false;
         }
-        
+
         /// <summary>
         /// 封装消息
         /// </summary>
@@ -29,18 +28,8 @@ namespace GameScript.RunTime.Network
         /// <returns>封装后的字节数组</returns>
         public override byte[] EncapsulatedMessage(INetworkMessage message)
         {
-            var gameNetworkMessage = message.Cast<GameNetworkMessage>();
-            var externalMessage = new ExternalMessage
-            {
-                CmdCode = gameNetworkMessage.Cmd,
-                CmdMerge = gameNetworkMessage.CmdMerge,
-                ProtocolSwitch = 0,
-            };
-
-            if (gameNetworkMessage.MsgByteString != null)
-            {
-                externalMessage.Data = gameNetworkMessage.MsgByteString;
-            }
+            var requestCommand = message.Cast<RequestCommand>();
+            var externalMessage = requestCommand.ToExternal();
 
             var byteMsg = externalMessage.ToByteArray();
             // 在数据前加4个字节 用来描述数据长度
@@ -52,7 +41,7 @@ namespace GameScript.RunTime.Network
             return package;
         }
 
-        
+
         /// <summary>
         /// 接收消息
         /// </summary>
@@ -69,31 +58,34 @@ namespace GameScript.RunTime.Network
                 {
                     return null;
                 }
+
                 if (l != 4)
                 {
                     // var bytes = new byte[client.ReceiveBufferSize];
                     // var receive = client.Receive(buffer: bytes);
-                   "出现错误了，已清空缓冲区，消息可能丢失".Error();
+                    "出现错误了，已清空缓冲区，消息可能丢失".Error();
                 }
-                
+
                 Array.Reverse(bodyLengthBytes);
-                
+
                 var length = BitConverter.ToInt32(bodyLengthBytes, 0);
                 var dataBytes = new byte[length];
                 var dataLength = 0;
-                while (true) 
+                while (true)
                 {
                     if (dataLength == length)
                     {
                         break;
                     }
+
                     dataLength += client.Receive(dataBytes, dataLength, dataBytes.Length, SocketFlags.None);
                 }
-                
+
                 //调用解析方法处理包体数据
                 var externalMessage = PackageUtils.DeserializeByByteArray<ExternalMessage>(dataBytes);
-                var gameNetworkMessage = new GameNetworkMessage(externalMessage.CmdMerge, externalMessage.Data);
-                return gameNetworkMessage;
+
+                var commandResult = new CommandResult(externalMessage);
+                return commandResult;
             }
             catch (Exception)
             {
