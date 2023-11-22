@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Cinemachine;
 using Pathfinding;
+using StandardAssets.GridMap.RunTime.Walker;
 using UnityEditor;
 using UnityEngine;
 
@@ -167,6 +168,16 @@ namespace GridMap
             {
                 helper.OnRelease();
             }
+        }
+        
+        /// <summary>
+        /// 获取缓存路径
+        /// </summary>
+        /// <param name="posArray"></param>
+        /// <returns></returns>
+        public static List<Vector3> GetCachePath(PosCache posCache)
+        {
+            return null;
         }
     }
 }
