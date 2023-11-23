@@ -18,8 +18,8 @@ namespace GameScript.RunTime.UI
 	public sealed class UILogin : UILogicResident
 	{
 		
-		private TMP_InputField _account;
-		private TMP_InputField _password;
+		private InputField _account;
+		private InputField _password;
 		protected override bool IsAutomate => false;
 
 		/// <summary>
@@ -29,17 +29,17 @@ namespace GameScript.RunTime.UI
 		{
 			base.OnInit();
 			
-			_account = UIEntity.GetComponentByChild<TMP_InputField>("Popup/InputField_ID");
-			_password = UIEntity.GetComponentByChild<TMP_InputField>("Popup/InputField_Pssword");
+			_account = UIEntity.GetComponentByChild<InputField>("AccountPart/UserNameInput");
+			_password = UIEntity.GetComponentByChild<InputField>("AccountPart/PwdInput");
 			
-			UIEntity.GetComponentByChild<Button>("Popup/Button_SignUp").onClick.AddListener(OnClickSignUp);
-			UIEntity.GetComponentByChild<Button>("Popup/Button_Blue").onClick.AddListener(() => _= OnClickLogin());
+			UIEntity.GetComponentByChild<Button>("SignUpBtn").onClick.AddListener(OnClickSignUp);
+			UIEntity.GetComponentByChild<Button>("LoginBtn").onClick.AddListener(() => _= OnClickLogin());
 		}
 
 		
 		private void OnClickSignUp()
 		{
-			// Main.m_UI.OpenUI<UIRegister>();
+			Main.m_UI.OpenUI<UIRegister>();
 		}
 		
 		private async UniTaskVoid OnClickLogin()
