@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Cinemachine;
 using Pathfinding;
-using StandardAssets.GridMap.RunTime.Walker;
+using GridMap.RunTime.Walker;
 using UnityEditor;
 using UnityEngine;
 

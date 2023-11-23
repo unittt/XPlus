@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace StandardAssets.GridMap.RunTime.Walker
+namespace GridMap.RunTime.Walker
 {
     public struct PosCache
     {

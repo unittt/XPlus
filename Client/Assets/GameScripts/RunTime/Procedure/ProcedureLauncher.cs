@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using GameScript.RunTime.Network;
+using UnityEngine;
 using HT.Framework;
 
 namespace GameScript.RunTime.Procedure
@@ -22,6 +23,8 @@ namespace GameScript.RunTime.Procedure
             //设置语言环境
             System.Globalization.CultureInfo.DefaultThreadCurrentCulture =
                 new System.Globalization.CultureInfo("en-US");
+            //连接服务器
+            GameNetManager.ConnectServer();
         }
 
         /// <summary>
@@ -29,7 +32,10 @@ namespace GameScript.RunTime.Procedure
         /// </summary>
         public override void OnUpdate()
         {
-            Main.m_Procedure.SwitchProcedure<ProcedureLogin>();
+            if (Main.m_Resource.IsInitialized)
+            {
+                Main.m_Procedure.SwitchProcedure<ProcedureLogin>();
+            }
         }
     }
 }

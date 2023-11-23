@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
-using GridMap;
 using UnityEngine;
 using Pathfinding;
 
-namespace StandardAssets.GridMap.RunTime.Walker
+namespace GridMap.RunTime.Walker
 {
     
     [RequireComponent(typeof(Seeker),typeof(SimpleSmoothModifier))]
