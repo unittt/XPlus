@@ -17,7 +17,7 @@ MonoBehaviour:
   LocationToLower: 0
   IncludeAssetGUID: 0
   UniqueBundleName: 0
-  ShowEditorAlias: 0
+  ShowEditorAlias: 1
   Packages:
   - PackageName: DefaultPackage
     PackageDesc: 
@@ -42,7 +42,7 @@ MonoBehaviour:
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackSeparately
-        FilterRuleName: CollectAll
+        FilterRuleName: CollectScene
         AssetTags: 
         UserData: 
     - GroupName: ugui

@@ -4,6 +4,14 @@ namespace GridMap
 {
     internal class CameraHelper : MapHelper
     {
+
+        private Camera _mainCamera;
+        
+        internal override void OnInit()
+        {
+            _mainCamera =  MapManager.Camera.VirtualCameraGameObject.GetComponentInChildren<Camera>();
+        }
+
         internal override void OnSetMapData(MapData mapData)
         {
             SetBounds(mapData.NodeWidth, mapData.NodeHeight, mapData.NodeSize);
@@ -37,6 +45,39 @@ namespace GridMap
         public void Release()
         {
             
+        }
+
+        /// <summary>
+        /// 设置跟随目标
+        /// </summary>
+        /// <param name="transform"></param>
+        public void SetTarget(Transform transform)
+        {
+            MapManager.Camera.Follow = transform;
+        }
+        
+        
+        /// <summary>
+        /// 获得相机的可视区域
+        /// </summary>
+        /// <returns></returns>
+        public Rect GetCameraViewRect()
+        {
+            // 对于正交摄像机，视野的高度是正交大小的两倍
+            var height = 2f * _mainCamera.orthographicSize;
+            // 视野的宽度是高度乘以宽高比
+            var width = height * _mainCamera.aspect;
+            // 获取摄像机的世界位置
+            Vector2 cameraPosition = _mainCamera.transform.position;
+        
+            // 创建表示视野的矩形
+            var cameraViewRect = new Rect(
+                cameraPosition.x - width / 2,
+                cameraPosition.y - height / 2,
+                width,
+                height
+            );
+            return cameraViewRect;
         }
     }
 }

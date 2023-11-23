@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6c33a93d8269f04b9dd82ab82d141ed, type: 3}
   m_Name: GridMapConfig
   m_EditorClassIdentifier: 
-  DataFolderPath: Assets/GraphCaches
+  DataFolderPath: Assets/GameRes/Map2d/ConfigData
   TextureNameRule: tile_[ID]_[X]_[Y]
   TextureSize: 2.56
   NodeSize: 0.32

@@ -179,5 +179,17 @@ namespace GridMap
         {
             return null;
         }
+
+
+        /// <summary>
+        /// 设置跟随的目标
+        /// </summary>
+        public void SetTarget(Transform transform)
+        {
+            //相机设置跟随的目标
+            CameraHelper.SetTarget(transform);
+            //动态创建
+            // BlockHelper.OnSetMapData();
+        }
     }
 }

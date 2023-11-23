@@ -110,7 +110,7 @@ namespace GridMap
 
                 if (textAsset == null) continue;
               
-                var mapData = JsonUtility.FromJson<MapData>(textAsset.text);
+                var mapData = MapData.Deserialize(textAsset.text);
                 _mapDatas.Add(mapData);
             }
 

@@ -96,10 +96,10 @@ namespace GridMap
         }
 
         /// <summary>
-        /// 当相机坐标发生改变时
+        /// 按矩形实例化块
         /// </summary>
-        /// <param name="cameraRect"></param>
-        private void OnCameraMove(Rect cameraRect)
+        /// <param name="rect"></param>
+        public void InstantiateBlockByRect(Rect rect)
         {
             if (!MapManager.IsDynamics)
             {
@@ -108,7 +108,7 @@ namespace GridMap
             
             foreach (var block in _blocks)
             {
-                if (!block.IsLoaded && MapGlobal.IsOverlaps(cameraRect, block.Bounds))
+                if (!block.IsLoaded && MapGlobal.IsOverlaps(rect, block.Bounds))
                 {
                     InstantiateBlockEntity(block);
                 }

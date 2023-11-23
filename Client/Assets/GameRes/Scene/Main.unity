@@ -224,7 +224,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: ActivatedProcedures.Array.size
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: ActivatedProcedures.Array.data[0]
@@ -236,7 +236,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: ActivatedProcedures.Array.data[2]
-      value: ProcedureLoadAssembly
+      value: GameScript.RunTime.Procedure.ProcedureGame
       objectReference: {fileID: 0}
     - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: ActivatedProcedures.Array.data[3]
@@ -265,6 +265,10 @@ PrefabInstance:
     - target: {fileID: 2859145590620282333, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: m_ReferenceResolution.y
       value: 1080
+      objectReference: {fileID: 0}
+    - target: {fileID: 3203883641810679623, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4292849675555829366, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: IsEnableDebugger

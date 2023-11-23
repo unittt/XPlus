@@ -44,41 +44,42 @@ namespace GameScript.RunTime.UI
 		
 		private async UniTaskVoid OnClickLogin()
 		{
-			var acc = _account.text;
-			var pwd = _password.text;
-			// if (CheckAccount(acc) | CheckPassword(pwd))
+			// var acc = _account.text;
+			// var pwd = _password.text;
+			// // if (CheckAccount(acc) | CheckPassword(pwd))
+			// // {
+			// // 	Main.m_UI.OpenUI<UIMessage>("账号或密码不符合规范", null);
+			// // 	return;
+			// // }
+			//
+			// var commandResult = await new RequestCommand
 			// {
-			// 	Main.m_UI.OpenUI<UIMessage>("账号或密码不符合规范", null);
+			// 	Title = "登录验证",
+			// 	CmdMerge = LoginCmd.LoginVerify.CmdMerge(),
+			// 	// 请求参数
+			// 	RequestData = () =>
+			// 	{
+			// 		var verify = new LoginVerify
+			// 		{
+			// 			Jwt = "1",
+			// 			Account = acc,
+			// 			Password = pwd
+			// 		};
+			//         
+			// 		return verify;
+			// 	}
+			// }.ExecuteAndWait();
+			//
+			//
+			// if (commandResult.ExternalMessage.ResponseStatus != GameCode.Success)
+			// {
+			// 	// Main.m_UI.OpenUI<UIMessage>(commandResult.ExternalMessage.ValidMsg, null);
 			// 	return;
 			// }
-			
-			var commandResult = await new RequestCommand
-			{
-				Title = "登录验证",
-				CmdMerge = LoginCmd.LoginVerify.CmdMerge(),
-				// 请求参数
-				RequestData = () =>
-				{
-					var verify = new LoginVerify
-					{
-						Jwt = "1",
-						Account = acc,
-						Password = pwd
-					};
-			        
-					return verify;
-				}
-			}.ExecuteAndWait();
-
-		
-			if (commandResult.ExternalMessage.ResponseStatus != GameCode.Success)
-			{
-				// Main.m_UI.OpenUI<UIMessage>(commandResult.ExternalMessage.ValidMsg, null);
-				return;
-			}
-			
-			//关闭界面 切换game流程
+			//
+			// //关闭界面 切换game流程
 			Close();
+			
 			Main.m_Procedure.SwitchProcedure<ProcedureGame>();
 		}
 		

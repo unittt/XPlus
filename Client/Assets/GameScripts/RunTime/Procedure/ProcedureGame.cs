@@ -1,6 +1,9 @@
 using System;
-using GameScript.RunTime.UI;
+using Cysharp.Threading.Tasks;
+using GridMap;
 using HT.Framework;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace GameScript.RunTime.Procedure
 {
@@ -15,8 +18,22 @@ namespace GameScript.RunTime.Procedure
             // Main.m_UI.OpenUI<UILoading>();
             // SceneInfo sceneInfo = new SceneInfo("scene", "Assets/GameRes/Scene/Game.unity", "Game");
             // Main.m_Resource.LoadScene(sceneInfo,OnLoading, OnLoadDone);
+            InitAsync().Forget();
         }
 
+
+        private async UniTask InitAsync()
+        {
+            await Main.m_Resource.LoadSceneAsync("Game",null,LoadSceneMode.Additive);
+            //等待加载地图
+
+            var textAsset = await Main.m_Resource.LoadAsset<TextAsset>("mapdata_1010");
+            MapData mapData = MapData.Deserialize(textAsset.text);
+            var mapManager = GameObject.Find("GridMapManager").GetComponent<MapManager>();
+            mapManager.SetMapData(mapData);
+            //等待加载角色
+        }
+        
         private void OnLoading(float arg)
         {
             OnLoadingGameScene?.Invoke(arg);

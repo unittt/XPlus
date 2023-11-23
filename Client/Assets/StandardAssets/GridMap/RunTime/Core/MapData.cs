@@ -71,5 +71,10 @@ namespace GridMap
                 Nodes[i] = gridNodeBases[i].Tag;
             }
         }
+
+        public static MapData Deserialize(string jsonText)
+        {
+            return JsonUtility.FromJson<MapData>(jsonText);
+        } 
     }
 }
