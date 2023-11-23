@@ -56,10 +56,13 @@ namespace GameScript.RunTime.UI
             
             if (commandResult.ExternalMessage.ResponseStatus != GameCode.Success)
             {
+                Log.Info($"注册失败:{commandResult.ExternalMessage.ValidMsg}");
                 // Main.m_UI.OpenUI<UIMessage>(commandResult.ExternalMessage.ValidMsg, null);
                 return;
             }
             // Main.m_UI.OpenUI<UIMessage>("注册成功", null);
+            
+            Log.Info("注册成功");
             Close();
         }
     }

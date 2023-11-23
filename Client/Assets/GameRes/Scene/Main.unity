@@ -196,7 +196,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114025988358540096, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: ServerPort
-      value: 10100
+      value: 10101
       objectReference: {fileID: 0}
     - target: {fileID: 114025988358540096, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: ChannelTypes.Array.size
