@@ -36,5 +36,16 @@ namespace GridMap
             var max = Vector2.Min(a.max, b.max);
             return min.x < max.x && min.y < max.y;
         }
+
+        /// <summary>
+        /// 世界坐标 转换为 地图节点坐标
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <param name="nodeSize"></param>
+        /// <returns></returns>
+        public static Vector2Int WorldToGridPos(this Vector2 pos, float nodeSize)
+        {
+            return new Vector2Int((int)(pos.x / nodeSize), (int)(pos.y / nodeSize));
+        }
     }
 }

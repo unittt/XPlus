@@ -30,7 +30,7 @@ namespace GameScript.RunTime.Procedure
             var textAsset = await Main.m_Resource.LoadAsset<TextAsset>("mapdata_1010");
             MapData mapData = MapData.Deserialize(textAsset.text);
             var mapManager = GameObject.Find("GridMapManager").GetComponent<MapManager>();
-            mapManager.SetMapData(mapData);
+            mapManager.SetMapData(mapData,false);
             //等待加载角色
         }
         

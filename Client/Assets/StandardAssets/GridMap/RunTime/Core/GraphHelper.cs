@@ -25,28 +25,13 @@ namespace GridMap
         /// graph中心点
         /// </summary>
         public Vector2 GraphCenter => _gridGraph.center;
-        
-        
+
         /// <summary>
         /// 序列化数据
         /// </summary>
-        internal GridNodeBase[] Nodes
-        {
-            get
-            {
-                // var settings = new Pathfinding.Serialization.SerializeSettings
-                // {
-                //     nodes = true,
-                //     editorSettings = true
-                // };
-                //
-                // return _astarPath.data.SerializeGraphs(settings);
-                return _gridGraph.nodes;
-            }
-        }
-        
- 
-        
+        internal GridNodeBase[] Nodes => _gridGraph.nodes;
+
+
         internal override void OnInit()
         {
             base.OnInit();
@@ -65,33 +50,14 @@ namespace GridMap
             //     AstarPath.graphs[0].Scan();
             // }
             
-            
-         
-            
-            // if (mapData.GraphData != null)
-            // {
-            //     //反序列化graphs
-            //     _astarPath.data.DeserializeGraphs(mapData.GraphData);
-            //     _gridGraph = _astarPath.graphs[0] as GridGraph;
-            // }
-            // else
-            // {
-            //     // _gridGraph.nodes[0].Walkable
-            //     _gridGraph= _astarPath.graphs[0] as GridGraph;
-            //     SetDimensions(_gridGraph, mapData.NodeSize, mapData.NodeWidth, mapData.NodeHeight);
-            // }
-            
-            
             _gridGraph= _astarPath.graphs[0] as GridGraph;
             SetDimensions(_gridGraph, mapData.NodeSize, mapData.NodeWidth, mapData.NodeHeight);
 
-            if (mapData.Nodes is { Length: > 0 } )
+            if (mapData.Nodes is not { Length: > 0 }) return;
+            var length = mapData.Nodes.Length;
+            for (var i = 0; i < length; i++)
             {
-                var length = mapData.Nodes.Length;
-                for (var i = 0; i < length; i++)
-                {
-                    SetNodeTag(i, mapData.Nodes[i]);
-                }
+                SetNodeTag(i, mapData.Nodes[i]);
             }
         }
         
@@ -118,6 +84,57 @@ namespace GridMap
             {
                 graphNode.Walkable = false;
             }
+        }
+
+        /// <summary>
+        /// 根据世界坐标获取图形节点
+        /// </summary>
+        /// <param name="worldPos"></param>
+        /// <param name="graphNode"></param>
+        /// <returns></returns>
+        public bool TryGetGraphNode(Vector2 worldPos, out GraphNode graphNode)
+        {
+            var nodePos = worldPos.WorldToGridPos(NodeSize);
+            return TryGetGraphNode(nodePos, out graphNode);
+        }
+        
+        /// <summary>
+        /// 根据格子的坐标获取图形节点
+        /// </summary>
+        /// <param name="nodePos"></param>
+        /// <param name="graphNode"></param>
+        /// <returns></returns>
+        public bool TryGetGraphNode(Vector2Int nodePos, out GraphNode graphNode)
+        {
+            var index = nodePos.y * Width + nodePos.x;
+            return TryGetGraphNode(index, out graphNode);
+        }
+        
+        /// <summary>
+        /// 根据格子的索引获取图形节点
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="graphNode"></param>
+        /// <returns></returns>
+        public bool TryGetGraphNode(int index,out GraphNode graphNode)
+        {
+            graphNode = null;
+            if (index < 0 || index >= _gridGraph.nodes.Length)
+            {
+                return false;
+            }
+            graphNode = _gridGraph.nodes[index];
+            return true;
+        }
+        
+        /// <summary>
+        /// 获得最近的Node
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
+        public GraphNode GetNearestNode(Vector2 position)
+        {
+            return _astarPath.GetNearest(position).node;
         }
         
         internal void SetNodeTag(Vector2 position, uint tag)

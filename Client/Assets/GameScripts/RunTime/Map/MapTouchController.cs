@@ -1,4 +1,5 @@
 using System;
+using GridMap.RunTime.Walker;
 using HT.Framework;
 using UnityEngine;
 
@@ -11,6 +12,8 @@ public sealed class MapTouchController : MonoBehaviour
     public LayerMask LayerMask;
     public bool IsEnable = true;
     public event Action<Vector2, GameObject> OnMouseDown;
+
+    public MapWalker _walker;
 
     private void Start()
     {
@@ -37,5 +40,8 @@ public sealed class MapTouchController : MonoBehaviour
         // 执行射线投射检测点击
         var hit = Physics2D.Raycast(mousePosition, Vector2.zero, Mathf.Infinity, LayerMask);
         OnMouseDown?.Invoke(mousePosition, hit.collider?.gameObject);
+        
+        
+        _walker.WalkTo(mousePosition.x,mousePosition.y);
     }
 }

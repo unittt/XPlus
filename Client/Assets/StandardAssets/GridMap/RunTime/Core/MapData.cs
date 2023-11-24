@@ -62,6 +62,39 @@ namespace GridMap
             return new Vector2(NodeWidth * NodeSize * 0.5f, NodeHeight * NodeSize * 0.5f);
         }
         
+        public bool NodeIsTag(Vector2 worldPos, NodeTag tag)
+        {
+            var nodePoint = new Vector2Int((int)(worldPos.x / NodeSize), (int)(worldPos.y / NodeSize));
+            return NodeIsTag(nodePoint, tag);
+        }
+
+        public bool NodeIsTag(Vector2Int point, NodeTag tag)
+        {
+            var index = point.y * NodeWidth + point.x;
+            return NodeIsTag(index, tag);
+        }
+
+        public bool NodeIsTag(int index, NodeTag tag)
+        {
+            if (TryGetNode(index, out var nodeTag))
+            {
+                return nodeTag == tag;
+            }
+
+            return false;
+        }
+        
+        public bool TryGetNode(int index, out NodeTag nodeTag)
+        {
+            nodeTag = 0;
+            if (Nodes is null || index < 0 || index >= Nodes.Length)
+            {
+                return false;
+            }
+            nodeTag = (NodeTag)Nodes[index];
+            return true;
+        }
+        
         public void WriteNodes(GridNodeBase[] gridNodeBases)
         {
             var length = gridNodeBases.Length;

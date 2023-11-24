@@ -1,3 +1,4 @@
+using Cinemachine;
 using UnityEngine;
 
 namespace GridMap
@@ -6,10 +7,12 @@ namespace GridMap
     {
 
         private Camera _mainCamera;
+        private CinemachineConfiner2D _confiner2D;
         
         internal override void OnInit()
         {
             _mainCamera =  MapManager.Camera.VirtualCameraGameObject.GetComponentInChildren<Camera>();
+            _confiner2D = MapManager.Camera.GetComponent<CinemachineConfiner2D>();
         }
 
         internal override void OnSetMapData(MapData mapData)
@@ -40,6 +43,7 @@ namespace GridMap
             };
             var collider2D = MapManager.Collider2D;
             collider2D.SetPath(0,path);
+            _confiner2D.InvalidateCache();
         }
 
         public void Release()

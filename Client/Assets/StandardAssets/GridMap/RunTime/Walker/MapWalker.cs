@@ -4,12 +4,13 @@ using Pathfinding;
 
 namespace GridMap.RunTime.Walker
 {
-    
     [RequireComponent(typeof(Seeker),typeof(SimpleSmoothModifier))]
     public class MapWalker : MonoBehaviour
     {
         public MapWalker followWalker;
-        private Seeker pathSeeker;
+        
+        //a*路径搜索
+        private Seeker _pathSeeker;
         private Path abPath;
        
         private bool isPathing;
@@ -25,7 +26,13 @@ namespace GridMap.RunTime.Walker
         
         public bool moveable = true;
         
+        /// <summary>
+        /// 移动速度
+        /// </summary>
         public float moveSpeed = 3.0f;
+        /// <summary>
+        /// 旋转的速度
+        /// </summary>
         public float rotateSpeed = 10.0f;
         private float moveNextDist = 0.5f;
         private PosCache _posCache;
@@ -35,7 +42,7 @@ namespace GridMap.RunTime.Walker
         
         private void Awake()
         {
-            pathSeeker = gameObject.GetComponent<Seeker>();
+            _pathSeeker = gameObject.GetComponent<Seeker>();
             _linePath = new List<Vector3>();
             SetPathMode(0);
         }
@@ -43,19 +50,19 @@ namespace GridMap.RunTime.Walker
 
         public void OnEnable()
         {
-            pathSeeker.pathCallback = OnAstarPathCallback;
+            _pathSeeker.pathCallback += OnAstarPathCallback;
         }
-
         
         public void OnDisable()
         {
             ClearPath();
-            pathSeeker.pathCallback = null;
+            _pathSeeker.pathCallback -= OnAstarPathCallback;
         }
         
         
          public virtual void OnDestroy()
-        {
+         {
+             _pathSeeker.pathCallback = null;
             moveTransform = null;
             rotateTransform = null;
             followWalker = null;
@@ -91,9 +98,11 @@ namespace GridMap.RunTime.Walker
         /// <param name="traversableTags">搜索者可以遍历的标签</param>
         public void SetPathMode(int traversableTags)
         {
-            pathSeeker.traversableTags = traversableTags;
+            // pathSeeker.traversableTags = traversableTags;
+            _pathSeeker.traversableTags = 1 << LayerGround | 1 << LayerSky;
         }
-        
+        public static readonly int LayerGround = 1;
+        public static readonly int LayerSky = 2;
 
         private void UpdateTransparent()
         {
@@ -182,16 +191,41 @@ namespace GridMap.RunTime.Walker
             _posCache.Position.y = (int)moveTransform.position.y;
             WalkTo(new Vector3(x, y, 0), useStraight);
         }
-        
-        public void WalkTo2(float x, float y)
+
+
+        public void WalkTo(Vector2 position, bool useStraight = true)
         {
-            WalkTo2(new Vector3(x, y, 0));
+           
+            //将目标坐标转换为node 坐标
+            
+            // var startPos = moveTransform.position;
+            // startPos.z = 0;
+            // useLine = false;
+            // if (useLine && GetLinePath(startPos, pos))
+            // {
+            //     OnLinePathCallback();
+            //     return;
+            // }
+            // List<Vector3> path = MapManager.Instance.GetCachePath();
+            // if (path != null)
+            // {
+            //     // Debug.Log ("use cache path "+path.Count);
+            //     OnLinePathCallback();
+            // }
+            // else
+            // {
+            //     _pathSeeker.StartPath(startPos, pos);
+            // }
         }
 
-        public void WalkTo3(float x, float y)
+        public void WalkTo(Vector2Int nodePoint,bool useStraight = true)
         {
-            WalkTo3(new Vector3(x, y, 0));
+            //1.清理路径
+            ClearPath();
+            
+            //2.判断是否为
         }
+        
         
         /// <summary>
         /// 停止移动
@@ -220,7 +254,7 @@ namespace GridMap.RunTime.Walker
         {
             if (_linePath.Count > 0) return _linePath;
             
-            var path = MapManager.GetCachePath(_posCache);
+            var path = MapManager.Instance.GetCachePath();
             return path is { Count: > 0 } ? path : abPath?.vectorPath;
         }
 
@@ -253,96 +287,46 @@ namespace GridMap.RunTime.Walker
             rotateTransform.localEulerAngles = angle;
         }
         
-      
-
-     
-
-      
-
-        
-        private void WalkTo3(Vector3 pos)
-        {
-            ClearPath();
-            Vector3 startPos = moveTransform.position;
-            startPos.z = 0;
-            if (GetLinePath3(startPos, pos))
-            {
-                OnLinePathCallback();
-            }
-        }
-        
-        private void WalkTo2(Vector3 pos)
-        {
-            ClearPath();
-            Vector3 startPos = moveTransform.position;
-            startPos.z = 0;
-            if (GetLinePath2(startPos, pos))
-            {
-                OnLinePathCallback();
-            }
-        }
-        
         
         private void WalkTo(Vector3 pos, bool useLine)
         {
-            // ClearPath();
-            // Vector3 startPos = moveTransform.position;
-            // startPos.z = 0; 
-            //
-            // if (useLine && GetLinePath(startPos, pos))
-            // {
-            //     OnLinePathCallback();
-            //     return;
-            // }
-            // List<Vector3> path = Map2D.CurrentMap.GetCachePath(posRecord);
-            // if (path != null)
-            // {
-            //     // Debug.Log ("use cache path "+path.Count);
-            //     OnLinePathCallback();
-            // }
-            // else
-            // {
-            //     pathSeeker.StartPath(startPos, pos);
-            // }
+            ClearPath();
+            var startPos = moveTransform.position;
+            startPos.z = 0;
+            useLine = false;
+            if (useLine && GetLinePath(startPos, pos))
+            {
+                OnLinePathCallback();
+                return;
+            }
+            List<Vector3> path = MapManager.Instance.GetCachePath();
+            if (path != null)
+            {
+                // Debug.Log ("use cache path "+path.Count);
+                OnLinePathCallback();
+            }
+            else
+            {
+                _pathSeeker.StartPath(startPos, pos);
+            }
+            
         }
         
-        private bool GetLinePath3(Vector3 startPos, Vector3 endPos)
-        {
-            // linePath.Clear();
-            // if (Map2D.CurrentMap != null && Map2D.CurrentMap.mapId == onMapID)
-            // {
-            //     linePath.Add(endPos);
-            //     return true;
-            // }
-            return false;
-        }
-
-        private bool GetLinePath2(Vector3 startPos, Vector3 endPos)
-        {
-            // linePath.Clear();
-            // if (Map2D.CurrentMap != null && Map2D.CurrentMap.mapId == onMapID && Map2D.CurrentMap.IsInMapArea(startPos.x, startPos.y) && Map2D.CurrentMap.IsInMapArea(endPos.x, endPos.y))
-            // {
-            //     linePath.Add(endPos);
-            //     return true;
-            // }
-            return false;
-        }
-
         private bool GetLinePath(Vector3 startPos, Vector3 endPos)
         {
-            // linePath.Clear();
-            // if (Map2D.CurrentMap != null && Map2D.CurrentMap.mapId == onMapID && Map2D.CurrentMap.IsLinePath(startPos, endPos))
-            // {
-            //     linePath.Add(endPos);
-            //     return true;
-            // }
+            _linePath.Clear();
+            if (MapManager.Instance.IsLinePath(startPos, endPos))
+            {
+                _linePath.Add(endPos);
+                return true;
+            }
             return false;
         }
         
         private void OnLinePathCallback()
         {
-            // pathIndex = 0;
-            // isPathing = true;
+            PathIndex = 0;
+            isPathing = true;
             // if (luaStartCallback != null)
             // {
             //     luaStartCallback.Call();
@@ -351,7 +335,25 @@ namespace GridMap.RunTime.Walker
         
         private void OnAstarPathCallback(Path p)
         {
-            
+            ABPath path = p as ABPath;
+            if (path == null)
+            {
+                return;
+            }
+            path.Claim(this);
+            if (path.error)
+            {
+                path.Release(this);
+                return;
+            }
+            abPath = path;
+            PathIndex = 0;
+            isPathing = true;
+            // if (luaStartCallback != null)
+            // {
+            //     luaStartCallback.Call();
+            // }
+            // Map2D.CurrentMap.AddSeekRecord (posRecord, abPath.vectorPath);
         }
         
     }

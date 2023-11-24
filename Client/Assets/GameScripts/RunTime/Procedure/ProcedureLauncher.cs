@@ -34,7 +34,8 @@ namespace GameScript.RunTime.Procedure
         {
             if (Main.m_Resource.IsInitialized)
             {
-                Main.m_Procedure.SwitchProcedure<ProcedureLogin>();
+                // Main.m_Procedure.SwitchProcedure<ProcedureLogin>();
+                Main.m_Procedure.SwitchProcedure<ProcedureGame>();
             }
         }
     }

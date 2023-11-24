@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Cinemachine;
 using Pathfinding;
-using GridMap.RunTime.Walker;
 using UnityEditor;
 using UnityEngine;
 
@@ -38,10 +37,7 @@ namespace GridMap
         /// </summary>
         [SerializeField]
         internal PolygonCollider2D Collider2D;
-
         
-        //网格图
-        private GridGraph _graph;
         
         //地图数据
         private MapData _mapData;
@@ -67,9 +63,12 @@ namespace GridMap
         /// </summary>
         public Func<MapData, int, int, Texture> BlockTextureFunc;
 
-        
+
+        public static MapManager Instance { get; private set; }
+
         void Awake()
         {
+            Instance = this;
             GraphHelper = RegisterHelper<GraphHelper>();
             BlockHelper = RegisterHelper<BlockHelper>();
             CameraHelper = RegisterHelper<CameraHelper>();
@@ -175,7 +174,7 @@ namespace GridMap
         /// </summary>
         /// <param name="posArray"></param>
         /// <returns></returns>
-        public static List<Vector3> GetCachePath(PosCache posCache)
+        public List<Vector3> GetCachePath()
         {
             return null;
         }
@@ -190,6 +189,33 @@ namespace GridMap
             CameraHelper.SetTarget(transform);
             //动态创建
             // BlockHelper.OnSetMapData();
+        }
+
+        
+        /// <summary>
+        /// 是否存在直线路径
+        /// </summary>
+        /// <param name="startPos">起始点</param>
+        /// <param name="endPos">结束点</param>
+        /// <returns></returns>
+        public bool IsLinePath(Vector2 startPos, Vector2 endPos)
+        {
+            var size = _mapData.NodeSize;
+            var startGridPos = startPos.WorldToGridPos(size);
+            var endGridPos = endPos.WorldToGridPos(size);
+            var dis = (int)Vector2.Distance(startGridPos, endGridPos);
+            dis = Mathf.Max(dis, 1);
+
+            for (var i = 1; i <= dis; i++)
+            {
+                var pos = Vector2.Lerp(startGridPos, endGridPos, 1.0f * i / dis);
+                var point = new Vector2Int((int)pos.x, (int)pos.y);
+                if (_mapData.NodeIsTag(point, NodeTag.Obstacle))
+                {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
