@@ -170,17 +170,6 @@ namespace GridMap
         }
         
         /// <summary>
-        /// 获取缓存路径
-        /// </summary>
-        /// <param name="posArray"></param>
-        /// <returns></returns>
-        public List<Vector3> GetCachePath()
-        {
-            return null;
-        }
-
-
-        /// <summary>
         /// 设置跟随的目标
         /// </summary>
         public void SetTarget(Transform transform)
@@ -190,7 +179,6 @@ namespace GridMap
             //动态创建
             // BlockHelper.OnSetMapData();
         }
-
         
         /// <summary>
         /// 是否存在直线路径

@@ -11,16 +11,14 @@ namespace GridMap.RunTime.Walker
         
         //a*路径搜索
         private Seeker _pathSeeker;
-        private Path abPath;
-       
         private bool isPathing;
         private bool isFollowing;
         private float followDis;
         private float followRate = 1.0f;
-        
-        private List<Vector3> _linePath;
 
-        
+        public List<Vector3> Path { get; protected set; }
+
+
         public Transform moveTransform;
         public Transform rotateTransform;
         
@@ -35,28 +33,27 @@ namespace GridMap.RunTime.Walker
         /// </summary>
         public float rotateSpeed = 10.0f;
         private float moveNextDist = 0.5f;
-        private PosCache _posCache;
-        
+   
         
         public int PathIndex { get; private set; }
         
         private void Awake()
         {
             _pathSeeker = gameObject.GetComponent<Seeker>();
-            _linePath = new List<Vector3>();
+            Path = new List<Vector3>();
             SetPathMode(0);
         }
 
 
         public void OnEnable()
         {
-            _pathSeeker.pathCallback += OnAstarPathCallback;
+            _pathSeeker.pathCallback += OnAStarPathCallback;
         }
         
         public void OnDisable()
         {
             ClearPath();
-            _pathSeeker.pathCallback -= OnAstarPathCallback;
+            _pathSeeker.pathCallback -= OnAStarPathCallback;
         }
         
         
@@ -127,15 +124,14 @@ namespace GridMap.RunTime.Walker
         /// <returns></returns>
         private Vector3 GetNextPos(float deltaTime)
         {
-            //获得路径 如果路径为空 或 长度为0 直接返回zero
-            var path = GetPath();
-            if (path == null || path.Count == 0)
+            if (Path is null || Path.Count == 0)
             {
                 return Vector3.zero;
             }
-            
+
+            var count = Path.Count;
             //限制index 
-            PathIndex = Mathf.Clamp(PathIndex, 0, path.Count);
+            PathIndex = Mathf.Clamp(PathIndex, 0, count);
             
             //移动速度
             var movement = moveSpeed * deltaTime;
@@ -148,10 +144,10 @@ namespace GridMap.RunTime.Walker
             var curPos = moveTransform.position;
             curPos.z = 0;
             var dir = Vector3.zero;
-            var waypoint = path[PathIndex];
+            var waypoint = GetWayPoint(PathIndex);
 
             float magnitude = 0;
-            if (PathIndex == path.Count - 1)
+            if (PathIndex == count - 1)
             {
                 dir = waypoint - curPos;
                 magnitude = dir.magnitude;
@@ -162,10 +158,10 @@ namespace GridMap.RunTime.Walker
                 return dir;
             }
 
-            while (PathIndex != path.Count - 1 && (curPos - waypoint).sqrMagnitude < moveNextDist * moveNextDist)
+            while (PathIndex != Path.Count - 1 && (curPos - waypoint).sqrMagnitude < moveNextDist * moveNextDist)
             {
                 PathIndex++;
-                waypoint = path[PathIndex];
+                waypoint = GetWayPoint(PathIndex);
             }
 
             dir = waypoint - curPos;
@@ -177,95 +173,30 @@ namespace GridMap.RunTime.Walker
             return dir;
         }
         
-        /// <summary>
-        /// 移动
-        /// </summary>
-        /// <param name="x"></param>
-        /// <param name="y"></param>
-        /// <param name="useStraight"></param>
-        public void WalkTo(float x, float y, bool useStraight = true)
-        {
-            _posCache.NodePoint.x = (int)x;
-            _posCache.NodePoint.y = (int)y;
-            _posCache.Position.x = ( int) moveTransform.position.x;
-            _posCache.Position.y = (int)moveTransform.position.y;
-            WalkTo(new Vector3(x, y, 0), useStraight);
-        }
-
-
-        public void WalkTo(Vector2 position, bool useStraight = true)
-        {
-           
-            //将目标坐标转换为node 坐标
-            
-            // var startPos = moveTransform.position;
-            // startPos.z = 0;
-            // useLine = false;
-            // if (useLine && GetLinePath(startPos, pos))
-            // {
-            //     OnLinePathCallback();
-            //     return;
-            // }
-            // List<Vector3> path = MapManager.Instance.GetCachePath();
-            // if (path != null)
-            // {
-            //     // Debug.Log ("use cache path "+path.Count);
-            //     OnLinePathCallback();
-            // }
-            // else
-            // {
-            //     _pathSeeker.StartPath(startPos, pos);
-            // }
-        }
-
-        public void WalkTo(Vector2Int nodePoint,bool useStraight = true)
-        {
-            //1.清理路径
-            ClearPath();
-            
-            //2.判断是否为
-        }
-        
         
         /// <summary>
         /// 停止移动
         /// </summary>
-        public void StopWalk()
+        public virtual void StopWalk()
         {
             ClearPath();
         }
         
-
         private void ClearPath()
         {
-            abPath?.Release(this);
-            abPath = null;
-            
             PathIndex = 0;
             isPathing = false;
-            _linePath.Clear();
+            Path.Clear();
         }
         
-        /// <summary>
-        /// 获得路径
-        /// </summary>
-        /// <returns></returns>
-        public List<Vector3> GetPath()
-        {
-            if (_linePath.Count > 0) return _linePath;
-            
-            var path = MapManager.Instance.GetCachePath();
-            return path is { Count: > 0 } ? path : abPath?.vectorPath;
-        }
 
-        public Vector3 GetWayPoint()
+        public Vector3 GetWayPoint(int index)
         {
-            var path = GetPath();
-            if (path is null || PathIndex < 0 || PathIndex >= path.Count)
+            if (Path is null || index >= Path.Count)
             {
                 return Vector3.zero;
             }
-            return path[PathIndex];
+            return Path[index];
         }
         
         private void Translate(Vector3 pos)
@@ -286,75 +217,50 @@ namespace GridMap.RunTime.Walker
             angle.z = 0f;
             rotateTransform.localEulerAngles = angle;
         }
-        
-        
-        private void WalkTo(Vector3 pos, bool useLine)
+
+
+        #region 移动目标
+        public void WalkTo(Vector3 endPos, bool useLine = true)
         {
+            //清理路径
             ClearPath();
+            
             var startPos = moveTransform.position;
             startPos.z = 0;
-            useLine = false;
-            if (useLine && GetLinePath(startPos, pos))
+            endPos.z = 0;
+     
+            if (useLine && MapManager.Instance.IsLinePath(startPos, endPos))
             {
-                OnLinePathCallback();
+                OnLinePathCallback(endPos);
                 return;
             }
-            List<Vector3> path = MapManager.Instance.GetCachePath();
-            if (path != null)
-            {
-                // Debug.Log ("use cache path "+path.Count);
-                OnLinePathCallback();
-            }
-            else
-            {
-                _pathSeeker.StartPath(startPos, pos);
-            }
+            _pathSeeker.StartPath(startPos, endPos);
+        }
+        
+        private void OnLinePathCallback(Vector3 pos)
+        {
+            Path.Add(pos);
+            OnFindPath();
+        }
+        
+        private void OnAStarPathCallback(Path path)
+        {
+            if (path.error) return;
             
+            //防止发生错误
+            Path.Clear();
+            Path.AddRange(path.vectorPath);
+            OnFindPath();
         }
-        
-        private bool GetLinePath(Vector3 startPos, Vector3 endPos)
-        {
-            _linePath.Clear();
-            if (MapManager.Instance.IsLinePath(startPos, endPos))
-            {
-                _linePath.Add(endPos);
-                return true;
-            }
-            return false;
-        }
-        
-        private void OnLinePathCallback()
+
+        /// <summary>
+        /// 当找到了路径
+        /// </summary>
+        protected virtual void OnFindPath()
         {
             PathIndex = 0;
             isPathing = true;
-            // if (luaStartCallback != null)
-            // {
-            //     luaStartCallback.Call();
-            // }
         }
-        
-        private void OnAstarPathCallback(Path p)
-        {
-            ABPath path = p as ABPath;
-            if (path == null)
-            {
-                return;
-            }
-            path.Claim(this);
-            if (path.error)
-            {
-                path.Release(this);
-                return;
-            }
-            abPath = path;
-            PathIndex = 0;
-            isPathing = true;
-            // if (luaStartCallback != null)
-            // {
-            //     luaStartCallback.Call();
-            // }
-            // Map2D.CurrentMap.AddSeekRecord (posRecord, abPath.vectorPath);
-        }
-        
+        #endregion
     }
 }
