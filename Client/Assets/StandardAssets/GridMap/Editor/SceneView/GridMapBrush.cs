@@ -107,7 +107,7 @@ namespace GridMap
            };
            
            //如果相交
-           if (EditorGlobalTools.TryGetOverlapsArea(rect1, rect2, out var overlapRect))
+           if (MapGlobal.TryGetOverlapsArea(rect1, rect2, out var overlapRect))
            {
                var width = (int)(overlapRect.size.x /nodeSize);
                var high =(int)(overlapRect.size.y / nodeSize);

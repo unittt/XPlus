@@ -63,6 +63,11 @@ namespace GridMap
         /// </summary>
         public Func<MapData, int, int, Texture> BlockTextureFunc;
 
+        
+        /// <summary>
+        /// 相机的视角
+        /// </summary>
+        public Rect CameraViewRect =>CameraHelper.GetCameraViewRect();
 
         public static MapManager Instance { get; private set; }
 
@@ -78,6 +83,16 @@ namespace GridMap
             }
         }
 
+        private void Update()
+        {
+            if (_mapData is null) return;
+            
+            foreach (var helper in _helpers)
+            {
+                helper.OnUpdate();
+            }
+        }
+        
         private T RegisterHelper<T>() where T : MapHelper, new()
         {
             var helper = new T
@@ -172,12 +187,12 @@ namespace GridMap
         /// <summary>
         /// 设置跟随的目标
         /// </summary>
-        public void SetTarget(Transform transform)
+        public void SetFollow(Transform transform)
         {
-            //相机设置跟随的目标
-            CameraHelper.SetTarget(transform);
-            //动态创建
-            // BlockHelper.OnSetMapData();
+            foreach (var helper in _helpers)
+            {
+                helper.SetFollow(transform);
+            }
         }
         
         /// <summary>

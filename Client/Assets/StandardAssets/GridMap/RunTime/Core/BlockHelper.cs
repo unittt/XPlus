@@ -10,16 +10,40 @@ namespace GridMap
     /// </summary>
     internal class BlockHelper : MapHelper
     {
+        
+        /// <summary>
+        /// 距离阈值
+        /// </summary>
+        private const float DIS_THRESHOLD = 0.1f;
+
+
+        private MapData _mapData;
         private ObjectPool<GameObject> _blockEntityPool;
         private ObjectPool<ChunkData> _blockPool;
         private List<ChunkData> _blocks;
-        private MapData _mapData;
+        
+        //跟随的目标
+        private Transform _target;
+        private Vector3 _lasetPosition;
+        
         
         internal override void OnInit()
         {
             _blockEntityPool = new ObjectPool<GameObject>(OnCreateBlockEntity, OnGetBlockEntity, OnReleaseBlockEntity);
             _blockPool = new ObjectPool<ChunkData>(OnCreateBlock);
             _blocks = new List<ChunkData>();
+        }
+
+        internal override void OnUpdate()
+        {
+            if (_target is null || Vector3.Distance(_target.position, _lasetPosition) <  DIS_THRESHOLD)
+            {
+                return;
+            }
+
+            _lasetPosition = _target.position;
+            //获取相机的视角
+            DynamicsRefreshBlockByRect(MapManager.CameraViewRect);
         }
         
         private GameObject OnCreateBlockEntity()
@@ -57,7 +81,7 @@ namespace GridMap
         {
             ResetBlock(width, height,size);
         }
-
+        
         private void ResetBlock(int width, int height, float size)
         {
             //释放数据
@@ -88,29 +112,39 @@ namespace GridMap
         private ChunkData InitBlock(int x, int y, float scale)
         {
             var chunkData = _blockPool.Get();
-            var center = new Vector3((x + 0.5f) * scale, (y + 0.5f) * scale, 0);
             chunkData.X = x;
             chunkData.Y = y;
-            chunkData.Bounds = new Rect(center, new Vector2(scale, scale));
+            
+            //矩形最小角的位置
+            var minPosition = new Vector2(x * scale, y * scale);
+            chunkData.Bounds = new Rect(minPosition, new Vector2(scale, scale));
             return chunkData;
         }
 
         /// <summary>
-        /// 按矩形实例化块
+        /// 动态刷新Block
         /// </summary>
         /// <param name="rect"></param>
-        public void InstantiateBlockByRect(Rect rect)
+        private void DynamicsRefreshBlockByRect(Rect rect)
         {
-            if (!MapManager.IsDynamics)
-            {
-                return;
-            }
+            if (!MapManager.IsDynamics)return;
             
             foreach (var block in _blocks)
             {
-                if (!block.IsLoaded && MapGlobal.IsOverlaps(rect, block.Bounds))
+                var isOverlaps = MapGlobal.IsOverlaps(rect, block.Bounds);
+                var isLoaded = block.IsLoaded;
+                switch (isOverlaps)
                 {
-                    InstantiateBlockEntity(block);
+                    //如果有交集 并且未加载
+                    case true when !isLoaded:
+                        //实例化实体
+                        InstantiateBlockEntity(block);
+                        break;
+                    //如果没有交集 并且存在实体
+                    case false when isLoaded:
+                        //释放实体
+                        ReleaseBlockEntity(block);
+                        break;
                 }
             }
         }
@@ -126,13 +160,12 @@ namespace GridMap
                 return;
             }
             
-            chunkData.IsLoaded = true;
             var entity = _blockEntityPool.Get();
             chunkData.Entity = entity;
             
             //设置transform
-            entity.transform.SetLocalPositionAndRotation(chunkData.Bounds.position, Quaternion.identity);
-            entity.transform.localScale = Vector3.one * chunkData.Bounds.size.x;
+            entity.transform.SetLocalPositionAndRotation(chunkData.Bounds.center, Quaternion.identity);
+            entity.transform.localScale = Vector3.one * _mapData.BlockSize;
             
             //加载贴图
             var texture = MapManager.LoadBlockTexture(chunkData.X, chunkData.Y);
@@ -141,7 +174,7 @@ namespace GridMap
             var propertyBlock = new MaterialPropertyBlock();
             mr.GetPropertyBlock(propertyBlock);
 
-            if (texture != null)
+            if (texture is not null)
             {
                 propertyBlock.SetTexture("_MainTex", texture);
             }
@@ -152,7 +185,12 @@ namespace GridMap
             
             mr.SetPropertyBlock(propertyBlock);
         }
-        
+
+        internal override void SetFollow(Transform target)
+        {
+            _target = target;
+        }
+
 
         /// <summary>
         /// 释放
@@ -175,12 +213,23 @@ namespace GridMap
         {
             //从列表中移除
             _blocks.Remove(chunkData);
-            //释放实体
-            _blockEntityPool.Release(chunkData.Entity);
+            ReleaseBlockEntity(chunkData);
             //调用释放方法
             chunkData.Release();
             //释放Block
             _blockPool.Release(chunkData);
+        }
+
+        /// <summary>
+        /// 释放实体
+        /// </summary>
+        /// <param name="chunkData"></param>
+        private void ReleaseBlockEntity(ChunkData chunkData)
+        {
+            //释放实体
+            if (!chunkData.IsLoaded) return;
+            _blockEntityPool.Release(chunkData.Entity);
+            chunkData.Entity = null;
         }
     }
 }

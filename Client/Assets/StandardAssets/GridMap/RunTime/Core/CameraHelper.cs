@@ -11,7 +11,7 @@ namespace GridMap
         
         internal override void OnInit()
         {
-            _mainCamera =  MapManager.Camera.VirtualCameraGameObject.GetComponentInChildren<Camera>();
+            _mainCamera =  Camera.main;
             _confiner2D = MapManager.Camera.GetComponent<CinemachineConfiner2D>();
         }
 
@@ -50,17 +50,13 @@ namespace GridMap
         {
             
         }
-
-        /// <summary>
-        /// 设置跟随目标
-        /// </summary>
-        /// <param name="transform"></param>
-        public void SetTarget(Transform transform)
+        
+        internal override void SetFollow(Transform target)
         {
-            MapManager.Camera.Follow = transform;
+            MapManager.Camera.Follow = target;
         }
-        
-        
+
+
         /// <summary>
         /// 获得相机的可视区域
         /// </summary>

@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace GridMap
 {
     /// <summary>
@@ -13,6 +15,11 @@ namespace GridMap
 
         }
 
+        internal virtual void OnUpdate()
+        {
+            
+        }
+        
         /// <summary>
          /// 当设置地图数据
          /// </summary>
@@ -37,6 +44,15 @@ namespace GridMap
          /// <param name="height"></param>
          /// <param name="size"></param>
          internal virtual void OnGridGraphParamsChanged(int width,int height, float size)
+         {
+             
+         }
+         
+         /// <summary>
+         /// 设置跟随目标
+         /// </summary>
+         /// <param name="target"></param>
+         internal virtual void SetFollow(Transform target)
          {
              
          }

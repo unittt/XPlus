@@ -10,7 +10,7 @@ namespace GridMap
         /// <summary>
         /// 是否已加载
         /// </summary>
-        public bool IsLoaded;
+        public bool IsLoaded => Entity is not null;
 
         
         public int X;
@@ -28,8 +28,8 @@ namespace GridMap
         
         public void Release()
         {
-            IsLoaded = false;
             Entity = null;
+            Bounds = Rect.zero;
         }
     }
 }

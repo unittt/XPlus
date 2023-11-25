@@ -37,7 +37,7 @@ namespace GridMap.RunTime.Walker
         
         public int PathIndex { get; private set; }
         
-        private void Awake()
+        protected virtual void Awake()
         {
             _pathSeeker = gameObject.GetComponent<Seeker>();
             Path = new List<Vector3>();
@@ -63,10 +63,8 @@ namespace GridMap.RunTime.Walker
             moveTransform = null;
             rotateTransform = null;
             followWalker = null;
-            if (!isFollowing) return;
             isFollowing = false;
-            StopAllCoroutines();
-        }
+         }
         
         private void Update()
         {
@@ -83,12 +81,18 @@ namespace GridMap.RunTime.Walker
                 {	
                     isPathing = false;
                     ClearPath();
+                    OnWalkEnd();
                 }
             }
             UpdateTransparent();
         }
 
-        
+        protected virtual void OnWalkEnd()
+        {
+            
+        }
+
+
         /// <summary>
         /// 用于设置对象在地图上可以移动的区域
         /// </summary>
