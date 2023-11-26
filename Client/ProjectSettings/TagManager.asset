@@ -12,6 +12,8 @@ TagManager:
   - 
   - Water
   - UI
+  - Map
+  - MapWalker
   - 
   - 
   - 
@@ -19,8 +21,6 @@ TagManager:
   - 
   - 
   - 
-  - 
-  - RoleCreate
   - 
   - 
   - 

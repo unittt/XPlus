@@ -220,5 +220,13 @@ namespace GridMap
             }
             return true;
         }
+
+
+        #region mapdata
+        public bool TryGetNode(Vector2 worldPos, out NodeTag nodeTag)
+        {
+            return _mapData.TryGetNode(worldPos, out nodeTag);
+        }
+        #endregion
     }
 }

@@ -203,12 +203,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc45658272d042029b5689b723b2059c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  followWalker: {fileID: 0}
-  moveTransform: {fileID: 494963783}
-  rotateTransform: {fileID: 1667636553}
-  moveable: 1
-  moveSpeed: 3
-  rotateSpeed: 10
+  MoveTransform: {fileID: 0}
+  RotateTransform: {fileID: 0}
+  MoveSpeed: 3
+  RotateSpeed: 10
+  MoveNextDist: 0.5
+  FollowWalker: {fileID: 0}
+  FollowDis: 0
+  FollowRate: 1
+  IsMoveable: 1
 --- !u!114 &494963781
 MonoBehaviour:
   m_ObjectHideFlags: 0

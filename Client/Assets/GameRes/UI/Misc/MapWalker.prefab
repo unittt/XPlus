@@ -75,6 +75,7 @@ GameObject:
   - component: {fileID: 34255297601605158}
   - component: {fileID: 5829632100330767732}
   - component: {fileID: 7116323171090184568}
+  - component: {fileID: 7288518232095016917}
   m_Layer: 7
   m_Name: MapWalker
   m_TagString: Untagged
@@ -179,12 +180,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc45658272d042029b5689b723b2059c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  followWalker: {fileID: 0}
-  moveTransform: {fileID: 4000011822534016}
-  rotateTransform: {fileID: 534543381547506300}
-  moveable: 1
-  moveSpeed: 2.7
-  rotateSpeed: 10
+  MoveTransform: {fileID: 4000011822534016}
+  RotateTransform: {fileID: 534543381547506300}
+  MoveSpeed: 2.7
+  RotateSpeed: 10
+  MoveNextDist: 0.5
+  FollowWalker: {fileID: 0}
+  FollowDis: 0
+  FollowRate: 1
+  IsMoveable: 1
+--- !u!114 &7288518232095016917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000011137813172}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b0199417bf8b4ac7a84deaf804092430, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _animator: {fileID: 6159422586699958081}
+  _mapwalker: {fileID: 7116323171090184568}
 --- !u!1 &1000011543160034
 GameObject:
   m_ObjectHideFlags: 0
@@ -422,5 +440,10 @@ PrefabInstance:
 --- !u!4 &6063285223199209653 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4000013725215880, guid: d7f89b00ae4ff5444bcf1f59be9aae67, type: 3}
+  m_PrefabInstance: {fileID: 6064985530907087933}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &6159422586699958081 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 95000010312979324, guid: d7f89b00ae4ff5444bcf1f59be9aae67, type: 3}
   m_PrefabInstance: {fileID: 6064985530907087933}
   m_PrefabAsset: {fileID: 0}

@@ -83,6 +83,14 @@ namespace GridMap
 
             return false;
         }
+
+
+        public bool TryGetNode(Vector2 worldPos, out NodeTag nodeTag)
+        {
+            var nodePoint = new Vector2Int((int)(worldPos.x / NodeSize), (int)(worldPos.y / NodeSize));
+            var index = nodePoint.y * NodeWidth + nodePoint.x;
+            return TryGetNode(index, out nodeTag);
+        }
         
         public bool TryGetNode(int index, out NodeTag nodeTag)
         {
