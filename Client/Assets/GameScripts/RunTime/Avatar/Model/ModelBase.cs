@@ -38,7 +38,7 @@ namespace GameScripts.RunTime.Avatar.Model
         
         private void OnEndMove()
         {
-            CrossFade("idleCity", 1,1);
+            CrossFade("idleCity",0.3f,1);
         }
         
         /// <summary>

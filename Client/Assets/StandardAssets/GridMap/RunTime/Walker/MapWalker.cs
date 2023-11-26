@@ -43,10 +43,7 @@ namespace GridMap.RunTime.Walker
             set
             {
 
-                if (_isPathing == value)
-                {
-                    return;
-                }
+                if (_isPathing == value) return;
                 _isPathing = value;
                 if (_isPathing)
                 {
