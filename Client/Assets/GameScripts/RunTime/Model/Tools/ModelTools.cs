@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
+using GameScripts.RunTime.Define;
 using UnityEngine;
 
-namespace GameScripts.RunTime.Avatar.Tools
+
+namespace GameScripts.RunTime.Model
 {
     public static class ModelTools
     {

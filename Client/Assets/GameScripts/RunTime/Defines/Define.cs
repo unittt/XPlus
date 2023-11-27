@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace GameScripts.RunTime.Avatar
+namespace GameScripts.RunTime.Define
 {
     public static class GameDefines
     {
