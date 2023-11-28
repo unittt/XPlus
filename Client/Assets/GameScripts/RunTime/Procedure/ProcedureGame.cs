@@ -37,7 +37,8 @@ namespace GameScript.RunTime.Procedure
             //加载角色
             var roleEntity = await Main.m_Entity.CreateEntity<RoleEntity>();
             ModelInfo modelInfo = new ModelInfo();
-            modelInfo.shape = 1120;
+            modelInfo.shape = 1110;
+            modelInfo.weapon = 9;
             roleEntity.Fill(modelInfo);
             var mapTouchController = GameObject.Find("Touch").GetComponent<MapTouchController>();
             mapTouchController._walker = roleEntity.Walker;

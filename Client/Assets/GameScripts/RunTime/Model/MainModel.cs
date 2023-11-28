@@ -1,3 +1,4 @@
+using HT.Framework;
 using UnityEngine;
 
 namespace GameScripts.RunTime.Model
@@ -7,10 +8,7 @@ namespace GameScripts.RunTime.Model
     /// </summary>
     public class MainModel : ModelBase
     {
-        //1.加载模型
-        //2.加载人物动画控制器
-        //3.播放动画
-
+        
         private SkinnedMeshRenderer _sMenderer;
         
         /// <summary>
@@ -21,8 +19,20 @@ namespace GameScripts.RunTime.Model
         /// 翅膀挂点
         /// </summary>
         public Transform WingContainer { get; private set; }
+
+
+        public override void OnInit(RoleEntity roleEntity)
+        {
+            base.OnInit(roleEntity);
         
-        
+        }
+
+        protected override void OnEntityCreationCompleted()
+        {
+            var variableBehaviour = Entity.GetComponent<VariableBehaviour>();
+            WeaponContainer = variableBehaviour.Container.Get<Transform>("mount_righthand");
+        }
+
         protected override Transform GetParent()
         {
             return RoleEntity.ActorContainer;
