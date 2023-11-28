@@ -785,7 +785,7 @@ namespace HT.Framework
 
             uILogic.OnDestroy();
             
-            Main.m_Resource.UnLoadAsset(uILogic.UIEntity, true);
+            Main.m_Resource.UnLoadAsset(uILogic.UIEntity);
             
             Main.Kill(uILogic.UIEntity);
             uILogic.UIEntity = null;

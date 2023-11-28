@@ -77,7 +77,7 @@ GameObject:
   - component: {fileID: 7116323171090184568}
   - component: {fileID: 7288518232095016917}
   m_Layer: 7
-  m_Name: MapWalker
+  m_Name: ActorEntity
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

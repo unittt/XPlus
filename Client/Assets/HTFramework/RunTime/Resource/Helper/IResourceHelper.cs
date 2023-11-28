@@ -90,8 +90,7 @@ namespace HT.Framework
         ///  卸载资源
         /// </summary>
         /// <param name="obj"></param>
-        /// <param name="isClone"></param>
-        void UnLoadAsset(Object obj, bool isClone);
+        void UnLoadAsset(Object obj);
 
         /// <summary>
         /// 释放场景

@@ -342,7 +342,7 @@ namespace HT.Framework
                 
                 ui.OnDestroy();
                 
-                Main.m_Resource.UnLoadAsset(ui.UIEntity, true);
+                Main.m_Resource.UnLoadAsset(ui.UIEntity);
                 Main.Kill(ui.UIEntity);
                 ui.UIEntity = null;
             }

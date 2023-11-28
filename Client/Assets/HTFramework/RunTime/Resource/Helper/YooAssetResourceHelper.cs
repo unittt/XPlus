@@ -309,27 +309,32 @@ namespace HT.Framework
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="isClone"></param>
-        public void UnLoadAsset(Object obj, bool isClone)
+        public void UnLoadAsset(Object obj)
         {
             if (obj == null)
             {
                 return;
             }
 
+            //是否为克隆体
+            var isClone = false;
             //作为clone的实例化编号
             var cloneInstanceID = 0;
-            if (isClone)
+            //如果为gameObject 判断是否为克隆体
+            if (obj.GetType() == typeof(GameObject))
             {
-                cloneInstanceID = obj.GetInstanceID();
-                obj = TryGetObjectByClone(obj, true);
-
-                if (obj == null)
+                //判断是否关联源obj
+                var sourceObj = TryGetObjectByClone(obj, true);
+                
+                if (sourceObj != null)
                 {
-                    return;
+                    cloneInstanceID = obj.GetInstanceID();
+                    obj = sourceObj;
+                    isClone = true;
                 }
             }
-            
-            //减少引用
+
+            //获得obj handle
             if (!TryGetLoadHandleByObj(obj, out var handle))
             {
                 return;

@@ -369,7 +369,7 @@ namespace HT.Framework
                         Entities[type].Remove(entityLogic);
                         entityLogic.OnDestroy();
                         Main.m_ReferencePool.Despawn(entityLogic);
-                        Main.m_Resource.UnLoadAsset(entityLogic.Entity,true);
+                        Main.m_Resource.UnLoadAsset(entityLogic.Entity);
                         Main.Kill(entityLogic.Entity);
                         entityLogic.Entity = null;
                         entityLogic = null;

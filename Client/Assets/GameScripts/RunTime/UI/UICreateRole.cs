@@ -254,13 +254,13 @@ namespace GameScript.RunTime.UI
 		{
 			foreach (var gameObj in _schoolInstances.Values)
 			{
-				Main.m_Resource.UnLoadAsset(gameObj, true);
+				Main.m_Resource.UnLoadAsset(gameObj);
 			}
 			_schoolInstances.Clear();
 			
 			foreach (var gameObj in _skillInstances.Values)
 			{
-				Main.m_Resource.UnLoadAsset(gameObj, true);
+				Main.m_Resource.UnLoadAsset(gameObj);
 			}
 			_skillInstances.Clear();
 

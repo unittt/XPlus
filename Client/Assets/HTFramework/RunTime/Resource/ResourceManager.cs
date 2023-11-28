@@ -203,9 +203,9 @@ namespace HT.Framework
         /// </summary>
         /// <param name="obj"></param>
         /// <param name="isClone"></param>
-        public void UnLoadAsset(Object obj, bool isClone = false)
+        public void UnLoadAsset(Object obj)
         {
-            _helper.UnLoadAsset(obj, isClone);
+            _helper.UnLoadAsset(obj);
         }
 
         /// <summary>
