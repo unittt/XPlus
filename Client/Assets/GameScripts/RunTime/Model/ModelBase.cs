@@ -1,3 +1,6 @@
+using Cysharp.Threading.Tasks;
+using HT.Framework;
+using Pb.Mmo.Common;
 using UnityEngine;
 
 namespace GameScripts.RunTime.Model
@@ -5,8 +8,15 @@ namespace GameScripts.RunTime.Model
     /// <summary>
     /// 模型基类，负责模型的动画，材质，颜色
     /// </summary>
-    public class ModelBase
+    public abstract class ModelBase : IReference
     {
+        
+        public RoleEntity Role;
+        /// <summary>
+        /// 模型实体
+        /// </summary>
+        public GameObject Entity { get; protected set; }
+
         private Animator _animator;
         private float _normalizedTime;
         private float _fixedTime;
@@ -199,6 +209,19 @@ namespace GameScripts.RunTime.Model
             _fixedTime = fixedTime;
             var iHash = ModelTools.StateToHash(sState);
             _animator.CrossFadeInFixedTime(iHash, iDuration, 0, _fixedTime);
+        }
+
+        public void Reset()
+        {
+            Role = null;
+        }
+
+        /// <summary>
+        /// 加载模型
+        /// </summary>
+        public async virtual UniTask LoadEntity()
+        {
+            
         }
     }
 }

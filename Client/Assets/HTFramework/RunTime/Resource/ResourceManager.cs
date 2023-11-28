@@ -202,7 +202,6 @@ namespace HT.Framework
         ///  卸载资源
         /// </summary>
         /// <param name="obj"></param>
-        /// <param name="isClone"></param>
         public void UnLoadAsset(Object obj)
         {
             _helper.UnLoadAsset(obj);

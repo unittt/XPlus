@@ -1,4 +1,8 @@
+using System;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using HT.Framework;
+using Pb.Mmo.Common;
 
 namespace GameScripts.RunTime.Model
 {
@@ -8,86 +12,69 @@ namespace GameScripts.RunTime.Model
     [EntityResource("RoleEntity",true)]
     public class RoleEntity : EntityLogicBase
     {
-        
+       
+        private readonly List<ModelBase> _models = new();
+        private readonly Dictionary<Type, ModelBase> _modelInstance = new();
+
+        /// <summary>
+        /// 模型信息
+        /// </summary>
+        public ModelInfo ModelInfo { get; private set; }
         
         public override void OnInit()
         {
-            base.OnInit();
-            //1.创建角色
-          
+            RegisterModel<MainModel>();
+            RegisterModel<WeaponModel>();
+            RegisterModel<WingModel>();
+            RegisterModel<RideModel>();
         }
 
-        public void Fill(int actorID,int weaponID)
+        /// <summary>
+        /// 注册模型逻辑
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        private void RegisterModel<T>() where T : ModelBase, new()
         {
-            //1.填充演员
-            //3.填充武器
-            //4.填充翅膀
-            //5.填充坐骑
+            var model = Main.m_ReferencePool.Spawn<T>();
+            _models.Add(model);
+            _modelInstance.Add(model.GetType(), model);
+            model.Role = this;
         }
 
-        public void ChangeShape()
+        /// <summary>
+        /// 获得模型逻辑
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public T GetModel<T>() where T: ModelBase
         {
-            // Main.m_Resource.LoadAsset<>()
+            var type = typeof(T);
+            return _modelInstance.ContainsKey(type) ? _modelInstance[type].Cast<T>() : null;
         }
         
-        /// <summary>
-        /// 设置身体的贴图
-        /// </summary>
-        public void SetBodyTexture()
+        public override void OnDestroy()
         {
-            
+            var maxIndex = _models.Count -1;
+            for (var i = maxIndex; i >= 0; i--)
+            {
+                Main.m_ReferencePool.Despawn(_models[i]);
+            }
+            _models.Clear();
+            _modelInstance.Clear();
         }
 
-        /// <summary>
-        /// 设置武器的贴图
-        /// </summary>
-        public void SetMountTexture()
+        public void Fill(ModelInfo modelInfo)
         {
-            
+            ModelInfo = modelInfo;
+            LoadEntities().Forget();
         }
         
-        // function CActor.OnTextureDone(self, type, prefab, errcode)
-        //     if prefab then
-        // if type == "body" then
-        //     self.m_MainModel:SetBodyMatTexture(prefab)
-        // elseif type == "mount" then
-        //     self.m_MainModel:SetMountMatTexture(prefab)
-        // end
-        //     elseif errcode then
-        // printc("CActor.OnTextureDone: ", errcode)
-        // end
-        //     end
-
-        /// <summary>
-        /// 设置身体的shader
-        /// </summary>
-        public void SetBodyShader()
+        private async UniTaskVoid LoadEntities()
         {
-            
-        }
-
-        /// <summary>
-        /// 刷新角色模型的shader
-        /// </summary>
-        private void UpdateShaderInfo()
-        {
-            // self.m_MainModel:UpdateShaderInfo()	
-        }
-
-        /// <summary>
-        /// 删除角色模型的材质球
-        /// </summary>
-        private void DelMaterial()
-        {
-            // self.m_MainModel:DelMaterial(sMatPath)
-        }
-
-        /// <summary>
-        /// 设置武器颜色
-        /// </summary>
-        public void SetWeaponMatColor()
-        {
-            
+            foreach (var model in _models)
+            {
+                await model.LoadEntity();
+            }
         }
     }
 }
