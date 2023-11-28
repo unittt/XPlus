@@ -19,7 +19,6 @@ public sealed class MapTouchController : MonoBehaviour
     private void Start()
     {
         _cam = Camera.main;
-        MapManager.Instance.SetFollow(_walker.transform);
     }
 
     private void Update()

@@ -37,5 +37,10 @@ namespace GameScripts.RunTime.Model
         {
             
         }
+        
+        protected override string GetLocation()
+        {
+            return "";
+        }
     }
 }

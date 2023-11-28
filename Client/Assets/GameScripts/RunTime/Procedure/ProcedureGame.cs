@@ -1,7 +1,9 @@
 using System;
 using Cysharp.Threading.Tasks;
+using GameScripts.RunTime.Model;
 using GridMap;
 using HT.Framework;
+using Pb.Mmo.Common;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -25,13 +27,21 @@ namespace GameScript.RunTime.Procedure
         private async UniTask InitAsync()
         {
             await Main.m_Resource.LoadSceneAsync("Game",null,LoadSceneMode.Additive);
+            
             //等待加载地图
-
             var textAsset = await Main.m_Resource.LoadAsset<TextAsset>("mapdata_1010");
             MapData mapData = MapData.Deserialize(textAsset.text);
             var mapManager = GameObject.Find("GridMapManager").GetComponent<MapManager>();
             mapManager.SetMapData(mapData);
-            //等待加载角色
+            
+            //加载角色
+            var roleEntity = await Main.m_Entity.CreateEntity<RoleEntity>();
+            ModelInfo modelInfo = new ModelInfo();
+            modelInfo.shape = 1120;
+            roleEntity.Fill(modelInfo);
+            var mapTouchController = GameObject.Find("Touch").GetComponent<MapTouchController>();
+            mapTouchController._walker = roleEntity.Walker;
+            MapManager.Instance.SetFollow(roleEntity.Entity.transform);
         }
         
         private void OnLoading(float arg)

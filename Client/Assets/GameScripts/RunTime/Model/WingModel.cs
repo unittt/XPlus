@@ -5,6 +5,9 @@ namespace GameScripts.RunTime.Model
     /// </summary>
     public class WingModel : ModelBase
     {
-        
+        protected override string GetLocation()
+        {
+            return "";
+        }
     }
 }

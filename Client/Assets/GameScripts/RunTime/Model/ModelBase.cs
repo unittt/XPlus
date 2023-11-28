@@ -7,20 +7,88 @@ namespace GameScripts.RunTime.Model
 {
     /// <summary>
     /// 模型基类，负责模型的动画，材质，颜色
+    /// 1.设置模型的材质
+    /// 2.设置模型的颜色
     /// </summary>
     public abstract class ModelBase : IReference
     {
+        /// <summary>
+        /// 角色实体
+        /// </summary>
+        public RoleEntity RoleEntity { get; private set; }
+        /// <summary>
+        /// 模型信息
+        /// </summary>
+        public ModelInfo Info => RoleEntity.ModelInfo;
         
-        public RoleEntity Role;
         /// <summary>
         /// 模型实体
         /// </summary>
         public GameObject Entity { get; protected set; }
+        /// <summary>
+        /// 模型实体是否加载完成
+        /// </summary>
+        public bool IsLoadDone => Entity is not null;
 
         private Animator _animator;
         private float _normalizedTime;
         private float _fixedTime;
         private float _iDuration;
+
+
+        public virtual void OnInit(RoleEntity roleEntity)
+        {
+            RoleEntity = roleEntity;
+        }
+        
+        #region 加载模型
+        /// <summary>
+        /// 加载模型
+        /// </summary>
+        public async UniTask CreateEntity()
+        {
+            var location = GetLocation();
+            if (string.IsNullOrEmpty(location))
+            {
+                return;
+            }
+            Entity = await Main.m_Resource.LoadPrefab(location,GetParent());
+            OnEntityCreationCompleted();
+        }
+
+        /// <summary>
+        /// 实体创建完成
+        /// </summary>
+        protected virtual void OnEntityCreationCompleted()
+        {
+            
+        }
+
+        /// <summary>
+        /// 获得模型的地址
+        /// </summary>
+        /// <returns></returns>
+        protected abstract string GetLocation();
+
+        /// <summary>
+        /// 获取父节点
+        /// </summary>
+        /// <returns></returns>
+        protected virtual Transform GetParent()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// 释放实体
+        /// </summary>
+        protected virtual void ReleaseEntity()
+        {
+            if (!IsLoadDone) return;
+            Main.m_Resource.UnLoadAsset(Entity);
+            Entity = null;
+        }
+        #endregion
         
         public void SetAnimatorCullModel(AnimatorCullingMode animatorCullingMode)
         {
@@ -51,13 +119,6 @@ namespace GameScripts.RunTime.Model
             
         }
 
-        /// <summary>
-        /// 初始化meshrender组件
-        /// </summary>
-        public virtual void InitSkinMeshRender()
-        {
-            
-        }
 
         /// <summary>
         /// 显示或者隐藏模型
@@ -66,93 +127,6 @@ namespace GameScripts.RunTime.Model
         public void SetActive(bool active)
         {
             
-        }
-
-        /// <summary>
-        /// 设置染色颜色
-        /// </summary>
-        public void SetRanseColor()
-        {
-            // if self.m_SkinnedMeshRenderer and ranseInfo then
-            //
-            // if ranseInfo[define.Ranse.PartType.hair] then 		
-            // self.m_SkinnedMeshRenderer.material:SetColor("_rColor",  ranseInfo[define.Ranse.PartType.hair])
-            // end 
-            //
-            // if ranseInfo[define.Ranse.PartType.clothes] then
-            // self.m_SkinnedMeshRenderer.material:SetColor("_gColor",  ranseInfo[define.Ranse.PartType.clothes])
-            // end 
-            //
-            // if ranseInfo[define.Ranse.PartType.other] then 
-            // self.m_SkinnedMeshRenderer.material:SetColor("_bColor",  ranseInfo[define.Ranse.PartType.other])
-            // end 
-            //
-            // if ranseInfo[define.Ranse.PartType.pant] then 
-            // self.m_SkinnedMeshRenderer.material:SetColor("_aColor",  ranseInfo[define.Ranse.PartType.pant])
-            // end
-            //
-            //     end 
-        }
-
-        
-        /// <summary>
-        /// 设置染色材质
-        /// </summary>
-        /// <param name="material"></param>
-        public void SetRanseMat(Material material)
-        {
-            // self.m_SkinnedMeshRenderer.material = self.m_RanseMat
-        }
-
-        /// <summary>
-        /// 恢复默认材质
-        /// </summary>
-        public void RecoverMat()
-        {
-            
-        }
-
-        /// <summary>
-        /// 设置模型的颜色
-        /// </summary>
-        public void SetModelColor(Color color)
-        {
-            // printc("-----------SetModelColor---透明度")
-            // if self.m_SkinnedMeshRenderer then
-            // self.m_SkinnedMeshRenderer.material:SetColor("_ColorAlpha", color)
-            // end 
-            //
-            // if self.m_ExModelRender then 
-            // self.m_ExModelRender.material:SetColor("_ColorAlpha", color)
-            // end 
-        }
-
-        /// <summary>
-        /// 恢复模型的颜色
-        /// </summary>
-        public void RecoverColor()
-        {
-            // if self.m_SkinnedMeshRenderer then
-            // self.m_SkinnedMeshRenderer.material:SetColor("_ColorAlpha", Color.white)
-            // end
-            //
-            // if self.m_ExModelRender then 
-            // self.m_ExModelRender.material:SetColor("_ColorAlpha", Color.white)
-            // end 
-        }
-
-        /// <summary>
-        /// 设置恢复模型透明度
-        /// </summary>
-        public void RecoverModelAlpha()
-        {
-            // if self.m_SkinnedMeshRenderer then
-            // self.m_SkinnedMeshRenderer.material:SetColor("_Alpha", Color.white)
-            // end
-            //
-            // if self.m_ExModelRender then 
-            // self.m_ExModelRender.material:SetColor("_Alpha", Color.white)
-            // end
         }
 
 
@@ -211,17 +185,13 @@ namespace GameScripts.RunTime.Model
             _animator.CrossFadeInFixedTime(iHash, iDuration, 0, _fixedTime);
         }
 
-        public void Reset()
-        {
-            Role = null;
-        }
-
         /// <summary>
-        /// 加载模型
+        /// 回池的时候会调用
         /// </summary>
-        public async virtual UniTask LoadEntity()
+        public virtual void Reset()
         {
-            
+            ReleaseEntity();
+            RoleEntity = null;
         }
     }
 }

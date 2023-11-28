@@ -1,16 +1,18 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using GridMap.RunTime.Walker;
 using HT.Framework;
 using Pb.Mmo.Common;
+using UnityEngine;
 
 namespace GameScripts.RunTime.Model
 {
     /// <summary>
     /// 角色实体
     /// </summary>
-    [EntityResource("RoleEntity",true)]
-    public class RoleEntity : EntityLogicBase
+    [EntityResource("ActorEntity",true)]
+    public sealed class RoleEntity : EntityLogicBase
     {
        
         private readonly List<ModelBase> _models = new();
@@ -20,13 +22,25 @@ namespace GameScripts.RunTime.Model
         /// 模型信息
         /// </summary>
         public ModelInfo ModelInfo { get; private set; }
-        
+
+        public Transform ActorContainer { get; private set; }
+
+        public MapWalker Walker { get; private set; }
+
         public override void OnInit()
         {
+            Walker = Entity.GetComponent<MapWalker>();
+            ActorContainer = Entity.FindChildren("ActorNode").transform;
+            
             RegisterModel<MainModel>();
             RegisterModel<WeaponModel>();
             RegisterModel<WingModel>();
             RegisterModel<RideModel>();
+
+            foreach (var model in _models)
+            {
+                model.OnInit(this);
+            }
         }
 
         /// <summary>
@@ -38,7 +52,6 @@ namespace GameScripts.RunTime.Model
             var model = Main.m_ReferencePool.Spawn<T>();
             _models.Add(model);
             _modelInstance.Add(model.GetType(), model);
-            model.Role = this;
         }
 
         /// <summary>
@@ -73,7 +86,7 @@ namespace GameScripts.RunTime.Model
         {
             foreach (var model in _models)
             {
-                await model.LoadEntity();
+                await model.CreateEntity();
             }
         }
     }

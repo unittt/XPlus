@@ -1,5 +1,3 @@
-using Cysharp.Threading.Tasks;
-using HT.Framework;
 using UnityEngine;
 
 namespace GameScripts.RunTime.Model
@@ -7,22 +5,32 @@ namespace GameScripts.RunTime.Model
     /// <summary>
     /// 主模型
     /// </summary>
-    public class MainModel :ModelBase
+    public class MainModel : ModelBase
     {
-       
-        
-        public void xxxx()
-        {
-            //1.加载模型
-            //2.加载人物动画控制器
-            //3.播放动画
+        //1.加载模型
+        //2.加载人物动画控制器
+        //3.播放动画
 
-            // await Main.m_Resource.LoadAsset<GameObject>("");
+        private SkinnedMeshRenderer _sMenderer;
+        
+        /// <summary>
+        /// 武器挂点
+        /// </summary>
+        public Transform WeaponContainer { get; private set; }
+        /// <summary>
+        /// 翅膀挂点
+        /// </summary>
+        public Transform WingContainer { get; private set; }
+        
+        
+        protected override Transform GetParent()
+        {
+            return RoleEntity.ActorContainer;
         }
 
-        public async virtual UniTask LoadModel()
+        protected override string GetLocation()
         {
-
+            return "model" + Info.shape;
         }
     }
 }
