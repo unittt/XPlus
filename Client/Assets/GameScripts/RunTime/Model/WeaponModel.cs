@@ -9,7 +9,7 @@ namespace  GameScripts.RunTime.Model
     {
         protected override Transform GetParent()
         {
-            var mainModel = RoleEntity.GetModel<MainModel>();
+            var mainModel = ActorEntity.GetModel<MainModel>();
             return mainModel.WeaponContainer;
         }
 

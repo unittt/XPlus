@@ -11,8 +11,10 @@ namespace GameScript.RunTime.Procedure
 {
     public class ProcedureGame : ProcedureBase
     {
+        private ActorEntity _actorEntity;
         public static event Action<float> OnLoadingGameScene; 
 
+        
         public override void OnEnter(ProcedureBase lastProcedure)
         {
             base.OnEnter(lastProcedure);
@@ -35,21 +37,21 @@ namespace GameScript.RunTime.Procedure
             mapManager.SetMapData(mapData);
             
             //加载角色
-            var roleEntity = await Main.m_Entity.CreateEntity<RoleEntity>();
+            _actorEntity = await Main.m_Entity.CreateEntity<ActorEntity>();
             ModelInfo modelInfo = new ModelInfo();
             modelInfo.shape = 1110;
             modelInfo.weapon = 9;
-            roleEntity.Fill(modelInfo);
+            _actorEntity.Fill(modelInfo);
             var mapTouchController = GameObject.Find("Touch").GetComponent<MapTouchController>();
-            mapTouchController._walker = roleEntity.Walker;
-            MapManager.Instance.SetFollow(roleEntity.Entity.transform);
+            mapTouchController._walker = _actorEntity.Walker;
+            MapManager.Instance.SetFollow(_actorEntity.Entity.transform);
         }
         
         private void OnLoading(float arg)
         {
             OnLoadingGameScene?.Invoke(arg);
         }
-   
+        
         private void OnLoadDone()
         {
             // Main.m_UI.DestroyUI<UILoading>();

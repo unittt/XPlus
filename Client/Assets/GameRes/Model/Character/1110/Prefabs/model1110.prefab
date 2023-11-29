@@ -297,6 +297,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Container:
     variables:
+    - name: renderer
+      objectValue: {fileID: 137000010629165902}
+      dataValue: 
+      variableType: 2
     - name: mount_HUD
       objectValue: {fileID: 4000014001784112}
       dataValue: 

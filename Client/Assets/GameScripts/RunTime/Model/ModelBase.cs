@@ -15,11 +15,11 @@ namespace GameScripts.RunTime.Model
         /// <summary>
         /// 角色实体
         /// </summary>
-        public RoleEntity RoleEntity { get; private set; }
+        public ActorEntity ActorEntity { get; private set; }
         /// <summary>
         /// 模型信息
         /// </summary>
-        public ModelInfo Info => RoleEntity.ModelInfo;
+        public ModelInfo Info => ActorEntity.ModelInfo;
         
         /// <summary>
         /// 模型实体
@@ -36,9 +36,9 @@ namespace GameScripts.RunTime.Model
         private float _iDuration;
 
 
-        public virtual void OnInit(RoleEntity roleEntity)
+        public virtual void OnInit(ActorEntity actorEntity)
         {
-            RoleEntity = roleEntity;
+            ActorEntity = actorEntity;
         }
         
         #region 加载模型
@@ -103,39 +103,37 @@ namespace GameScripts.RunTime.Model
             _animator.runtimeAnimatorController = controller;
         }
 
-        /// <summary>
-        /// 设置材质效果
-        /// </summary>
-        public void SetMatEffect()
-        {
-            
-        }
-
-        /// <summary>
-        /// 设置法术效果
-        /// </summary>
-        public void SetMagicEffect()
-        {
-            
-        }
-
-
+   
+        
         /// <summary>
         /// 显示或者隐藏模型
         /// </summary>
         /// <param name="active"></param>
-        public void SetActive(bool active)
+        public virtual void SetActive(bool value)
         {
-            
+            if (IsLoadDone)
+            {
+                Entity.SetActive(value);
+            }
         }
 
-
+        /// <summary>
+        /// 设置模型透明度(0 ~ 1)
+        /// </summary>
+        public virtual void SetModelAlpha(float alpha)
+        {
+          
+        }
+        
         /// <summary>
         /// 设置模型的大小
         /// </summary>
-        public void SetSize(float size)
+        public virtual void SetSize(Vector3 size)
         {
-            
+            if (IsLoadDone)
+            {
+                Entity.transform.localScale = size;
+            }
         }
 
         public void SetAnimationSpeed(float speed)
@@ -191,7 +189,7 @@ namespace GameScripts.RunTime.Model
         public virtual void Reset()
         {
             ReleaseEntity();
-            RoleEntity = null;
+            ActorEntity = null;
         }
     }
 }

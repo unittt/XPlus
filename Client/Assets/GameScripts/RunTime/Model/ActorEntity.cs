@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using GridMap;
 using GridMap.RunTime.Walker;
 using HT.Framework;
 using Pb.Mmo.Common;
@@ -12,7 +13,7 @@ namespace GameScripts.RunTime.Model
     /// 角色实体
     /// </summary>
     [EntityResource("ActorEntity",true)]
-    public sealed class RoleEntity : EntityLogicBase
+    public sealed class ActorEntity : EntityLogicBase
     {
        
         private readonly List<ModelBase> _models = new();
@@ -22,10 +23,17 @@ namespace GameScripts.RunTime.Model
         /// 模型信息
         /// </summary>
         public ModelInfo ModelInfo { get; private set; }
-
+        /// <summary>
+        /// 角色显示容器
+        /// </summary>
         public Transform ActorContainer { get; private set; }
-
+        /// <summary>
+        /// 移动组件
+        /// </summary>
         public MapWalker Walker { get; private set; }
+
+        //当前所在的节点
+        private NodeTag? _cacheNode;
 
         public override void OnInit()
         {
@@ -42,6 +50,34 @@ namespace GameScripts.RunTime.Model
                 model.OnInit(this);
             }
         }
+
+        public override void Reset()
+        {
+            _cacheNode = null;
+            Walker.OnStartMove -= OnStartMove;
+            Walker.OnEndMove -= OnEndMove;
+            Walker.OnUpdateMove -= OnUpdateMove;
+            Walker = null;
+        }
+        
+        #region 移动
+        private void OnStartMove()
+        {
+            
+        }
+        
+        private void OnUpdateMove(Vector3 arg1, NodeTag nodeTag)
+        {
+            if (_cacheNode == nodeTag)return;
+            _cacheNode = nodeTag;
+            SetModelAlpha(nodeTag == NodeTag.Transparent ? 0.5f : 1);
+        }
+
+        private void OnEndMove()
+        {
+            
+        }
+        #endregion
 
         /// <summary>
         /// 注册模型逻辑
@@ -80,6 +116,13 @@ namespace GameScripts.RunTime.Model
         {
             ModelInfo = modelInfo;
             LoadEntities().Forget();
+            
+            //播放默认动画
+            
+            //注册监听
+            Walker.OnStartMove += OnStartMove;
+            Walker.OnEndMove += OnEndMove;
+            Walker.OnUpdateMove += OnUpdateMove;
         }
         
         private async UniTaskVoid LoadEntities()
@@ -87,6 +130,21 @@ namespace GameScripts.RunTime.Model
             foreach (var model in _models)
             {
                 await model.CreateEntity();
+            }
+        }
+
+        /// <summary>
+        /// 设置模型的透明度
+        /// </summary>
+        /// <param name="alpha"></param>
+        private void SetModelAlpha(float alpha)
+        {
+            foreach (var model in _models)
+            {
+                if (model.IsLoadDone)
+                {
+                    model.SetModelAlpha(alpha);
+                }
             }
         }
     }
