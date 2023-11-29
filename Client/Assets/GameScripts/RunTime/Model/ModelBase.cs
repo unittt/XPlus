@@ -12,6 +12,7 @@ namespace GameScripts.RunTime.Model
     /// </summary>
     public abstract class ModelBase : IReference
     {
+        
         /// <summary>
         /// 角色实体
         /// </summary>
@@ -29,6 +30,11 @@ namespace GameScripts.RunTime.Model
         /// 模型实体是否加载完成
         /// </summary>
         public bool IsLoadDone => Entity is not null;
+
+        /// <summary>
+        /// 是否正在加载中
+        /// </summary>
+        public bool IsLoading { get; private set; }
 
         private Animator _animator;
         private float _normalizedTime;
@@ -52,8 +58,11 @@ namespace GameScripts.RunTime.Model
             {
                 return;
             }
+
+            IsLoading = true;
             Entity = await Main.m_Resource.LoadPrefab(location,GetParent());
             OnEntityCreationCompleted();
+            IsLoading = false;
         }
 
         /// <summary>
@@ -74,15 +83,27 @@ namespace GameScripts.RunTime.Model
         /// 获取父节点
         /// </summary>
         /// <returns></returns>
-        protected virtual Transform GetParent()
+        public virtual Transform GetParent()
         {
-            return null;
+            return ActorEntity.ActorContainer;
         }
 
         /// <summary>
+        /// 设置父物体
+        /// </summary>
+        /// <param name="parent"></param>
+        public virtual void SetParent(Transform parent)
+        {
+            if (IsLoadDone)
+            {
+                Entity.transform.SetParent(parent, false);
+            }
+        }
+        
+        /// <summary>
         /// 释放实体
         /// </summary>
-        protected virtual void ReleaseEntity()
+        public virtual void ReleaseEntity()
         {
             if (!IsLoadDone) return;
             Main.m_Resource.UnLoadAsset(Entity);
@@ -190,6 +211,7 @@ namespace GameScripts.RunTime.Model
         {
             ReleaseEntity();
             ActorEntity = null;
+            IsLoading = false;
         }
     }
 }

@@ -1,3 +1,6 @@
+using HT.Framework;
+using UnityEngine;
+
 namespace GameScripts.RunTime.Model
 {
     /// <summary>
@@ -6,41 +9,19 @@ namespace GameScripts.RunTime.Model
     public class RideModel : ModelBase
     {
         /// <summary>
-        /// 停用与骑行模型关联的所有效果
+        /// 角色乘骑的节点
         /// </summary>
-        public void UnActiveEffect()
+        public Transform MountRideContainer { get; private set; }
+
+        protected override void OnEntityCreationCompleted()
         {
-            
+            var variableBehaviour = Entity.GetComponent<VariableBehaviour>();
+            MountRideContainer =  variableBehaviour.Container.Get<Transform>("mount_Ride");
         }
 
-        /// <summary>
-        /// 骑乘
-        /// </summary>
-        public void SetOnRide()
-        {
-            
-        }
-
-        /// <summary>
-        /// 根据给定级别 ( lv) 控制骑行效果的可见性
-        /// </summary>
-        public void ShowRideEffect(int lv)
-        {
-            
-        }
-
-        
-        /// <summary>
-        /// 清理所有特效
-        /// </summary>
-        public void ClearEffect()
-        {
-            
-        }
-        
         protected override string GetLocation()
         {
-            return "";
+            return "model" + Info.horse;
         }
     }
 }

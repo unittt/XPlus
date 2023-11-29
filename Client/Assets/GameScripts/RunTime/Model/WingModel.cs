@@ -1,3 +1,5 @@
+using UnityEngine;
+
 namespace GameScripts.RunTime.Model
 {
     /// <summary>
@@ -8,6 +10,12 @@ namespace GameScripts.RunTime.Model
         protected override string GetLocation()
         {
             return "";
+        }
+        
+        public override Transform GetParent()
+        {
+            var mainModel = ActorEntity.GetModel<MainModel>();
+            return mainModel.IsLoadDone ? mainModel.WingContainer : base.GetParent();
         }
     }
 }

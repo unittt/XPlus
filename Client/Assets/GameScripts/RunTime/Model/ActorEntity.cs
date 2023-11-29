@@ -19,32 +19,43 @@ namespace GameScripts.RunTime.Model
         private readonly List<ModelBase> _models = new();
         private readonly Dictionary<Type, ModelBase> _modelInstance = new();
 
+        //当前所在的节点
+        private NodeTag? _cacheNode;
+        
         /// <summary>
         /// 模型信息
         /// </summary>
         public ModelInfo ModelInfo { get; private set; }
-        /// <summary>
-        /// 角色显示容器
-        /// </summary>
-        public Transform ActorContainer { get; private set; }
+      
         /// <summary>
         /// 移动组件
         /// </summary>
         public MapWalker Walker { get; private set; }
+        
+        /// <summary>
+        /// 角色显示容器
+        /// </summary>
+        public Transform ActorContainer { get; private set; }
 
-        //当前所在的节点
-        private NodeTag? _cacheNode;
+        /// <summary>
+        /// 是否为乘骑状态
+        /// </summary>
+        public bool IsRiding => ModelInfo.horse > 0;
 
         public override void OnInit()
         {
             Walker = Entity.GetComponent<MapWalker>();
             ActorContainer = Entity.FindChildren("ActorNode").transform;
-            
-            RegisterModel<MainModel>();
-            RegisterModel<WeaponModel>();
-            RegisterModel<WingModel>();
+        
+            //坐骑
             RegisterModel<RideModel>();
-
+            //主模型
+            RegisterModel<MainModel>();
+            //武器
+            RegisterModel<WeaponModel>();
+            //翅膀
+            RegisterModel<WingModel>();
+            
             foreach (var model in _models)
             {
                 model.OnInit(this);
@@ -112,12 +123,29 @@ namespace GameScripts.RunTime.Model
             _modelInstance.Clear();
         }
 
-        public void Fill(ModelInfo modelInfo)
+        /// <summary>
+        /// 装配演员
+        /// </summary>
+        /// <param name="modelInfo"></param>
+        public void AssembleModel(ModelInfo modelInfo)
         {
             ModelInfo = modelInfo;
-            LoadEntities().Forget();
+            AssembleModel().Forget();
+        }
+        
+        /// <summary>
+        /// 装配模型
+        /// </summary>
+        private async UniTaskVoid AssembleModel()
+        {
+            foreach (var model in _models)
+            {
+                await model.CreateEntity();
+            }
             
-            //播放默认动画
+            //播放动画
+            
+            
             
             //注册监听
             Walker.OnStartMove += OnStartMove;
@@ -125,14 +153,6 @@ namespace GameScripts.RunTime.Model
             Walker.OnUpdateMove += OnUpdateMove;
         }
         
-        private async UniTaskVoid LoadEntities()
-        {
-            foreach (var model in _models)
-            {
-                await model.CreateEntity();
-            }
-        }
-
         /// <summary>
         /// 设置模型的透明度
         /// </summary>
@@ -147,5 +167,79 @@ namespace GameScripts.RunTime.Model
                 }
             }
         }
+
+
+        #region 模型切换
+        /// <summary>
+        /// 切换坐骑
+        /// </summary>
+        public void SwitchRide()
+        {
+            InternalSwitchRide().Forget();
+        }
+
+        private async UniTaskVoid InternalSwitchRide()
+        {
+            //1.释放坐骑
+            var rideModel = GetModel<RideModel>();
+            rideModel.ReleaseEntity();
+            
+            //2.加载新的坐骑
+            await rideModel.CreateEntity();
+            
+            //3.切换主模型的父物体
+            var mainModel = GetModel<MainModel>();
+            mainModel.SetParent(mainModel.GetParent());
+        }
+
+        /// <summary>
+        /// 切换主模型
+        /// </summary>
+        public void SwitchMainModel()
+        {
+            InternalSwitchMainModel().Forget();
+        }
+        
+        private async UniTaskVoid InternalSwitchMainModel()
+        {
+            //1.移除主模型
+            var mainModel = GetModel<MainModel>();
+            mainModel.ReleaseEntity();
+            
+            //2.加载新的主模型
+            await mainModel.CreateEntity();
+            
+            //3.设置武器和翅膀的父物体
+            var weaponModel = GetModel<WeaponModel>();
+            weaponModel.SetParent(weaponModel.GetParent());
+            
+            var wingModel = GetModel<WingModel>();
+            wingModel.SetParent(wingModel.GetParent());
+        }
+
+        /// <summary>
+        /// 切换武器
+        /// </summary>
+        public void SwitchWeapon()
+        {
+            //1.移除武器
+            var weaponModel = GetModel<WeaponModel>();
+            weaponModel.ReleaseEntity();
+            //2.加载新武器
+            weaponModel.CreateEntity().Forget();
+        }
+
+        /// <summary>
+        /// 切换翅膀
+        /// </summary>
+        public void SwitchWing()
+        {
+            //1.移除翅膀
+            var wingModel = GetModel<WingModel>();
+            wingModel.ReleaseEntity();
+            //2.加载新翅膀
+            wingModel.CreateEntity().Forget();
+        }
+        #endregion
     }
 }

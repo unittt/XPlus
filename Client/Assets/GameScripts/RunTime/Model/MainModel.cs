@@ -35,16 +35,17 @@ namespace GameScripts.RunTime.Model
             base.Reset();
         }
         
-        protected override Transform GetParent()
+        public override Transform GetParent()
         {
-            return ActorEntity.ActorContainer;
+            var rideModel = ActorEntity.GetModel<RideModel>();
+            return rideModel is { IsLoadDone: true } ? rideModel.MountRideContainer : base.GetParent();
         }
 
         protected override string GetLocation()
         {
             return "model" + Info.shape;
         }
-
+        
         public override void SetModelAlpha(float alpha)
         {
             if (!IsLoadDone) return;

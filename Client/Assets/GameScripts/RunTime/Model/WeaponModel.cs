@@ -7,10 +7,10 @@ namespace  GameScripts.RunTime.Model
     /// </summary>
     public class WeaponModel : ModelBase
     {
-        protected override Transform GetParent()
+        public override Transform GetParent()
         {
             var mainModel = ActorEntity.GetModel<MainModel>();
-            return mainModel.WeaponContainer;
+            return mainModel.IsLoadDone ? mainModel.WeaponContainer : base.GetParent();
         }
 
         protected override string GetLocation()
