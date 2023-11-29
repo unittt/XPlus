@@ -45,6 +45,7 @@ namespace GameScripts.RunTime.Model
         public override void OnInit()
         {
             Walker = Entity.GetComponent<MapWalker>();
+            Walker.IsMoveable = false;
             ActorContainer = Entity.FindChildren("ActorNode").transform;
         
             //坐骑
@@ -60,21 +61,34 @@ namespace GameScripts.RunTime.Model
             {
                 model.OnInit(this);
             }
+            Walker.IsMoveable = true;
         }
 
         public override void Reset()
         {
             _cacheNode = null;
+            Walker.IsMoveable = false;
             Walker.OnStartMove -= OnStartMove;
             Walker.OnEndMove -= OnEndMove;
             Walker.OnUpdateMove -= OnUpdateMove;
             Walker = null;
+            
+            var maxIndex = _models.Count -1;
+            for (var i = maxIndex; i >= 0; i--)
+            {
+                Main.m_ReferencePool.Despawn(_models[i]);
+            }
+            _models.Clear();
+            _modelInstance.Clear();
         }
         
         #region 移动
         private void OnStartMove()
         {
-            
+            foreach (var model in _models)
+            {
+                model.CrossFade(AnimationClipCode.RUN);
+            }
         }
         
         private void OnUpdateMove(Vector3 arg1, NodeTag nodeTag)
@@ -86,7 +100,10 @@ namespace GameScripts.RunTime.Model
 
         private void OnEndMove()
         {
-            
+            foreach (var model in _models)
+            {
+                model.CrossFade(AnimationClipCode.IDLE_CITY);
+            }
         }
         #endregion
 
@@ -112,17 +129,6 @@ namespace GameScripts.RunTime.Model
             return _modelInstance.ContainsKey(type) ? _modelInstance[type].Cast<T>() : null;
         }
         
-        public override void OnDestroy()
-        {
-            var maxIndex = _models.Count -1;
-            for (var i = maxIndex; i >= 0; i--)
-            {
-                Main.m_ReferencePool.Despawn(_models[i]);
-            }
-            _models.Clear();
-            _modelInstance.Clear();
-        }
-
         /// <summary>
         /// 装配演员
         /// </summary>
@@ -142,11 +148,6 @@ namespace GameScripts.RunTime.Model
             {
                 await model.CreateEntity();
             }
-            
-            //播放动画
-            
-            
-            
             //注册监听
             Walker.OnStartMove += OnStartMove;
             Walker.OnEndMove += OnEndMove;

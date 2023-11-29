@@ -40,7 +40,7 @@ namespace GameScript.RunTime.Procedure
             _actorEntity = await Main.m_Entity.CreateEntity<ActorEntity>();
             ModelInfo modelInfo = new ModelInfo();
             modelInfo.shape = 1110;
-            modelInfo.horse = 4003;
+            modelInfo.horse = 4004;
             modelInfo.weapon = 9;
             _actorEntity.AssembleModel(modelInfo);
             var mapTouchController = GameObject.Find("Touch").GetComponent<MapTouchController>();

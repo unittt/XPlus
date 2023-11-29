@@ -22,7 +22,7 @@ namespace Pb.Mmo.Common
         public int weapon = 5; /*关联武器id*/
         public int adorn = 6; /*装饰*/
         public int figure = 7; /*造型id @model.key, 用以取代前面几项，前几项仅覆盖默认设置时使用（player不使用此项，仅npc等使用）*/
-        public int horse = 8;
+        public int horse = 8;//坐骑
         public int isbianshen = 9; //是否变身 1.是 0.否
         public int ranse_clothes = 10; //外观染色
         public int ranse_hair = 11; //头发染色

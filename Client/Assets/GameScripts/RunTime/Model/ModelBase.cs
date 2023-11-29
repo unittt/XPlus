@@ -37,9 +37,7 @@ namespace GameScripts.RunTime.Model
         public bool IsLoading { get; private set; }
 
         private Animator _animator;
-        private float _normalizedTime;
         private float _fixedTime;
-        private float _iDuration;
 
 
         public virtual void OnInit(ActorEntity actorEntity)
@@ -61,7 +59,9 @@ namespace GameScripts.RunTime.Model
 
             IsLoading = true;
             Entity = await Main.m_Resource.LoadPrefab(location,GetParent());
+            _animator = Entity.GetComponent<Animator>();
             OnEntityCreationCompleted();
+            CrossFade(AnimationClipCode.IDLE_CITY);
             IsLoading = false;
         }
 
@@ -157,23 +157,23 @@ namespace GameScripts.RunTime.Model
             }
         }
 
+        #region 动画
         public void SetAnimationSpeed(float speed)
         {
             
         }
 
+        
         /// <summary>
         /// 播放动画
         /// </summary>
         /// <param name="sState"></param>
         /// <param name="normalizedTime"></param>
-        public void Play(string sState, float normalizedTime)
-        {
-            _normalizedTime = normalizedTime;
-
-            var iHash = ModelTools.StateToHash(sState);
-            _animator?.Play(iHash,0);
-        }
+        // public virtual void Play(string sState, float normalizedTime)
+        // {
+        //     var iHash = ModelTools.StateToHash(sState);
+        //     _animator?.Play(iHash,0);
+        // }
 
         public void PlayInFixedTime(string sState, float fixedTime)
         {
@@ -188,22 +188,32 @@ namespace GameScripts.RunTime.Model
         /// <param name="sState"></param>
         /// <param name="iDuration"></param>
         /// <param name="normalizedTime"></param>
-        public void CrossFade(string sState,float iDuration, float normalizedTime)
+        public void CrossFade(string sState, float iDuration = 0, float normalizedTime = 0)
         {
-            _iDuration = iDuration;
-            _normalizedTime = normalizedTime;
+            if (_animator is null) return;
+            sState = CheckClickState(sState);
             var iHash = ModelTools.StateToHash(sState);
             _animator.CrossFade(iHash, iDuration, 0, normalizedTime);
         }
-        
+
         public void CrossFadeInFixedTime(string sState,float iDuration, float fixedTime)
         {
-            _iDuration = iDuration;
-            _fixedTime = fixedTime;
             var iHash = ModelTools.StateToHash(sState);
-            _animator.CrossFadeInFixedTime(iHash, iDuration, 0, _fixedTime);
+            _animator.CrossFadeInFixedTime(iHash, iDuration, 0, fixedTime);
         }
 
+        /// <summary>
+        /// 检查动画
+        /// </summary>
+        /// <param name="sState"></param>
+        /// <returns></returns>
+        protected virtual string CheckClickState(string sState)
+        {
+            return sState;
+        }
+        
+        #endregion
+        
         /// <summary>
         /// 回池的时候会调用
         /// </summary>

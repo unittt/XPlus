@@ -10,7 +10,7 @@ namespace GameScripts.RunTime.Model
     {
         
         private SkinnedMeshRenderer _renderer;
-        private MaterialPropertyBlock _mpBlock = new();
+        private MaterialPropertyBlock _mpBlock;
 
         /// <summary>
         /// 武器挂点
@@ -26,13 +26,14 @@ namespace GameScripts.RunTime.Model
             var variableBehaviour = Entity.GetComponent<VariableBehaviour>();
             _renderer = variableBehaviour.Container.Get<SkinnedMeshRenderer>("renderer");
             WeaponContainer = variableBehaviour.Container.Get<Transform>("mount_righthand");
+            _mpBlock = new MaterialPropertyBlock();
         }
 
-        public override void Reset()
+        public override void ReleaseEntity()
         {
+            base.ReleaseEntity();
             _renderer = null;
             WeaponContainer = null;
-            base.Reset();
         }
         
         public override Transform GetParent()
@@ -56,6 +57,31 @@ namespace GameScripts.RunTime.Model
             _renderer.GetPropertyBlock(_mpBlock);
             _mpBlock.SetColor("_Alpha",color);
             _renderer.SetPropertyBlock(_mpBlock);
+        }
+
+        protected override string CheckClickState(string sState)
+        {
+            
+            //如果当前为城市闲置
+            if (sState == AnimationClipCode.IDLE_CITY)
+            {
+                var horse = ActorEntity.ModelInfo.horse;
+                if (horse > 0 && horse != 4008)
+                {
+                    return AnimationClipCode.IDLE_RIDE;
+                }
+            }
+            
+            if (sState == AnimationClipCode.RUN)
+            {
+                var horse = ActorEntity.ModelInfo.horse;
+                if (horse > 0 && horse != 4008)
+                {
+                    return AnimationClipCode.RUN_RIDE;
+                }
+            }
+            
+            return sState;
         }
     }
 }
