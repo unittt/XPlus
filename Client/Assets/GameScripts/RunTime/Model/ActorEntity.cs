@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using GridMap;
-using GridMap.RunTime.Walker;
 using HT.Framework;
 using Pb.Mmo.Common;
 using UnityEngine;
@@ -12,42 +10,27 @@ namespace GameScripts.RunTime.Model
     /// <summary>
     /// 角色实体
     /// </summary>
-    [EntityResource("ActorEntity",true)]
-    public sealed class ActorEntity : EntityLogicBase
+    public abstract class ActorEntity : EntityLogicBase
     {
        
         private readonly List<ModelBase> _models = new();
         private readonly Dictionary<Type, ModelBase> _modelInstance = new();
 
-        //当前所在的节点
-        private NodeTag? _cacheNode;
-        
+        protected VariableArray VbArray { get; private set; }
         /// <summary>
         /// 模型信息
         /// </summary>
         public ModelInfo ModelInfo { get; private set; }
-      
         /// <summary>
-        /// 移动组件
+        /// 模型容器
         /// </summary>
-        public MapWalker Walker { get; private set; }
+        public Transform ModelContainer { get; private set; }
         
-        /// <summary>
-        /// 角色显示容器
-        /// </summary>
-        public Transform ActorContainer { get; private set; }
-
-        /// <summary>
-        /// 是否为乘骑状态
-        /// </summary>
-        public bool IsRiding => ModelInfo.horse > 0;
 
         public override void OnInit()
         {
-            Walker = Entity.GetComponent<MapWalker>();
-            Walker.IsMoveable = false;
-            ActorContainer = Entity.FindChildren("ActorNode").transform;
-        
+            VbArray = Entity.GetComponent<VariableBehaviour>().Container;
+            ModelContainer = VbArray.Get<Transform>("modelNode");
             //坐骑
             RegisterModel<RideModel>();
             //主模型
@@ -61,18 +44,10 @@ namespace GameScripts.RunTime.Model
             {
                 model.OnInit(this);
             }
-            Walker.IsMoveable = true;
         }
-
-        public override void Reset()
+        
+        public override void OnDestroy()
         {
-            _cacheNode = null;
-            Walker.IsMoveable = false;
-            Walker.OnStartMove -= OnStartMove;
-            Walker.OnEndMove -= OnEndMove;
-            Walker.OnUpdateMove -= OnUpdateMove;
-            Walker = null;
-            
             var maxIndex = _models.Count -1;
             for (var i = maxIndex; i >= 0; i--)
             {
@@ -82,31 +57,6 @@ namespace GameScripts.RunTime.Model
             _modelInstance.Clear();
         }
         
-        #region 移动
-        private void OnStartMove()
-        {
-            foreach (var model in _models)
-            {
-                model.CrossFade(AnimationClipCode.RUN);
-            }
-        }
-        
-        private void OnUpdateMove(Vector3 arg1, NodeTag nodeTag)
-        {
-            if (_cacheNode == nodeTag)return;
-            _cacheNode = nodeTag;
-            SetModelAlpha(nodeTag == NodeTag.Transparent ? 0.5f : 1);
-        }
-
-        private void OnEndMove()
-        {
-            foreach (var model in _models)
-            {
-                model.CrossFade(AnimationClipCode.IDLE_CITY);
-            }
-        }
-        #endregion
-
         /// <summary>
         /// 注册模型逻辑
         /// </summary>
@@ -148,17 +98,19 @@ namespace GameScripts.RunTime.Model
             {
                 await model.CreateEntity();
             }
-            //注册监听
-            Walker.OnStartMove += OnStartMove;
-            Walker.OnEndMove += OnEndMove;
-            Walker.OnUpdateMove += OnUpdateMove;
+            OnAssembleModelFinish();
+        }
+
+        protected virtual void OnAssembleModelFinish()
+        {
+            
         }
         
         /// <summary>
         /// 设置模型的透明度
         /// </summary>
         /// <param name="alpha"></param>
-        private void SetModelAlpha(float alpha)
+        public virtual void SetModelAlpha(float alpha)
         {
             foreach (var model in _models)
             {
@@ -171,28 +123,6 @@ namespace GameScripts.RunTime.Model
 
 
         #region 模型切换
-        /// <summary>
-        /// 切换坐骑
-        /// </summary>
-        public void SwitchRide()
-        {
-            InternalSwitchRide().Forget();
-        }
-
-        private async UniTaskVoid InternalSwitchRide()
-        {
-            //1.释放坐骑
-            var rideModel = GetModel<RideModel>();
-            rideModel.ReleaseEntity();
-            
-            //2.加载新的坐骑
-            await rideModel.CreateEntity();
-            
-            //3.切换主模型的父物体
-            var mainModel = GetModel<MainModel>();
-            mainModel.SetParent(mainModel.GetParent());
-        }
-
         /// <summary>
         /// 切换主模型
         /// </summary>
@@ -221,7 +151,7 @@ namespace GameScripts.RunTime.Model
         /// <summary>
         /// 切换武器
         /// </summary>
-        public void SwitchWeapon()
+        public virtual void SwitchWeapon()
         {
             //1.移除武器
             var weaponModel = GetModel<WeaponModel>();
@@ -233,7 +163,7 @@ namespace GameScripts.RunTime.Model
         /// <summary>
         /// 切换翅膀
         /// </summary>
-        public void SwitchWing()
+        public virtual void SwitchWing()
         {
             //1.移除翅膀
             var wingModel = GetModel<WingModel>();
@@ -242,5 +172,18 @@ namespace GameScripts.RunTime.Model
             wingModel.CreateEntity().Forget();
         }
         #endregion
+
+        public void AdjustSpeedPlay(string run, float f)
+        {
+            
+        }
+        
+        public void CrossFade(string code, float iDuration = 0, float normalizedTime = 0)
+        {
+            foreach (var model in _models)
+            {
+                model.CrossFade(code,iDuration, normalizedTime);
+            }
+        }
     }
 }

@@ -14,7 +14,7 @@ public sealed class MapTouchController : MonoBehaviour
     public bool IsEnable = true;
     public event Action<Vector2, GameObject> OnMouseDown;
 
-    public MapWalker _walker;
+    public PathfinderAgent _walker;
 
     private void Start()
     {

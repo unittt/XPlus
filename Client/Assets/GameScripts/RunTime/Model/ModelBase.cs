@@ -85,7 +85,7 @@ namespace GameScripts.RunTime.Model
         /// <returns></returns>
         public virtual Transform GetParent()
         {
-            return ActorEntity.ActorContainer;
+            return ActorEntity.ModelContainer;
         }
 
         /// <summary>

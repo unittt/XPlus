@@ -5,8 +5,11 @@ using System;
 
 namespace GridMap.RunTime.Walker
 {
+    /// <summary>
+    /// 寻路代理
+    /// </summary>
     [RequireComponent(typeof(Seeker),typeof(SimpleSmoothModifier))]
-    public class MapWalker : MonoBehaviour
+    public sealed class PathfinderAgent : MonoBehaviour
     {
         
         //a*路径搜索
@@ -62,7 +65,7 @@ namespace GridMap.RunTime.Walker
         /// <summary>
         /// 跟随的目标
         /// </summary>
-        public MapWalker FollowWalker;
+        public PathfinderAgent FollowWalker;
         /// <summary>
         /// 跟随的距离
         /// </summary>
@@ -109,8 +112,8 @@ namespace GridMap.RunTime.Walker
         public event Action<Vector3,NodeTag> OnUpdateMove;
 
         #endregion
-        
-        protected virtual void Awake()
+
+        private void Awake()
         {
             _pathSeeker = gameObject.GetComponent<Seeker>();
             Path = new List<Vector3>();
@@ -129,7 +132,7 @@ namespace GridMap.RunTime.Walker
         }
 
 
-        public virtual void OnDestroy()
+        public void OnDestroy()
         {
             _pathSeeker.pathCallback = null;
             MoveTransform = null;
@@ -234,7 +237,7 @@ namespace GridMap.RunTime.Walker
         /// <summary>
         /// 停止移动
         /// </summary>
-        public virtual void StopWalk()
+        public void StopWalk()
         {
             ClearPath();
         }
@@ -246,7 +249,7 @@ namespace GridMap.RunTime.Walker
             IsPathing = false;
         }
         
-        public Vector3 GetWayPoint(int index)
+        private Vector3 GetWayPoint(int index)
         {
             if (Path is null || index >= Path.Count)
             {

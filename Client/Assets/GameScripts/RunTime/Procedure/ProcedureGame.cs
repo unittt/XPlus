@@ -11,7 +11,7 @@ namespace GameScript.RunTime.Procedure
 {
     public class ProcedureGame : ProcedureBase
     {
-        private ActorEntity _actorEntity;
+        private MapWalker _mapWalkerEntity;
         public static event Action<float> OnLoadingGameScene; 
 
         
@@ -37,15 +37,15 @@ namespace GameScript.RunTime.Procedure
             mapManager.SetMapData(mapData);
             
             //加载角色
-            _actorEntity = await Main.m_Entity.CreateEntity<ActorEntity>();
+            _mapWalkerEntity = await Main.m_Entity.CreateEntity<MapWalker>();
             ModelInfo modelInfo = new ModelInfo();
             modelInfo.shape = 1110;
             modelInfo.horse = 4004;
             modelInfo.weapon = 9;
-            _actorEntity.AssembleModel(modelInfo);
+            _mapWalkerEntity.AssembleModel(modelInfo);
             var mapTouchController = GameObject.Find("Touch").GetComponent<MapTouchController>();
-            mapTouchController._walker = _actorEntity.Walker;
-            MapManager.Instance.SetFollow(_actorEntity.Entity.transform);
+            mapTouchController._walker = _mapWalkerEntity.Agent;
+            MapManager.Instance.SetFollow(_mapWalkerEntity.Entity.transform);
         }
         
         private void OnLoading(float arg)
