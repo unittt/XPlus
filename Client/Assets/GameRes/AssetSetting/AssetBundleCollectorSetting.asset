@@ -81,7 +81,7 @@ MonoBehaviour:
         CollectorType: 0
         AddressRuleName: AddressByFilePath
         PackRuleName: PackDirectory
-        FilterRuleName: CollectAll
+        FilterRuleName: CollectSprite
         AssetTags: 
         UserData: 
     - GroupName: DynamicAtlas
@@ -92,9 +92,9 @@ MonoBehaviour:
       - CollectPath: Assets/GameRes/Atlas/DynamicAtlas
         CollectorGUID: 0f0b8993cb95e6e4b98950baeba28be1
         CollectorType: 0
-        AddressRuleName: AddressByFileName
-        PackRuleName: PackDirectory
-        FilterRuleName: CollectAll
+        AddressRuleName: AddressByFilePath
+        PackRuleName: PackSeparately
+        FilterRuleName: CollectSprite
         AssetTags: 
         UserData: 
     - GroupName: Map2d
