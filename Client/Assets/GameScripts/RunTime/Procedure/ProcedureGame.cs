@@ -1,5 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
+using GameScript.RunTime.UI;
 using GameScripts.RunTime.Model;
 using GridMap;
 using HT.Framework;
@@ -22,6 +23,8 @@ namespace GameScript.RunTime.Procedure
             // Main.m_UI.OpenUI<UILoading>();
             // SceneInfo sceneInfo = new SceneInfo("scene", "Assets/GameRes/Scene/Game.unity", "Game");
             // Main.m_Resource.LoadScene(sceneInfo,OnLoading, OnLoadDone);
+
+            Main.m_UI.OpenUI<UIMain>();
             InitAsync().Forget();
         }
 
