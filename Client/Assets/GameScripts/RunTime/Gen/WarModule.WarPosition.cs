@@ -10,44 +10,41 @@
 using Luban;
 
 
-namespace cfg.test
+namespace cfg.WarModule
 {
-/// <summary>
-/// 这是个测试excel结构
-/// </summary>
-public sealed partial class TestExcelBean1 : Luban.BeanBase
+public sealed partial class WarPosition : Luban.BeanBase
 {
-    public TestExcelBean1(ByteBuf _buf) 
+    public WarPosition(ByteBuf _buf) 
     {
-        X1 = _buf.ReadInt();
-        X2 = _buf.ReadString();
-        X3 = _buf.ReadInt();
-        X4 = _buf.ReadFloat();
+        Camp = (WarModule.ECamp)_buf.ReadInt();
+        Index = _buf.ReadInt();
+        X = _buf.ReadFloat();
+        Z = _buf.ReadFloat();
     }
 
-    public static TestExcelBean1 DeserializeTestExcelBean1(ByteBuf _buf)
+    public static WarPosition DeserializeWarPosition(ByteBuf _buf)
     {
-        return new test.TestExcelBean1(_buf);
+        return new WarModule.WarPosition(_buf);
     }
 
     /// <summary>
-    /// 最高品质
+    /// 阵营
     /// </summary>
-    public readonly int X1;
+    public readonly WarModule.ECamp Camp;
     /// <summary>
-    /// 黑色的
+    /// 索引
     /// </summary>
-    public readonly string X2;
+    public readonly int Index;
     /// <summary>
-    /// 蓝色的
+    /// x
     /// </summary>
-    public readonly int X3;
+    public readonly float X;
     /// <summary>
-    /// 最差品质
+    /// z
     /// </summary>
-    public readonly float X4;
+    public readonly float Z;
    
-    public const int __ID__ = -1738345160;
+    public const int __ID__ = 261689463;
     public override int GetTypeId() => __ID__;
 
     public  void ResolveRef(Tables tables)
@@ -61,10 +58,10 @@ public sealed partial class TestExcelBean1 : Luban.BeanBase
     public override string ToString()
     {
         return "{ "
-        + "x1:" + X1 + ","
-        + "x2:" + X2 + ","
-        + "x3:" + X3 + ","
-        + "x4:" + X4 + ","
+        + "camp:" + Camp + ","
+        + "index:" + Index + ","
+        + "x:" + X + ","
+        + "z:" + Z + ","
         + "}";
     }
 }

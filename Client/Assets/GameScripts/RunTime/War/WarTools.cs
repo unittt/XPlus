@@ -26,6 +26,16 @@ namespace GameScripts.RunTime.War
             var dir = (endPos - startPos).normalized;
             return root.TransformDirection(dir);
         }
-        
+
+        // public static void xxxxxx()
+        // {
+        //     TableGlobal.Instance.TbWarPosition.GetPosition()
+        // }
+
+
+        // public void CreateWarrior()
+        // {
+        //     
+        // }
     }
 }

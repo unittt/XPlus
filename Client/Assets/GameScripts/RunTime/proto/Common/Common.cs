@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Pb.Mmo.Common
 {
 
@@ -11,30 +13,6 @@ namespace Pb.Mmo.Common
         public int face_y = 6;
         public int face_z = 7;
     }
-
-
-    public class ModelInfo
-    {
-        public int shape = 1;
-        public int scale = 2; /*缩放比例*/
-        public int color = 3; /*染色*/
-        public int mutate_texture = 4; /*变色贴图*/
-        public int weapon = 5; /*关联武器id*/
-        public int adorn = 6; /*装饰*/
-        public int figure = 7; /*造型id @model.key, 用以取代前面几项，前几项仅覆盖默认设置时使用（player不使用此项，仅npc等使用）*/
-        public int horse = 8;//坐骑
-        public int isbianshen = 9; //是否变身 1.是 0.否
-        public int ranse_clothes = 10; //外观染色
-        public int ranse_hair = 11; //头发染色
-        public int ranse_pant = 12; //头发染色
-        public int ranse_summon = 13; //宠物染色
-        public int shizhuang = 14; //时装
-        public int ranse_shizhuang = 15; //时装染色
-        public int fuhun = 16; //武器附魂 1.是 0.否
-        public int follow_spirit = 18; // 跟随器灵
-        public int show_wing = 19; // 显示翅膀id
-    }
-
 
     public class SimpleRole
     {

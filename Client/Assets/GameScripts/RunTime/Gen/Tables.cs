@@ -13,12 +13,14 @@ namespace cfg
 {
 public partial class Tables
 {
+    public WarModule.TbWarPosition TbWarPosition {get; }
     public SkillModule.TbSchoolSkill TbSchoolSkill {get; }
     public SystemModule.TbRoleType TbRoleType {get; }
     public SystemModule.TbSchool TbSchool {get; }
 
     public Tables(System.Func<string, ByteBuf> loader)
     {
+        TbWarPosition = new WarModule.TbWarPosition(loader("warmodule_tbwarposition"));
         TbSchoolSkill = new SkillModule.TbSchoolSkill(loader("skillmodule_tbschoolskill"));
         TbRoleType = new SystemModule.TbRoleType(loader("systemmodule_tbroletype"));
         TbSchool = new SystemModule.TbSchool(loader("systemmodule_tbschool"));
@@ -27,6 +29,7 @@ public partial class Tables
     
     private void ResolveRef()
     {
+        TbWarPosition.ResolveRef(this);
         TbSchoolSkill.ResolveRef(this);
         TbRoleType.ResolveRef(this);
         TbSchool.ResolveRef(this);

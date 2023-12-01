@@ -9,18 +9,12 @@
 
 
 
-namespace cfg.SystemModule
+namespace cfg.WarModule
 { 
-    public enum ESex
+    public enum ECamp
     {
-        /// <summary>
-        /// 男
-        /// </summary>
-        MALE = 0,
-        /// <summary>
-        /// 女
-        /// </summary>
-        FEMALE = 1,
+        A = 0,
+        B = 1,
     }
 
 } 
