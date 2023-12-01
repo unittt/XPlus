@@ -153,9 +153,4 @@ namespace Pb.Mmo.Common
         public List<BuffUnit> buff_list; //buff列表
         public List<StatusBuffUnit> status_list; //战斗状态列表
     }
-    
-    
-    
-    
-    
 }
