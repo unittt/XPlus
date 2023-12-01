@@ -1,9 +1,10 @@
 <module name="WarModule">
 
 <bean name="WarPosition">
-		<var name="id" type="string" comment="id"/>
+		<var name="camp" type="ECamp" comment="阵营"/>
+		<var name="index" type="int" comment="索引"/>
 		<var name="x" type="float" comment="x"/>
 		<var name="z" type="float" comment="z"/>
 	</bean>
-	<table name="TbWarPosition" value="WarPosition" index="id" input="战斗/站位.xlsx"/>
+	<table name="TbWarPosition" value="WarPosition" mode="list" input="战斗/站位.xlsx"/>
 </module>

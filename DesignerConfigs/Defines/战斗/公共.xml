@@ -1,0 +1,11 @@
+<module name="WarModule">
+
+<!-- 
+	阵营
+-->
+<enum name="ECamp">
+	<var name="A"/>
+	<var name="B"/>
+</enum>
+
+</module>

@@ -14,7 +14,7 @@ namespace GridMap
         /// <summary>
         /// 距离阈值
         /// </summary>
-        private const float DIS_THRESHOLD = 0.1f;
+        private const float DIS_THRESHOLD = 0.01f;
 
 
         private MapData _mapData;

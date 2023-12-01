@@ -15,12 +15,12 @@ TagManager:
   - Map
   - MapWalker
   - War
-  - 
-  - 
-  - 
-  - 
-  - 
-  - 
+  - ModelTexture
+  - Hide
+  - WarUI
+  - RoleCreate
+  - HudLayer
+  - Magic
   - 
   - 
   - 
