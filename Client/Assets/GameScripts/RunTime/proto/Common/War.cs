@@ -66,6 +66,13 @@ namespace Pb.Mmo.Common
         public int war_end = 4;
     }
 
+    public class  GS2CWarCampFmtInfo {
+        public int war_id = 1;         //战斗id
+        public int fmt_id1 = 2;        //阵营1 阵法id
+        public int fmt_grade1 = 3;     //阵营1 阵法等级
+        public int fmt_id2 = 4;        //阵营2 阵法id
+        public int fmt_grade2 = 5;     //阵营2 阵法等级
+    }
 
 
 
