@@ -59,6 +59,7 @@ namespace GameScripts.RunTime.Model
 
             IsLoading = true;
             Entity = await Main.m_Resource.LoadPrefab(location,GetParent());
+            Entity.SetLayerIncludeChildren(ActorEntity.Layer);
             _animator = Entity.GetComponent<Animator>();
             OnEntityCreationCompleted();
             CrossFade(AnimationClipCode.IDLE_CITY);

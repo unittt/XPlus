@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using GameScript.RunTime.Config;
 using GridMap;
 using GridMap.RunTime.Walker;
 using HT.Framework;
@@ -20,6 +21,8 @@ namespace GameScripts.RunTime.Model
         /// 移动组件
         /// </summary>
         public PathfinderAgent Agent { get; private set; }
+
+        public override int Layer => LayerConfig.MapWalker;
 
         public override void OnInit()
         {

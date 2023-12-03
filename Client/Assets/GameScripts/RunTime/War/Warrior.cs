@@ -1,6 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
+using GameScript.RunTime.Config;
 using GameScripts.RunTime.Model;
 using HT.Framework;
 using UnityEngine;
@@ -167,6 +168,7 @@ namespace GameScripts.RunTime.War
         
         #endregion
 
+        public override int Layer => LayerConfig.War;
     }
     
     

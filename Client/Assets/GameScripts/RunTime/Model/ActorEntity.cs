@@ -25,7 +25,12 @@ namespace GameScripts.RunTime.Model
         /// 模型容器
         /// </summary>
         public Transform ModelContainer { get; private set; }
-        
+
+
+        /// <summary>
+        /// 实体层级
+        /// </summary>
+        public abstract int Layer { get; }
 
         public override void OnInit()
         {
@@ -44,6 +49,7 @@ namespace GameScripts.RunTime.Model
             {
                 model.OnInit(this);
             }
+            
         }
         
         public override void OnDestroy()

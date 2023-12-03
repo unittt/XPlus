@@ -2,6 +2,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using GameScript.RunTime.UI;
 using GameScripts.RunTime.Model;
+using GameScripts.RunTime.War;
 using GridMap;
 using HT.Framework;
 using Pb.Mmo.Common;
@@ -49,6 +50,9 @@ namespace GameScript.RunTime.Procedure
             var mapTouchController = GameObject.Find("Touch").GetComponent<MapTouchController>();
             mapTouchController._walker = _mapWalkerEntity.Agent;
             MapManager.Instance.SetFollow(_mapWalkerEntity.Entity.transform);
+
+
+            Main.m_Entity.CreateEntity<WarRoot>();
         }
         
         private void OnLoading(float arg)
