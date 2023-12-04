@@ -10,7 +10,7 @@ namespace GameScripts.RunTime.War
         public override void OnInit()
         {
             var camera = Entity.GetComponentByChild<Camera>("WarCamera");
-            var warBg = Entity.GetComponentByChild<SpriteRenderer>("WarBg");
+            var warBg = Entity.GetComponentByChild<SpriteRenderer>("WarCamera/WarBg");
             
             var cameraHeight = 2f * camera.orthographicSize;
             var cameraWidth = cameraHeight * camera.aspect;

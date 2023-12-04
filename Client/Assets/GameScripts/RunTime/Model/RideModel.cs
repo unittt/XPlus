@@ -1,3 +1,4 @@
+using System;
 using HT.Framework;
 using UnityEngine;
 
@@ -21,6 +22,7 @@ namespace GameScripts.RunTime.Model
 
         protected override string GetLocation()
         {
+            if (Info.horse <= 0) return string.Empty;
             return "model" + Info.horse;
         }
     }

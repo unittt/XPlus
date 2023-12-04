@@ -1,3 +1,4 @@
+using cfg.WarModule;
 using UnityEngine;
 
 namespace GameScripts.RunTime.War
@@ -25,6 +26,17 @@ namespace GameScripts.RunTime.War
         {
             var dir = (endPos - startPos).normalized;
             return root.TransformDirection(dir);
+        }
+
+
+        public static Vector3 GetDefalutRotateAngle(ECamp camp)
+        {
+            if (camp == ECamp.A)
+            {
+                return new Vector3(0, -50, 0);
+            }
+            
+            return new Vector3(0, 130, 0);
         }
 
         // public static void xxxxxx()

@@ -9,6 +9,7 @@ namespace GameScripts.RunTime.Model
     {
         protected override string GetLocation()
         {
+            if (Info.show_wing <= 0) return string.Empty;
             return "";
         }
         

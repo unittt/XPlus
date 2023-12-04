@@ -89,6 +89,11 @@ namespace HT.Framework
 
         public virtual T GetValue<T>()
         {
+            if (objectValue is null)
+            {
+                return default;
+            }
+            
             return (T)GetValue();
         }
 

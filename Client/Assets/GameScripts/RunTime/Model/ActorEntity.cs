@@ -89,7 +89,7 @@ namespace GameScripts.RunTime.Model
         /// 装配演员
         /// </summary>
         /// <param name="modelInfo"></param>
-        public void AssembleModel(ModelInfo modelInfo)
+        public virtual void AssembleModel(ModelInfo modelInfo)
         {
             ModelInfo = modelInfo;
             AssembleModel().Forget();

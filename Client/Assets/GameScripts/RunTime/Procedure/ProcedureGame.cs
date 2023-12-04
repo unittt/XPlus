@@ -50,6 +50,10 @@ namespace GameScript.RunTime.Procedure
             var mapTouchController = GameObject.Find("Touch").GetComponent<MapTouchController>();
             mapTouchController._walker = _mapWalkerEntity.Agent;
             MapManager.Instance.SetFollow(_mapWalkerEntity.Entity.transform);
+            
+            
+            
+            WarManager.InitWar();
         }
         
         private void OnLoading(float arg)

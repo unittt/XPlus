@@ -43,21 +43,90 @@ namespace Pb.Mmo.Common
 
     public class GS2CWarAddWarrior
     {
+        /// <summary>
+        /// 战斗的唯一标识符
+        /// </summary>
         public int war_id = 1;
+        /// <summary>
+        /// 阵营
+        /// </summary>
         public int camp_id = 2;
-        public int type = 3; /*1 player,2 npc,3 summon,4 partner,5 roplayer,6 rosummon,7 ropartner */
 
         public PlayerWarrior warrior;
         public NpcWarrior npcwarrior;
         public SumWarrior sumwarrior;
         public PartnerWarrior partnerwarrior;
-        public RoPlayerWarrior roplayerwarrior;
-        public RoPartnerWarrior ropartnerwarrior;
-        public RoSummonWarrior rosummonwarrior;
-        public int add_type = 11; //是否立即执行插入
         public int is_summon = 12; //战斗中召唤入场
     }
 
+    public class GS2CWarAddPlayerWarrior
+    {
+        /// <summary>
+        /// 战斗的唯一标识符
+        /// </summary>
+        public int war_id = 1;
+        /// <summary>
+        /// 阵营
+        /// </summary>
+        public int camp_id = 2;
+        /// <summary>
+        /// 战士
+        /// </summary>
+        public PlayerWarrior warrior;
+    }
+    
+    public class GS2CWarAddNpcWarrior
+    {
+        /// <summary>
+        /// 战斗的唯一标识符
+        /// </summary>
+        public int war_id = 1;
+        /// <summary>
+        /// 阵营
+        /// </summary>
+        public int camp_id = 2;
+        /// <summary>
+        /// 战士
+        /// </summary>
+        public NpcWarrior warrior;
+    }
+    
+    public class GS2CWarAddSumWarrior
+    {
+        /// <summary>
+        /// 战斗的唯一标识符
+        /// </summary>
+        public int war_id = 1;
+        /// <summary>
+        /// 阵营
+        /// </summary>
+        public int camp_id = 2;
+        /// <summary>
+        /// 战士
+        /// </summary>
+        public SumWarrior warrior;
+    }
+    
+    /// <summary>
+    /// 伙伴
+    /// </summary>
+    public class GS2CWarAddPartnerWarrior
+    {
+        /// <summary>
+        /// 战斗的唯一标识符
+        /// </summary>
+        public int war_id = 1;
+        /// <summary>
+        /// 阵营
+        /// </summary>
+        public int camp_id = 2;
+        /// <summary>
+        /// 战士
+        /// </summary>
+        public PartnerWarrior warrior;
+    }
+    
+    
     public class GS2CWarDelWarrior
     {
         public int war_id = 1;

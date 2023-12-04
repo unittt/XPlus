@@ -15,7 +15,7 @@ namespace  GameScripts.RunTime.Model
 
         protected override string GetLocation()
         {
-            return $"weapon{Info.shape.ToString()}_{Info.weapon.ToString()}";
+            return Info.weapon <= 0 ? string.Empty : $"weapon{Info.shape.ToString()}_{Info.weapon.ToString()}";
         }
     }
 }

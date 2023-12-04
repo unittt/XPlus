@@ -1,4 +1,6 @@
-﻿using GameScript.RunTime.Network;
+﻿using Cysharp.Threading.Tasks;
+using GameScript.RunTime.Network;
+using GridMap;
 using UnityEngine;
 using HT.Framework;
 
@@ -24,19 +26,16 @@ namespace GameScript.RunTime.Procedure
             System.Globalization.CultureInfo.DefaultThreadCurrentCulture =
                 new System.Globalization.CultureInfo("en-US");
             //连接服务器
-            GameNetManager.ConnectServer();
+            // GameNetManager.ConnectServer();
+            
+            InitAsync().Forget();
         }
 
-        /// <summary>
-        /// 流程帧刷新
-        /// </summary>
-        public override void OnUpdate()
+        private async UniTaskVoid InitAsync()
         {
-            if (Main.m_Resource.IsInitialized)
-            {
-                // Main.m_Procedure.SwitchProcedure<ProcedureLogin>();
-                Main.m_Procedure.SwitchProcedure<ProcedureGame>();
-            }
+            await UniTask.WaitUntil( ()=>Main.m_Resource.IsInitialized);
+            await TableGlobal.Init();
+            Main.m_Procedure.SwitchProcedure<ProcedureGame>();
         }
     }
 }
