@@ -25,8 +25,16 @@ namespace GameScript.RunTime.Procedure
             // SceneInfo sceneInfo = new SceneInfo("scene", "Assets/GameRes/Scene/Game.unity", "Game");
             // Main.m_Resource.LoadScene(sceneInfo,OnLoading, OnLoadDone);
 
+
+            WarManager.OnEnter += OnWarEnter;
+            
             Main.m_UI.OpenUI<UIMain>();
             InitAsync().Forget();
+        }
+
+        private void OnWarEnter()
+        {
+            
         }
 
 
@@ -51,9 +59,6 @@ namespace GameScript.RunTime.Procedure
             mapTouchController._walker = _mapWalkerEntity.Agent;
             MapManager.Instance.SetFollow(_mapWalkerEntity.Entity.transform);
             
-            
-            
-            WarManager.InitWar();
         }
         
         private void OnLoading(float arg)

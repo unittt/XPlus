@@ -3,12 +3,18 @@ using System.Collections.Generic;
 namespace Pb.Mmo.Common
 {
 
+    /// <summary>
+    /// 显示战斗
+    /// </summary>
     public class GS2CShowWar
     {
         public int war_id = 1;
         public int war_type = 2;
         public int sky_war = 3;
         public int weather = 4;
+        /// <summary>
+        /// 是否为boss战
+        /// </summary>
         public int is_bosswar = 5;
         public string tollgate_group; // 关卡组
         public int tollgate_id = 7; // 关卡id
@@ -27,19 +33,63 @@ namespace Pb.Mmo.Common
         public int bout_id = 2;
     }
 
+    /// <summary>
+    /// 回合开始
+    /// </summary>
     public class GS2CWarBoutStart
     {
 
+        /// <summary>
+        /// 房间唯一标识
+        /// </summary>
         public int war_id = 1;
+        /// <summary>
+        /// 回合编号
+        /// </summary>
         public int bout_id = 2;
+        /// <summary>
+        /// 倒计时
+        /// </summary>
         public int left_time = 3;
     }
 
+    /// <summary>
+    /// 回合结束
+    /// </summary>
     public class GS2CWarBoutEnd
     {
         public int war_id = 1;
     }
 
+    /// <summary>
+    /// 技能
+    /// </summary>
+    public class GS2CWarSkill
+    {
+        /// <summary>
+        /// 房间唯一标识
+        /// </summary>
+        public int war_id = 1;
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<int>  action_wlist;
+        public List<int> select_wlist;
+        public int skill_id = 4;
+        public int magic_id = 5;
+    }
+
+    public class GS2CWarDamage {
+        public int war_id = 1;
+        public int wid = 2;
+        public int type = 3;           /* 1 miss 2 defense */
+        public int iscrit = 4;         /* 1 crit */
+        public int damage = 5;
+        public int hited_effect = 6;   //是否表现受击动作
+    }
+    
+    
+    
 
     public class GS2CWarAddWarrior
     {
@@ -59,16 +109,20 @@ namespace Pb.Mmo.Common
         public int is_summon = 12; //战斗中召唤入场
     }
 
+    
+    /// <summary>
+    /// 玩家战士进入战斗
+    /// </summary>
     public class GS2CWarAddPlayerWarrior
     {
         /// <summary>
         /// 战斗的唯一标识符
         /// </summary>
-        public int war_id = 1;
+        public int war_id;
         /// <summary>
         /// 阵营
         /// </summary>
-        public int camp_id = 2;
+        public int camp_id;
         /// <summary>
         /// 战士
         /// </summary>
@@ -148,8 +202,17 @@ namespace Pb.Mmo.Common
     //玩家战士进入战斗
     public class GS2CPlayerWarriorEnter
     {
+        /// <summary>
+        /// 房间的唯一标识
+        /// </summary>
         public int war_id = 1;
+        /// <summary>
+        /// 玩家的唯一标识
+        /// </summary>
         public int wid = 2;
+        /// <summary>
+        /// 召唤兽列表
+        /// </summary>
         public List<int> sum_list;
     }
 }
