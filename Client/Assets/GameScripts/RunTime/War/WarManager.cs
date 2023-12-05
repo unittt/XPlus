@@ -9,7 +9,7 @@ namespace GameScripts.RunTime.War
     /// <summary>
     /// 战斗管理器
     /// </summary>
-    public class WarManager
+    public sealed class WarManager : SingletonBase<WarManager>
     {
 
         private Dictionary<int, Warrior> _warriors = new Dictionary<int, Warrior>();
@@ -20,16 +20,18 @@ namespace GameScripts.RunTime.War
         public static event Action OnEnter;
         public static event Action OnLeave;
 
+        public int CmdIndex;
         
         /// <summary>
         /// 启动战斗
         /// </summary>
         public  static async UniTaskVoid Start()
         {
-            //1.加载场景
-            await Main.m_Entity.CreateEntity<WarRoot>("warRoot");
-            //2.播放背景音乐
+            //1.关闭移动
             
+            //2.加载场景
+            await Main.m_Entity.CreateEntity<WarRoot>("warRoot");
+            //3.播放背景音乐
         }
 
         /// <summary>
@@ -111,6 +113,18 @@ namespace GameScripts.RunTime.War
             //3.开始回合
         }
 
+
+        #region MyRegion
+
+        public bool TryGetWarrior(int wid,out Warrior warrior)
+        {
+            warrior = null;
+            return true;
+        }
+
+        #endregion
+        
+        
         
 
         // private static int war_id = 1;

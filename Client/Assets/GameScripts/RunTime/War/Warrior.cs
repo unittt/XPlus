@@ -169,6 +169,11 @@ namespace GameScripts.RunTime.War
         #endregion
 
         public override int Layer => LayerConfig.War;
+
+        public bool IsBusy(string passivereborn)
+        {
+            return false;
+        }
     }
     
     
