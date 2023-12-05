@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using GameScript.RunTime.Network;
 using HT.Framework;
+using UnityEditor;
 
 namespace GameScripts.RunTime.War
 {
@@ -40,6 +41,7 @@ namespace GameScripts.RunTime.War
 
         private void ClearWarriorVary(int wid)
         {
+            // AssetDatabase.(value)
             // 逻辑实现，根据游戏的具体需求
             if (m_VaryInfo.TryGetValue(wid, out var dVary))
             {
