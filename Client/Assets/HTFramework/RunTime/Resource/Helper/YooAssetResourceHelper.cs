@@ -311,7 +311,7 @@ namespace HT.Framework
         /// <param name="isClone"></param>
         public void UnLoadAsset(Object obj)
         {
-            if (obj == null)
+            if (obj is null)
             {
                 return;
             }

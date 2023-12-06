@@ -5,7 +5,10 @@ namespace GameScripts.RunTime.DataUser
 {
     public class WarBuffData : DataSetBase
     {
-        public Dictionary<int, BuffEffectData> Datas = new();
+        public Dictionary<int, BuffEffectData> Datas = new()
+        {
+            {1, new BuffEffectData(){AddCnt = 1,BuffId = 103,Height = 0.3f,Path = "",Pos = ""}}
+        };
     }
 
     public class BuffEffectData

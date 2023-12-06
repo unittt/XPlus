@@ -13,6 +13,7 @@ namespace cfg
 {
 public partial class Tables
 {
+    public BuffModule.TbBuff TbBuff {get; }
     public WarModule.TbWarPosition TbWarPosition {get; }
     public SkillModule.TbSchoolSkill TbSchoolSkill {get; }
     public SystemModule.TbRoleType TbRoleType {get; }
@@ -20,6 +21,7 @@ public partial class Tables
 
     public Tables(System.Func<string, ByteBuf> loader)
     {
+        TbBuff = new BuffModule.TbBuff(loader("buffmodule_tbbuff"));
         TbWarPosition = new WarModule.TbWarPosition(loader("warmodule_tbwarposition"));
         TbSchoolSkill = new SkillModule.TbSchoolSkill(loader("skillmodule_tbschoolskill"));
         TbRoleType = new SystemModule.TbRoleType(loader("systemmodule_tbroletype"));
@@ -29,6 +31,7 @@ public partial class Tables
     
     private void ResolveRef()
     {
+        TbBuff.ResolveRef(this);
         TbWarPosition.ResolveRef(this);
         TbSchoolSkill.ResolveRef(this);
         TbRoleType.ResolveRef(this);
