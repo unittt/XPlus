@@ -30,4 +30,16 @@
 	<var name="DemonGodPalace"  alias="妖神宫" comment="妖神宫"/>
 </enum>
 
+
+
+<!-- 
+	身体部位
+-->
+<enum name="EBodyParts">
+	<var name="Human" alias="头" comment="头"/>
+	<var name="Waist" alias="腰" comment="腰"/>
+	<var name="Feet"  alias="脚" comment="脚"/>
+	<var name="Hands"  alias="手" comment="手"/>
+</enum>
+
 </module>

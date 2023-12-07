@@ -1,0 +1,16 @@
+<module name="BuffModule">
+
+<bean name="Buff">
+		<var name="id" type="int" comment="buff编号"/>
+		<var name="name" type="string" comment="名称"/>
+		<var name="icon" type="int" comment="图标"/>
+		<var name="desc" type="string" comment="描述"/>
+		<var name="buffGroup" type="EBuffGroup" comment="大组状态类型"/>
+		<var name="buffType" type="EBuffType" comment="buff类型"/>
+		<var name="updateType" type="EUpdateType" comment="更新方式"/>
+		<var name="buffEvent" type="EBuffEvent" comment="触发时机"/>
+		<var name="part" type="SystemModule.EBodyParts" comment="身体部位"/>
+		<var name="skillID" type="int" comment="技能id"/>
+	</bean>
+	<table name="TbBuff" value="Buff" index="id" input="buff/buff.xlsx"/>
+</module>

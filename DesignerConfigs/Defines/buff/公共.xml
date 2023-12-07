@@ -1,0 +1,44 @@
+<module name="BuffModule">
+
+
+<!-- 
+	buff类型
+-->
+<enum name="EBuffType">
+	<var name="None" alias="" comment="空白"/>
+	<var name="Sealing" alias="封印" comment="封印"/>
+	<var name="Poisoning" alias="中毒" comment="中毒"/>
+</enum>
+
+
+<!-- 
+	大组状态类型
+-->
+<enum name="EBuffGroup">
+	<var name="Temporary" alias="临时大组" comment="临时大组"/>
+	<var name="Gain" alias="增益大组" comment="增益大组"/>
+	<var name="Abnormal" alias="异常大组" comment="异常大组"/>
+	<var name="Special" alias="特殊大组" comment="特殊大组"/>
+</enum>
+
+
+<!-- 
+	更新方式
+-->
+<enum name="EUpdateType">
+	<var name="Keep" alias="保持" comment="保持"/>
+	<var name="Add"  alias="叠加" comment="叠加"/>
+	<var name="Replace" alias="替换" comment="替换"/>
+</enum>
+
+
+<!-- 
+	触发时机
+-->
+<enum name="EBuffEvent">
+	<var name="None" alias="" comment="None"/>
+	<var name="AttackBegin" alias="攻击开始" comment="攻击开始"/>
+	<var name="StrikeAction"  alias="受击动作" comment="受击动作"/>
+</enum>
+
+</module>

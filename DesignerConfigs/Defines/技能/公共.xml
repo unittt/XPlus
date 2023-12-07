@@ -1,0 +1,24 @@
+<module name="SkillModule">
+
+<!-- 
+	攻击方式
+-->
+<enum name="EAttackType">
+	<var name="Physical" alias="物理" comment="物理"/>
+	<var name="Spell" alias="法术" comment="法术"/>
+</enum>
+
+
+<!-- 
+	元素
+-->
+<enum name="EElementType">
+	<var name="water" alias="水" comment="水"/>
+	<var name="fire" alias="火" comment="火"/>
+	<var name="soil" alias="土" comment="土"/>
+	<var name="wind" alias="风" comment="风"/>
+</enum>
+
+
+
+</module>
