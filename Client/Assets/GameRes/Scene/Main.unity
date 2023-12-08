@@ -216,7 +216,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114046948290896454, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: IsEnableOverlayUI
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: DefaultProcedure
@@ -249,6 +249,14 @@ PrefabInstance:
     - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: ActivatedProcedures.Array.data[5]
       value: ProcedureUpdateResources
+      objectReference: {fileID: 0}
+    - target: {fileID: 114742769800330520, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
+      propertyPath: m_ReferenceResolution.x
+      value: 1920
+      objectReference: {fileID: 0}
+    - target: {fileID: 114742769800330520, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
+      propertyPath: m_ReferenceResolution.y
+      value: 1080
       objectReference: {fileID: 0}
     - target: {fileID: 2859145590620282333, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: m_ScreenMatchMode
