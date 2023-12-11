@@ -27,14 +27,32 @@ namespace GameScripts.RunTime.EditorMagic
             var addBtn = entity.FindChildren("AddBtn");
             addBtn.GetComponent<Button>().onClick.AddListener(OnClickAdd);
             _inputField = entity.GetComponentByChild<InputField>("InputField");
-            
+            _inputField.onValueChanged.AddListener(OnValueChanged);
             RefreshFieldInfoText();
             
             _inputField.interactable = !hasSelectHandler;
             addBtn.SetActive(hasSelectHandler);
             if (hasSelectHandler)  _selectHandlerType = selectHandlerAttribute.SelectHandler;
         }
-        
+
+        private void OnValueChanged(string arg0)
+        {
+            if (_varFieldInfo.FieldType == typeof(int))
+            {
+                int.TryParse(arg0, out var value);
+                _varFieldInfo.Value = value;
+            }
+            else if (_varFieldInfo.FieldType == typeof(float))
+            {
+                float.TryParse(arg0, out var value);
+                _varFieldInfo.Value = value;
+            }
+            else
+            {
+                _varFieldInfo.Value = arg0;
+            }
+        }
+
         private void OnClickAdd()
         {
             var action = (Action<object>)OnSelectCallBack;
