@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using HT.Framework;
 using UnityEngine;
 
 namespace GameScripts.RunTime.Utility.Selector
@@ -29,19 +28,8 @@ namespace GameScripts.RunTime.Utility.Selector
                 _s2eDic.Add(inspectorName, eValue);
             }
         }
-
-        public override void SetTarget(object obj, FieldInfo fieldInfo)
-        {
-            if (fieldInfo.FieldType != typeof(T))
-            {
-                $"字段类型’{fieldInfo.FieldType}‘与目标类型’{typeof(T)}‘ 不一致".Error();
-                return;
-            }
-            
-            base.SetTarget(obj, fieldInfo);
-        }
-
-        protected override object GetObjValue(string value)
+        
+        public override object GetValue(string value)
         {
             return _s2eDic[value];
         }
