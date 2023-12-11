@@ -22,11 +22,11 @@ namespace GameScripts.RunTime.EditorMagic
             _entity.GetComponentByChild<Text>("Label").text = _argumentAttribute.displayName;
             if (!string.IsNullOrEmpty(_argumentAttribute.ShowMethod))
             {
-                _isShowMethod = _varFieldInfo.Target.GetType().GetMethod(_argumentAttribute.ShowMethod);
+                _isShowMethod = _varFieldInfo.Target.GetType().GetMethod(_argumentAttribute.ShowMethod, BindingFlags.Instance |BindingFlags.Public|BindingFlags.NonPublic );
             }
         }
 
-        public virtual void Refresh()
+        public void Refresh()
         {
             if (_isShowMethod == null) return;
             var result = (bool)_isShowMethod.Invoke(_varFieldInfo.Target, null);

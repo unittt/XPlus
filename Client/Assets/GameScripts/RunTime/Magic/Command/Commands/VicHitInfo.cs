@@ -19,6 +19,10 @@ namespace GameScripts.RunTime.Magic.Command
         [SelectHandler(typeof(EnumSelectorHandler<BoolType>))]
         public BoolType play_anim;
         
+        [Argument("伤害跟随")]
+        [SelectHandler(typeof(EnumSelectorHandler<BoolType>))]
+        public BoolType damage_follow;
+        
         [Argument("考虑高度")]
         [SelectHandler(typeof(EnumSelectorHandler<BoolType>))]
         public BoolType consider_hight;

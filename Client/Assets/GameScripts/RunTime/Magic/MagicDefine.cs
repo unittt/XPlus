@@ -142,6 +142,6 @@ namespace GameScripts.RunTime.Magic
         [InspectorName("匀速旋转")] Lerp_pos,
         [InspectorName("LookAt")] Look_at,
         [InspectorName("随机方向")] Random,
-        [InspectorName("prepare")] Prepare,
+        // [InspectorName("预设点")] Prepare,
     }
 }

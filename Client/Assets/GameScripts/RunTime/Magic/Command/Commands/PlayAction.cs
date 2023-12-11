@@ -11,7 +11,7 @@ namespace GameScripts.RunTime.Magic.Command
         
         [Argument("执行人")]
         [SelectHandler(typeof(EnumSelectorHandler<ExecutorType>))]
-        public ExecutorType excutor;
+        public ExecutorType executor;
 
         [Argument("起始帧(?)")]
         public float start_frame;
