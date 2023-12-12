@@ -122,14 +122,9 @@ namespace GameScripts.RunTime.EditorMagic
                 //复合参数
                 if (fieldInfo.FieldType.IsSubclassOf(ComplexType))
                 {
-                    if (varFieldInfo.Value == null)
-                    {
-                        Log.Info("为空---------");
-                        //复合赋值
-                        varFieldInfo.Value = Activator.CreateInstance(fieldInfo.FieldType);
-                    }
+                    //默认赋值
+                    varFieldInfo.Value ??= Activator.CreateInstance(fieldInfo.FieldType);
                     
-                  
                     //创建一个复合box
                     // var complexArgBox = Main.Clone(_complexArgBoxPrefab, parent);
                     var complexArgBox = Main.Clone(_complexArgBoxPrefab, _argContent);
