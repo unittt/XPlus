@@ -4,6 +4,7 @@ using System.Reflection;
 using GameScripts.RunTime.Magic.Command;
 using GameScripts.RunTime.Utility.Variable;
 using HT.Framework;
+using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +16,7 @@ namespace GameScripts.RunTime.EditorMagic
     [UIResource("UIEditorMagicBuildCmd")]
     public sealed class UIEditorMagicBuildCmd : UILogicResident
     {
-        private static Type IComplexType = typeof(IComplex);
+        private static Type ComplexType = typeof(ComplexBase);
         private Dictionary<Type, GameObject> _t2BtnOption;
 
         private Transform _argContent;
@@ -23,6 +24,9 @@ namespace GameScripts.RunTime.EditorMagic
         private GameObject _complexArgBoxPrefab;
         
         private List<ArgBoxEntityBase> _argBoxEntities = new();
+
+        //当前指令数据
+        private CommandBase commandBase;
 
         public override void OnInit()
         {
@@ -32,6 +36,10 @@ namespace GameScripts.RunTime.EditorMagic
             _argContent = variableArray.Get<Transform>("argContent");
             _argBoxPrefab = variableArray.Get<GameObject>("argBox");
             _complexArgBoxPrefab = variableArray.Get<GameObject>("complexArgBox");
+
+            variableArray.Get<InputField>("startInputField");
+            variableArray.Get<Button>("confirmBtn").onClick.AddListener(OnClickConfirm);
+            variableArray.Get<Button>("closeBtn").onClick.AddListener(Close);;
             
             
             //1.查找所有指令
@@ -59,6 +67,7 @@ namespace GameScripts.RunTime.EditorMagic
                 _t2BtnOption.Add(cmdType, commandBtn.FindChildren("sprite"));
             }
         }
+
         
         public override void OnOpen(params object[] args)
         {
@@ -80,8 +89,8 @@ namespace GameScripts.RunTime.EditorMagic
             _argBoxEntities.Clear();
             
             //1.实例化对象
-            var command = Activator.CreateInstance(cmdType).Cast<CommandBase>();
-            ShowCmd2(command,cmdType, _argContent);
+            commandBase = Activator.CreateInstance(cmdType).Cast<CommandBase>();
+            ShowCmd2(commandBase,cmdType, _argContent);
 
             //刷新
             foreach (var argBoxEntity in _argBoxEntities)
@@ -110,11 +119,17 @@ namespace GameScripts.RunTime.EditorMagic
             foreach (var fieldInfo in fieldInfos)
             {
                 var varFieldInfo = new VarFieldInfo(target, fieldInfo);
-                varFieldInfo.ValueChange += OnFieldInfoValueChanged;
-                
                 //复合参数
-                if (IComplexType.IsAssignableFrom(fieldInfo.FieldType))
+                if (fieldInfo.FieldType.IsSubclassOf(ComplexType))
                 {
+                    if (varFieldInfo.Value == null)
+                    {
+                        Log.Info("为空---------");
+                        //复合赋值
+                        varFieldInfo.Value = Activator.CreateInstance(fieldInfo.FieldType);
+                    }
+                    
+                  
                     //创建一个复合box
                     // var complexArgBox = Main.Clone(_complexArgBoxPrefab, parent);
                     var complexArgBox = Main.Clone(_complexArgBoxPrefab, _argContent);
@@ -134,6 +149,8 @@ namespace GameScripts.RunTime.EditorMagic
                     argBoxEntity.Fill(argBox,varFieldInfo,parentArgBox);
                     _argBoxEntities.Add(argBoxEntity);
                 }
+                
+                varFieldInfo.ValueChange += OnFieldInfoValueChanged;
             }
         }
 
@@ -145,5 +162,19 @@ namespace GameScripts.RunTime.EditorMagic
                 argBoxEntity.Refresh();
             }
         }
+        
+        
+        private void OnClickConfirm()
+        {
+            if (commandBase != null)
+            {
+                // JsonConvert.
+                // var faceTo = commandBase.Cast<FaceTo>();
+                // Log.Info(faceTo.randomPosition.x_max.ToString());
+                var json = JsonUtility.ToJson(commandBase);
+                Log.Info(json);
+            }
+        }
+        
     }
 }

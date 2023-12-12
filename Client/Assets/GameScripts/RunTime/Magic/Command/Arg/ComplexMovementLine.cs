@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using GameScripts.RunTime.Utility.Selector;
 
@@ -6,11 +7,11 @@ namespace GameScripts.RunTime.Magic.Command
     /// <summary>
     /// 直线移动
     /// </summary>
-    public struct ComplexMovementLine : IComplex
+    [Serializable]
+    public sealed class ComplexMovementLine : ComplexBase
     {
-        [Argument("渐变曲线")] 
-        [SelectHandler(typeof(SelectorHandler_Enum<Ease>))]
-        public Ease ease_type;
+        [Argument("渐变曲线")] [SelectHandler(typeof(SelectorHandler_Enum<Ease>))]
+        public Ease ease_type = Ease.Linear;
 
         #region 起点
         [Argument("起始点类型")]
@@ -21,7 +22,7 @@ namespace GameScripts.RunTime.Magic.Command
         public string begin_prepare;
         
         [Argument("自定义起点","IsShowBeginRelative")]
-        public ComplexPosition begin_relative;
+        public ComplexPosition begin_relative = new();
         #endregion
         
         #region 终点
@@ -33,16 +34,14 @@ namespace GameScripts.RunTime.Magic.Command
         public string end_prepare;
         
         [Argument("自定义终点","IsShowEndRelative")]
-        public ComplexPosition end_relative;
+        public ComplexPosition end_relative = new();
         #endregion
-     
-        [Argument("计算朝向",true)] 
-        [SelectHandler(typeof(SelectorHandler_Bool))]
-        public bool calc_face;
-        
-        [Argument("面对终点",true)]
-        [SelectHandler(typeof(SelectorHandler_Bool))]
-        public bool look_at_pos;
+
+        [Argument("计算朝向")] [SelectHandler(typeof(SelectorHandler_Bool))]
+        public bool calc_face = true;
+
+        [Argument("面对终点")] [SelectHandler(typeof(SelectorHandler_Bool))]
+        public bool look_at_pos = true;
 
         #region 处理参数显示
         private bool IsShowBeginPrepare()

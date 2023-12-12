@@ -28,30 +28,9 @@ namespace GameScripts.RunTime.EditorMagic
             {
                 _isShowMethod = _varFieldInfo.Target.GetType().GetMethod(_argumentAttribute.ShowMethod, BindingFlags.Instance |BindingFlags.Public|BindingFlags.NonPublic );
             }
-
-            SetDefaultValue();
         }
 
-        /// <summary>
-        /// 设置默认值
-        /// </summary>
-        protected virtual void SetDefaultValue()
-        {
-            var defaultValue = _argumentAttribute.DefaultValue;
-            if (defaultValue is not  null)
-            {
-                _varFieldInfo.Value = defaultValue;
-            }
-            else
-            {
-                if (_varFieldInfo.FieldType == typeof(string))
-                {
-                    _varFieldInfo.Value = string.Empty;
-                }
-            }
-        }
         
-
         public void Refresh()
         {
             var active = _parent?.ActiveSelf ?? true;

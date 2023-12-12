@@ -6,7 +6,7 @@ namespace GameScripts.RunTime.Magic.Command
         [Argument("路径")]
         public string path;
         
-        [Argument("时间",1)]
-        public string time;
+        [Argument("时间")]
+        public float time = 1;
     }
 }

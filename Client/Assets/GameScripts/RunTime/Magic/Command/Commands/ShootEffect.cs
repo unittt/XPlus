@@ -24,12 +24,10 @@ namespace GameScripts.RunTime.Magic.Command
         
         [Argument("延迟移动")]
         public float delay_time;
-        
-        [Argument("渐变曲线",Ease.Linear)]
-        [SelectHandler(typeof(SelectorHandler_Enum<Ease>))]
-        public Ease ease_type;
-        
-        [Argument("存在时间", 1)]
-        public float alive_time;
+
+        [Argument("渐变曲线")] [SelectHandler(typeof(SelectorHandler_Enum<Ease>))]
+        public Ease ease_type = Ease.Linear;
+
+        [Argument("存在时间")] public float alive_time = 1;
     }
 }

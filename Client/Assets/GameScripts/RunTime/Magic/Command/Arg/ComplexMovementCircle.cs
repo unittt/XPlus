@@ -1,12 +1,15 @@
+using System;
+
 namespace GameScripts.RunTime.Magic.Command
 {
     /// <summary>
     /// 圆弧
     /// </summary>
-    public struct ComplexMovementCircle:IComplex
+    [Serializable]
+    public sealed class ComplexMovementCircle:ComplexBase
     {
-        [Argument("插值次数",5)] 
-        public int lerp_cnt;
+        [Argument("插值次数")] 
+        public int lerp_cnt = 5;
         
         [Argument("自定义起点")] 
         public ComplexPosition begin_relative;

@@ -4,7 +4,7 @@ namespace GameScripts.RunTime.Magic.Command
 {
     
     [Command("模型颜色", 91)]
-    public class ActorColor:CommandBase
+    public sealed class ActorColor:CommandBase
     {
         [Argument("执行人")]
         [SelectHandler(typeof(SelectorHandler_Enum<ExecutorType>))]

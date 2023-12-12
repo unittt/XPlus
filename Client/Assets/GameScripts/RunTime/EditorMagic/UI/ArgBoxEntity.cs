@@ -75,7 +75,14 @@ namespace GameScripts.RunTime.EditorMagic
 
         private void RefreshFieldInfoText()
         {
-            _inputField.text = _isEnum ? ((Enum)_varFieldInfo.Value).GetInspectorName() : _varFieldInfo.Value.ToString();
+            if (_varFieldInfo.Value == null)
+            {
+                _inputField.text = "";
+            }
+            else
+            {
+                _inputField.text = _isEnum ? ((Enum)_varFieldInfo.Value).GetInspectorName() : _varFieldInfo.Value.ToString();
+            }
         }
     }
 }

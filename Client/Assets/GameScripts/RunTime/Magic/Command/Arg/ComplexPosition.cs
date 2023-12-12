@@ -1,3 +1,4 @@
+using System;
 using GameScripts.RunTime.Utility.Selector;
 
 namespace GameScripts.RunTime.Magic.Command
@@ -5,7 +6,8 @@ namespace GameScripts.RunTime.Magic.Command
     /// <summary>
     /// 自定位置
     /// </summary>
-    public struct ComplexPosition : IComplex
+    [Serializable]
+    public sealed class ComplexPosition : ComplexBase
     {
         [Argument("基本位置"), SelectHandler(typeof(SelectorHandler_Enum<PositionType>))]
         public PositionType BasePosition;

@@ -20,19 +20,16 @@ namespace GameScripts.RunTime.Magic.Command
         [Argument("终点位置")]
         public ComplexPosition end_pos;
 
-        [Argument("时间",1)] 
-        public float cale_time;
-        
-        [Argument("渐变曲线",Ease.Linear)]
-        [SelectHandler(typeof(SelectorHandler_Enum<Ease>))]
-        public Ease ease_type;
-        
-        [Argument("存在时间", 1)]
-        public float alive_time;
-        
-        
-        [Argument("重复纹理",true)]
-        [SelectHandler(typeof(SelectorHandler_Bool))]
-        public bool repeat_texture;
+        [Argument("时间")] 
+        public float cale_time = 1;
+
+        [Argument("渐变曲线")] [SelectHandler(typeof(SelectorHandler_Enum<Ease>))]
+        public Ease ease_type = Ease.Linear;
+
+        [Argument("存在时间")] public float alive_time = 1;
+
+
+        [Argument("重复纹理")] [SelectHandler(typeof(SelectorHandler_Bool))]
+        public bool repeat_texture = true;
     }
 }

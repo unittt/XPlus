@@ -3,7 +3,7 @@ using GameScripts.RunTime.Utility.Selector;
 namespace GameScripts.RunTime.Magic.Command
 {
     [Command("材质球", 93)]
-    public class ActorMaterial:CommandBase
+    public sealed class ActorMaterial:CommandBase
     {
         [Argument("执行人")]
         [SelectHandler(typeof(SelectorHandler_Enum<ExecutorType>))]

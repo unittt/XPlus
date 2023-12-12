@@ -9,23 +9,17 @@ namespace GameScripts.RunTime.Magic.Command
         [Argument("执行人")]
         [SelectHandler(typeof(SelectorHandler_Enum<ExecutorType>))]
         public ExecutorType executor;
-        
-        [Argument("upFloat速度",10)]
-        public float up_speed;
-        
-        [Argument("upFloat时间",0.2f)]
-        public float up_time;
-        
-        [Argument("hitFloat速度",8)]
-        public float hit_speed;
-        
-        [Argument("hitFloat时间",0.2f)]
-        public float hit_time;
-        
-        [Argument("落地时间",1)]
-        public float down_time;
-        
-        [Argument("躺地时间",0.5f)]
-        public float lie_time;
+
+        [Argument("upFloat速度")] public float up_speed = 10;
+
+        [Argument("upFloat时间")] public float up_time = 0.2f;
+
+        [Argument("hitFloat速度")] public float hit_speed = 8;
+
+        [Argument("hitFloat时间")] public float hit_time = 0.2f;
+
+        [Argument("落地时间")] public float down_time = 1;
+
+        [Argument("躺地时间")] public float lie_time = 0.5f;
     }
 }

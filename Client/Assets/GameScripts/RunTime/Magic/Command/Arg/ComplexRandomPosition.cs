@@ -1,6 +1,9 @@
+using System;
+
 namespace GameScripts.RunTime.Magic.Command
 {
-    public struct ComplexRandomPosition : IComplex
+    [Serializable]
+    public sealed class ComplexRandomPosition : ComplexBase
     {
         [Argument("x最小值")] public float x_min;
         [Argument("x最大值")] public float x_max;
