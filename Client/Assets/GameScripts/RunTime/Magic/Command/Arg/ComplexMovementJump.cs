@@ -1,4 +1,3 @@
-using System;
 using DG.Tweening;
 using GameScripts.RunTime.Utility.Selector;
 
@@ -7,7 +6,6 @@ namespace GameScripts.RunTime.Magic.Command
     /// <summary>
     /// 跳跃
     /// </summary>
-    [Serializable]
     public sealed class ComplexMovementJump: ComplexBase
     {
         [Argument("跳跃力度")] 

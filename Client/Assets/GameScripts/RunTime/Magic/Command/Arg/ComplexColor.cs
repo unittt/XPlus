@@ -1,8 +1,5 @@
-using System;
-
 namespace GameScripts.RunTime.Magic.Command
 {
-    [Serializable]
     public sealed class ComplexColor : ComplexBase
     {
         [Argument("r")] public float r;
