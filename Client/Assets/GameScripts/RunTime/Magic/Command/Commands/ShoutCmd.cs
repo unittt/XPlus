@@ -3,17 +3,17 @@ using GameScripts.RunTime.Utility.Selector;
 namespace GameScripts.RunTime.Magic.Command
 {
     [Command("喊招",1003)]
-    public class ShoutCmd
+    public class ShoutCmd: CommandBase
     {
         [Argument("存在时间")]
-        public float alive_time;
+        public float alive_time = 1.5f;
         
         [Argument("显示文字")]
-        [SelectHandler(typeof(EnumSelectorHandler<BoolType>))]
-        public BoolType show;
+        [SelectHandler(typeof(SelectorHandler_Bool))]
+        public bool show;
         
         [Argument("播放音效")]
-        [SelectHandler(typeof(EnumSelectorHandler<BoolType>))]
-        public BoolType shot;
+        [SelectHandler(typeof(SelectorHandler_Bool))]
+        public bool shot;
     }
 }

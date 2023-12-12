@@ -10,7 +10,7 @@ namespace GameScripts.RunTime.Utility
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        public static string GetInspectorName(this System.Enum value)
+        public static string GetInspectorName(this Enum value)
         {
             var type = value.GetType();
             var name = Enum.GetName(type, value);

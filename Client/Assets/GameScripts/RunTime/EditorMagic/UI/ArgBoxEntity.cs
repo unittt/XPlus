@@ -16,9 +16,9 @@ namespace GameScripts.RunTime.EditorMagic
         private InputField _inputField;
         private bool _isEnum;
 
-        public override void Fill(GameObject entity,VarFieldInfo varFieldInfo)
+        public override void Fill(GameObject entity,VarFieldInfo varFieldInfo, ArgBoxEntityBase parent)
         {
-            base.Fill(entity, varFieldInfo);
+            base.Fill(entity, varFieldInfo,parent);
             _isEnum = varFieldInfo.FieldType.IsEnum;
             
             var selectHandlerAttribute = varFieldInfo.Info.GetCustomAttribute<SelectHandlerAttribute>();
@@ -27,14 +27,21 @@ namespace GameScripts.RunTime.EditorMagic
             var addBtn = entity.FindChildren("AddBtn");
             addBtn.GetComponent<Button>().onClick.AddListener(OnClickAdd);
             _inputField = entity.GetComponentByChild<InputField>("InputField");
-            _inputField.onValueChanged.AddListener(OnValueChanged);
+            
             RefreshFieldInfoText();
             
-            _inputField.interactable = !hasSelectHandler;
+            _inputField.readOnly = hasSelectHandler;
             addBtn.SetActive(hasSelectHandler);
-            if (hasSelectHandler)  _selectHandlerType = selectHandlerAttribute.SelectHandler;
+            if (hasSelectHandler)
+            {
+                _selectHandlerType = selectHandlerAttribute.SelectHandler;
+            }
+            else
+            {
+                _inputField.onValueChanged.AddListener(OnValueChanged);
+            }
         }
-
+        
         private void OnValueChanged(string arg0)
         {
             if (_varFieldInfo.FieldType == typeof(int))

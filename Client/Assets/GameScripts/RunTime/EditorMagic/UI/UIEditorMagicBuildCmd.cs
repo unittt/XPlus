@@ -21,8 +21,7 @@ namespace GameScripts.RunTime.EditorMagic
         private Transform _argContent;
         private GameObject _argBoxPrefab;
         private GameObject _complexArgBoxPrefab;
-
-
+        
         private List<ArgBoxEntityBase> _argBoxEntities = new();
 
         public override void OnInit()
@@ -99,7 +98,7 @@ namespace GameScripts.RunTime.EditorMagic
             
         }
         
-        private void ShowCmd2(object target, Type cmdType, Transform parent)
+        private void ShowCmd2(object target, Type cmdType, Transform parent, ArgBoxEntityBase parentArgBox = null)
         {
             //2.获取目标的字段
             var fieldInfos = cmdType.GetFields((field) =>
@@ -117,21 +116,22 @@ namespace GameScripts.RunTime.EditorMagic
                 if (IComplexType.IsAssignableFrom(fieldInfo.FieldType))
                 {
                     //创建一个复合box
-                    var complexArgBox = Main.Clone(_complexArgBoxPrefab, parent);
+                    // var complexArgBox = Main.Clone(_complexArgBoxPrefab, parent);
+                    var complexArgBox = Main.Clone(_complexArgBoxPrefab, _argContent);
                     
                     var complexArgBoxEntity = Main.m_ReferencePool.Spawn<ComplexArgBoxEntity>();
-                    complexArgBoxEntity.Fill(complexArgBox, varFieldInfo);
+                    complexArgBoxEntity.Fill(complexArgBox, varFieldInfo,parentArgBox);
                     _argBoxEntities.Add(complexArgBoxEntity);
                     
                     var target2 = fieldInfo.GetValue(target);
-                    ShowCmd2(target2,fieldInfo.FieldType, complexArgBoxEntity.Container);
+                    ShowCmd2(target2,fieldInfo.FieldType, complexArgBoxEntity.Container, complexArgBoxEntity);
                 }
                 else
                 {
                     var argBox = Main.Clone(_argBoxPrefab, parent);
                     var argBoxEntity = Main.m_ReferencePool.Spawn<ArgBoxEntity>();
                     
-                    argBoxEntity.Fill(argBox,varFieldInfo);
+                    argBoxEntity.Fill(argBox,varFieldInfo,parentArgBox);
                     _argBoxEntities.Add(argBoxEntity);
                 }
             }

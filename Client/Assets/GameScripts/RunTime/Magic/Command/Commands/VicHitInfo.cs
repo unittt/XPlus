@@ -12,23 +12,23 @@ namespace GameScripts.RunTime.Magic.Command
         public float hurt_delta;
         
         [Argument("面向攻击者")]
-        [SelectHandler(typeof(EnumSelectorHandler<BoolType>))]
-        public BoolType face_atk;
+        [SelectHandler(typeof(SelectorHandler_Bool))]
+        public bool face_atk;
         
         [Argument("受击动作")]
-        [SelectHandler(typeof(EnumSelectorHandler<BoolType>))]
-        public BoolType play_anim;
+        [SelectHandler(typeof(SelectorHandler_Bool))]
+        public bool play_anim;
         
         [Argument("伤害跟随")]
-        [SelectHandler(typeof(EnumSelectorHandler<BoolType>))]
-        public BoolType damage_follow;
+        [SelectHandler(typeof(SelectorHandler_Bool))]
+        public bool damage_follow;
         
         [Argument("考虑高度")]
-        [SelectHandler(typeof(EnumSelectorHandler<BoolType>))]
-        public BoolType consider_hight;
+        [SelectHandler(typeof(SelectorHandler_Bool))]
+        public bool consider_hight;
         
         [Argument("播放音效")]
-        [SelectHandler(typeof(EnumSelectorHandler<BoolType>))]
-        public BoolType shot;
+        [SelectHandler(typeof(SelectorHandler_Bool))]
+        public bool shot;
     }
 }

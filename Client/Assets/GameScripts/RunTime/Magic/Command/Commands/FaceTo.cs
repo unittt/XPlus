@@ -6,11 +6,11 @@ namespace GameScripts.RunTime.Magic.Command
     public class FaceTo: CommandBase
     {
         [Argument("执行人")]
-        [SelectHandler(typeof(EnumSelectorHandler<ExecutorType>))]
+        [SelectHandler(typeof(SelectorHandler_Enum<ExecutorType>))]
         public ExecutorType executor;
         
         [Argument("方向类型")]
-        [SelectHandler(typeof(EnumSelectorHandler<FaceType>))]
+        [SelectHandler(typeof(SelectorHandler_Enum<FaceType>))]
         public FaceType face_to;
 
         [Argument("位置","IsShowPos")]

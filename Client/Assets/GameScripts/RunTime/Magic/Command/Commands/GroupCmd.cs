@@ -6,12 +6,12 @@ namespace GameScripts.RunTime.Magic.Command
     public class GroupCmd:CommandBase
     {
         [Argument("指令组类型")]
-        [SelectHandler(typeof(EnumSelectorHandler<CmdGroupType>))]
+        [SelectHandler(typeof(SelectorHandler_Enum<CmdGroupType>))]
         public CmdGroupType cmdGroupType;
 
         #region 条件判断
         [Argument("条件")]
-        [SelectHandler(typeof(EnumSelectorHandler<CmdGroupCondition>))]
+        [SelectHandler(typeof(SelectorHandler_Enum<CmdGroupCondition>))]
         public CmdGroupCondition Condition_name;
         
         [Argument("true指令组","IsShowCondition")]
@@ -26,7 +26,7 @@ namespace GameScripts.RunTime.Magic.Command
         public string group_names;
         
         [Argument("选取方式","IsShowRepeat")]
-        [SelectHandler(typeof(EnumSelectorHandler<GetType>))]
+        [SelectHandler(typeof(SelectorHandler_Enum<GetType>))]
         public GetType get_type;
 
         [Argument("选取次数","IsShowRepeat")]
@@ -34,7 +34,7 @@ namespace GameScripts.RunTime.Magic.Command
         #endregion
         
         [Argument("添加方式")]
-        [SelectHandler(typeof(EnumSelectorHandler<CmdGroupAddType>))]
+        [SelectHandler(typeof(SelectorHandler_Enum<CmdGroupAddType>))]
         public CmdGroupAddType add_type;
 
         private bool IsShowCondition()

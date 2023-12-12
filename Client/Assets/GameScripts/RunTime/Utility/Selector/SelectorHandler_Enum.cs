@@ -9,11 +9,11 @@ namespace GameScripts.RunTime.Utility.Selector
     /// 枚举选择器
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class EnumSelectorHandler<T> :SelectorHandler where T: struct,Enum
+    public class SelectorHandler_Enum<T> :SelectorHandler where T: struct,Enum
     {
         private Dictionary<string, T> _s2eDic;
 
-        public EnumSelectorHandler()
+        public SelectorHandler_Enum()
         {
             _s2eDic = new Dictionary<string, T>();
             var enumType = typeof(T);

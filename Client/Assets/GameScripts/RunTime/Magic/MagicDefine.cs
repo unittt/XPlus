@@ -32,15 +32,7 @@ namespace GameScripts.RunTime.Magic
         [InspectorName("受击队伍中心")] VictimTeamCenter,
         [InspectorName("像机位置")] CameraPosition
     }
-
-
-    public enum BoolType
-    {
-        [InspectorName("是")] TRUE,
-        [InspectorName("否")] FALSE
-    }
-
-
+    
     public enum ExecutorType
     {
         [InspectorName("攻击者")] Attacker,
@@ -55,6 +47,20 @@ namespace GameScripts.RunTime.Magic
     }
 
 
+    /// <summary>
+    /// 绑定类型
+    /// </summary>
+    public enum BindType
+    {
+        [InspectorName("无")] Empty,
+        [InspectorName("节点")] Node,
+        [InspectorName("部位")] Pos,
+    }
+    
+
+    /// <summary>
+    /// 身体部位
+    /// </summary>
     public enum BodyPart
     {
         [InspectorName("头部")] Head,
@@ -62,6 +68,15 @@ namespace GameScripts.RunTime.Magic
         [InspectorName("脚部")] Foot
     }
 
+    /// <summary>
+    /// 施法层级类型
+    /// </summary>
+    public enum MagicLayer
+    {
+        [InspectorName("正常")] normal,
+        [InspectorName("遮挡")] Cover,
+        [InspectorName("置顶")] Top
+    }
 
     public enum MoveType
     {
@@ -70,7 +85,7 @@ namespace GameScripts.RunTime.Magic
         [InspectorName("跳跃")] Jump
     }
 
-
+    
     public enum EffectCountType
     {
         [InspectorName("单个")] Single,
@@ -143,5 +158,34 @@ namespace GameScripts.RunTime.Magic
         [InspectorName("LookAt")] Look_at,
         [InspectorName("随机方向")] Random,
         // [InspectorName("预设点")] Prepare,
+    }
+
+    /// <summary>
+    /// 位置
+    /// </summary>
+    public enum LocationType
+    {
+        /// <summary>
+        /// 当前位置
+        /// </summary>
+        [InspectorName("当前位置")] Current,
+        /// <summary>
+        /// 预设
+        /// </summary>
+        [InspectorName("预设")] Prepare,
+        /// <summary>
+        /// 自定义
+        /// </summary>
+        [InspectorName("自定义")] Relative,
+    }
+
+
+    /// <summary>
+    /// 特写镜头移动类型
+    /// </summary>
+    public enum CloseUpMoveType
+    {
+        [InspectorName("相机->人物")] Cam,
+        [InspectorName("人物->相机")] Actor,
     }
 }
