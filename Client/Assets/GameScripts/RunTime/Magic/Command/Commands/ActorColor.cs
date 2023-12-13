@@ -1,9 +1,11 @@
+using System;
 using GameScripts.RunTime.Utility.Selector;
 
 namespace GameScripts.RunTime.Magic.Command
 {
     
     [Command("模型颜色", 91)]
+    [Serializable]
     public sealed class ActorColor:CommandBase
     {
         [Argument("执行人")]

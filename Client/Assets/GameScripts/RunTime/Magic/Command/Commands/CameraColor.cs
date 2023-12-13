@@ -1,5 +1,8 @@
+using System;
+
 namespace GameScripts.RunTime.Magic.Command
 {
+    [Serializable]
     [Command("像机颜色", 86)]
     public class CameraColor:CommandBase
     {

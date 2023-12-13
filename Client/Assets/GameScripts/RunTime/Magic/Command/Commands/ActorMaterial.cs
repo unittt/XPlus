@@ -1,7 +1,9 @@
+using System;
 using GameScripts.RunTime.Utility.Selector;
 
 namespace GameScripts.RunTime.Magic.Command
 {
+    [Serializable]
     [Command("材质球", 93)]
     public sealed class ActorMaterial:CommandBase
     {

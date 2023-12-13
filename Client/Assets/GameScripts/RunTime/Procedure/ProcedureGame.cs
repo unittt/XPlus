@@ -30,7 +30,7 @@ namespace GameScript.RunTime.Procedure
             WarManager.OnEnter += OnWarEnter;
             
             Main.m_UI.OpenUI<UIMain>();
-            Main.m_UI.OpenUI<UIEditorMagicBuildCmd>();
+            Main.m_UI.OpenUI<UIEditorMagic>();
             InitAsync().Forget();
         }
 

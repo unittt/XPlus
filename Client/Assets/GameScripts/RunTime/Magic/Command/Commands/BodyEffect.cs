@@ -1,8 +1,10 @@
+using System;
 using GameScripts.RunTime.Utility.Selector;
 
 namespace GameScripts.RunTime.Magic.Command
 {
     
+    [Serializable]
     [Command("绑定身体",60)]
     public class BodyEffect:CommandBase
     {

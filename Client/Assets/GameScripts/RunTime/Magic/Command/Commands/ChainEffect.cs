@@ -1,9 +1,10 @@
+using System;
 using DG.Tweening;
 using GameScripts.RunTime.Utility.Selector;
 
 namespace GameScripts.RunTime.Magic.Command
 {
-    
+    [Serializable]
     [Command("链接特效",81)]
     public class ChainEffect:CommandBase
     {

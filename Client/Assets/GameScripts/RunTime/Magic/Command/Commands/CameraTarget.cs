@@ -1,3 +1,4 @@
+using System;
 using GameScripts.RunTime.Utility.Selector;
 
 namespace GameScripts.RunTime.Magic.Command
@@ -5,6 +6,7 @@ namespace GameScripts.RunTime.Magic.Command
     /// <summary>
     /// 人物特写
     /// </summary>
+    [Serializable]
     [Command("人物特写", 84)]
     public class CameraTarget: CommandBase
     {

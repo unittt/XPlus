@@ -1,5 +1,8 @@
+using System;
+
 namespace GameScripts.RunTime.Magic.Command
 {
+    [Serializable]
     public abstract class CommandBase
     {
         /// <summary>

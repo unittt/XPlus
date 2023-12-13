@@ -1,8 +1,10 @@
+using System;
 using GameScripts.RunTime.Utility.Selector;
 
 namespace GameScripts.RunTime.Magic.Command
 {
     
+    [Serializable]
     [Command("移动位置",12)]
     public class Move:CommandBase
     {

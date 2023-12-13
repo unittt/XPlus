@@ -1,7 +1,9 @@
+using System;
 using GameScripts.RunTime.Utility.Selector;
 
 namespace GameScripts.RunTime.Magic.Command
 {
+    [Serializable]
     [Command("像机锁定", 88)]
     public class CameraLock : CommandBase
     {

@@ -1,6 +1,8 @@
+using System;
+
 namespace GameScripts.RunTime.Magic.Command
 {
-    
+    [Serializable]
     [Command("震屏",81)]
     public class ShakeScreen:CommandBase
     {

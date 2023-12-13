@@ -1,8 +1,9 @@
+using System;
 using GameScripts.RunTime.Utility.Selector;
 
 namespace GameScripts.RunTime.Magic.Command
 {
-    
+    [Serializable]
     [Command("定点特效",70)]
     public class StandEffect: CommandBase
     {

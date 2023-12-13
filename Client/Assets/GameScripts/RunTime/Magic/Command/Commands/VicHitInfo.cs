@@ -1,3 +1,4 @@
+using System;
 using GameScripts.RunTime.Utility.Selector;
 
 namespace GameScripts.RunTime.Magic.Command
@@ -5,6 +6,7 @@ namespace GameScripts.RunTime.Magic.Command
     /// <summary>
     /// 受击信息
     /// </summary>
+    [Serializable]
     [Command("受击信息",1)]
     public class VicHitInfo : CommandBase
     {

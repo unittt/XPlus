@@ -1,7 +1,9 @@
+using System;
 using GameScripts.RunTime.Utility.Selector;
 
 namespace GameScripts.RunTime.Magic.Command
 {
+    [Serializable]
     [Command("播放动作",10)]
     public class PlayAction:CommandBase
     {

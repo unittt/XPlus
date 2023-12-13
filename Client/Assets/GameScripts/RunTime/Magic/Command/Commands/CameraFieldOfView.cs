@@ -1,5 +1,8 @@
+using System;
+
 namespace GameScripts.RunTime.Magic.Command
 {
+    [Serializable]
     [Command("像机FieldOfView", 87)]
     public class CameraFieldOfView : CommandBase
     {

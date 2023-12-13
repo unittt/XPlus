@@ -1,8 +1,10 @@
+using System;
 using DG.Tweening;
 using GameScripts.RunTime.Utility.Selector;
 
 namespace GameScripts.RunTime.Magic.Command
 {
+    [Serializable]
     [Command("射击特效",80)]
     public class ShootEffect:CommandBase
     {

@@ -1,5 +1,8 @@
+using System;
+
 namespace GameScripts.RunTime.Magic.Command
 {
+    [Serializable]
     [Command("加载UI", 92)]
     public class LoadUI: CommandBase
     {

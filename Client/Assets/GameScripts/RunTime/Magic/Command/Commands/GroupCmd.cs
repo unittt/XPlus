@@ -1,7 +1,9 @@
+using System;
 using GameScripts.RunTime.Utility.Selector;
 
 namespace GameScripts.RunTime.Magic.Command
 {
+    [Serializable]
     [Command("指令组",1001)]
     public class GroupCmd:CommandBase
     {

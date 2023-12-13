@@ -1,8 +1,10 @@
+using System;
 using GameScripts.RunTime.Utility.Selector;
 
 namespace GameScripts.RunTime.Magic.Command
 {
     
+    [Serializable]
     [Command("浮空", 99)]
     public class FloatHit:CommandBase
     {
