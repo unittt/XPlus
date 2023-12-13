@@ -1,7 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
 using GameScript.RunTime.UI;
-using GameScripts.RunTime.EditorMagic;
 using GameScripts.RunTime.Model;
 using GameScripts.RunTime.War;
 using GridMap;
