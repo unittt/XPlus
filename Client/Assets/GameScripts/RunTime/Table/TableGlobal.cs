@@ -7,10 +7,15 @@ using Luban;
 /// <summary>
 /// luban配置表 全局访问
 /// </summary>
-public static class TableGlobal
+public class TableGlobal
 {
     public static Tables Instance { get; private set; }
 
+    private TableGlobal()
+    {
+        
+    }
+    
     public static async UniTask Init()
     {
         var bytesInstances = await Main.m_Resource.LoadRawFileDataByTag("data",true);

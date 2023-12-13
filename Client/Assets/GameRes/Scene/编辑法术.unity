@@ -218,13 +218,25 @@ PrefabInstance:
       propertyPath: IsEnableOverlayUI
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114046948290896454, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
+      propertyPath: DefineUINames.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114046948290896454, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
+      propertyPath: DefineUIEntitys.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 114046948290896454, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
+      propertyPath: DefineUINames.Array.data[0]
+      value: <None>
+      objectReference: {fileID: 0}
     - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: DefaultProcedure
       value: GameScript.RunTime.Procedure.ProcedureLauncher
       objectReference: {fileID: 0}
     - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: ActivatedProcedures.Array.size
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: ActivatedProcedures.Array.data[0]
@@ -232,7 +244,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: ActivatedProcedures.Array.data[1]
-      value: GameScript.RunTime.Procedure.ProcedureLogin
+      value: GameScript.RunTime.Procedure.ProcedureEditor
       objectReference: {fileID: 0}
     - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: ActivatedProcedures.Array.data[2]
@@ -257,6 +269,10 @@ PrefabInstance:
     - target: {fileID: 114742769800330520, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: m_ReferenceResolution.y
       value: 1080
+      objectReference: {fileID: 0}
+    - target: {fileID: 114872231495406314, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
+      propertyPath: MainParameters.Array.size
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2859145590620282333, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: m_ScreenMatchMode

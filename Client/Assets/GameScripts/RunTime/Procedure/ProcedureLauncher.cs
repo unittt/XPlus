@@ -1,6 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
 using GameScript.RunTime.Network;
-using GridMap;
 using UnityEngine;
 using HT.Framework;
 
@@ -33,9 +32,11 @@ namespace GameScript.RunTime.Procedure
 
         private async UniTaskVoid InitAsync()
         {
+            //等待Resource初始化完成
             await UniTask.WaitUntil( ()=>Main.m_Resource.IsInitialized);
+            //等待配置表加载完成
             await TableGlobal.Init();
-            Main.m_Procedure.SwitchProcedure<ProcedureGame>();
+            Main.m_Procedure.SwitchNextProcedure();
         }
     }
 }

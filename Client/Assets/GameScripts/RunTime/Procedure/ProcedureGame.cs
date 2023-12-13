@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 
 namespace GameScript.RunTime.Procedure
 {
-    public class ProcedureGame : ProcedureBase
+    public sealed class ProcedureGame : ProcedureBase
     {
         private MapWalker _mapWalkerEntity;
         public static event Action<float> OnLoadingGameScene; 
@@ -29,7 +29,6 @@ namespace GameScript.RunTime.Procedure
             WarManager.OnEnter += OnWarEnter;
             
             Main.m_UI.OpenUI<UIMain>();
-            Main.m_UI.OpenUI<UIEditorMagic>();
             InitAsync().Forget();
         }
 

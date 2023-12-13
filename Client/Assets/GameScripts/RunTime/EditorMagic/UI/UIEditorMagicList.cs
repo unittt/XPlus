@@ -50,24 +50,19 @@ namespace GameScripts.RunTime.EditorMagic
         
         public override void OnOpen(params object[] args)
         {
-            // var selectHandlerType = args[0].Cast<Type>();
-            // _callBack = args[1].Cast<Action<object>>();
-            // _selectorHandler = Activator.CreateInstance(selectHandlerType).Cast<SelectorHandler>();
-            // _selectorHandler.GetElementCollection(_context);
-            //
             //1.清理数据
             Main.m_ReferencePool.Despawns(_elements);
             _searchInputField.text = "";
             _element = null;
-            //
-            // //2.生成数据
-            // foreach (var value in _context)
-            // {
-            //     var element = Main.m_ReferencePool.Spawn<SearchElement>();
-            //     var entity = Main.Clone(_searchElementEntityPrefab, _content);
-            //     element.Fill(entity,value,OnSelect);
-            //     _elements.Add(element);
-            // }
+        
+            //2.生成数据
+            foreach (var value in EditorMagicManager.MagicDatas)
+            {
+                var element = Main.m_ReferencePool.Spawn<SearchElement>();
+                var entity = Main.Clone(_searchElementEntityPrefab, _content);
+                element.Fill(entity,value.Name,OnSelect);
+                _elements.Add(element);
+            }
         }
 
         private void xxxxx()
