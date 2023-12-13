@@ -1,7 +1,9 @@
+using System;
 using GameScripts.RunTime.Utility.Selector;
 
 namespace GameScripts.RunTime.Magic.Command
 {
+    [Serializable]
     public sealed class ComplexEffect : ComplexBase
     {
         [Argument("路径")]

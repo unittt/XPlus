@@ -1,8 +1,11 @@
+using System;
+
 namespace GameScripts.RunTime.Magic.Command
 {
     /// <summary>
     /// 圆弧
     /// </summary>
+    [Serializable]
     public sealed class ComplexMovementCircle:ComplexBase
     {
         [Argument("插值次数")] 

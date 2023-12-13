@@ -118,11 +118,13 @@ namespace GameScripts.RunTime.EditorMagic
 
             foreach (var fieldInfo in fieldInfos)
             {
+                
                 var varFieldInfo = new VarFieldInfo(target, fieldInfo);
+
                 //复合参数
                 if (fieldInfo.FieldType.IsSubclassOf(ComplexType))
                 {
-                    //默认赋值
+                  
                     varFieldInfo.Value ??= Activator.CreateInstance(fieldInfo.FieldType);
                     
                     //创建一个复合box

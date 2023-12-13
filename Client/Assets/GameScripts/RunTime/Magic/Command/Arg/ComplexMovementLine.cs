@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using GameScripts.RunTime.Utility.Selector;
 
@@ -6,6 +7,7 @@ namespace GameScripts.RunTime.Magic.Command
     /// <summary>
     /// 直线移动
     /// </summary>
+    [Serializable]
     public sealed class ComplexMovementLine : ComplexBase
     {
         [Argument("渐变曲线")] [SelectHandler(typeof(SelectorHandler_Enum<Ease>))]
