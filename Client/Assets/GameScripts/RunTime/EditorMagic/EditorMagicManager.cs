@@ -40,11 +40,9 @@ namespace GameScripts.RunTime.EditorMagic
 
         static EditorMagicManager()
         {
-            //添加自定义程序集到运行时程序域
+            //1.添加自定义程序集到运行时程序域
             ReflectionToolkit.AddRunTimeAssembly("EditorMagic");
-            
-            
-            //1.查找所有指令
+            //2.查找所有指令
             var types = ReflectionToolkit.GetTypesInRunTimeAssemblies(type => type.IsSubclassOf(typeof(CommandBase)) && !type.IsAbstract);
 
             T2AInstance = new Dictionary<Type, CommandAttribute>();
@@ -53,6 +51,9 @@ namespace GameScripts.RunTime.EditorMagic
                 var attribute = type.GetCustomAttribute<CommandAttribute>();
                 T2AInstance.Add(type, attribute);
             }
+
+            //3.指令排序
+            T2AInstance = T2AInstance.OrderBy(p => p.Value.Sort).ToDictionary(p => p.Key, o => o.Value);
         }
 
         [RuntimeInitializeOnLoadMethod]

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using GameScripts.RunTime.Magic.Command;
 using GameScripts.RunTime.Utility.Variable;
@@ -48,13 +47,10 @@ namespace GameScripts.RunTime.EditorMagic
             variableArray.Get<Button>("confirmBtn").onClick.AddListener(OnClickConfirm);
             variableArray.Get<Button>("closeBtn").onClick.AddListener(Close);
             
-
-            // 1.指令排序
-            var sortedDic = EditorMagicManager.T2AInstance.OrderBy(pair => pair.Value).ThenBy(pair => pair.Key)
-                .ToList();
+            
             //2.实例化指令按钮
             _cmdOptions = new List<CommandOption>();
-            foreach (var pair in sortedDic)
+            foreach (var pair in EditorMagicManager.T2AInstance)
             {
                 var entity = Main.Clone(commandBtnPrefab, commandBtnParent, false);
                 var commandOption = new CommandOption(entity, pair.Key, pair.Value.WrapName, ShowCmd);
