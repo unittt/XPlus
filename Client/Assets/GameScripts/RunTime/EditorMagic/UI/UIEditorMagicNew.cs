@@ -1,10 +1,4 @@
-
-using System.IO;
-using GameScripts.RunTime.Magic;
-using GameScripts.RunTime.Magic.Command;
 using HT.Framework;
-using UnityEditor;
-using UnityEngine;
 using UnityEngine.UI;
 
 namespace GameScripts.RunTime.EditorMagic
@@ -35,31 +29,11 @@ namespace GameScripts.RunTime.EditorMagic
             {
                 return;
             }
-            
-            var fileName = $"{_inputField.text}.bytes"; // 指定文件名
-            var path = "Assets/GameRes/MagicFile";
-            path = Path.Combine(path, fileName);
 
-            var magicData = new MagicData();
-            var faceTo = new FaceTo();
-            faceTo.pos = new ComplexPosition();
-            faceTo.pos.Depth = 100;
-            magicData.Commands.Add(faceTo);
-
-            var bytes = magicData.SerializeCommands();
-            File.WriteAllBytes(path,bytes);
-            
-            // 刷新Asset数据库，以便Unity编辑器能够检测到新文件
-            AssetDatabase.Refresh();
-            Debug.Log("MagicData保存成功");
-            
-            var textAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(path);
-            var newData = MagicData.Deserialize(textAsset.bytes);
-            Log.Info(newData.Commands.Count.ToString());
-            
+            if (EditorMagicManager.CreateMagicFile(_inputField.text))
+            {
+                Close();
+            }
         }
-        
-        // var newData = JsonToolkit.StringToJson<MagicData>(json);
-        // JsonConvert.SerializeObject(magicData);
     }
 }

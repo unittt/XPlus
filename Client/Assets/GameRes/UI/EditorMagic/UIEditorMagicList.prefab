@@ -237,6 +237,10 @@ MonoBehaviour:
       objectValue: {fileID: 5059302406899952835}
       dataValue: 
       variableType: 2
+    - name: searchElementEntity
+      objectValue: {fileID: 90254657580208949, guid: 81ad66162a6da2e428c2d34b69e0d921, type: 3}
+      dataValue: 
+      variableType: 1
 --- !u!1 &2187177994695874275
 GameObject:
   m_ObjectHideFlags: 0

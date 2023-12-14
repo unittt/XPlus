@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using System.IO;
 using GameScript.RunTime.UI.Search;
 using GameScripts.RunTime.Magic;
 using GameScripts.RunTime.Utility.Selector;
 using HT.Framework;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,12 +13,15 @@ namespace GameScripts.RunTime.EditorMagic
     /// 法术列表
     /// </summary>
     [UIResource("UIEditorMagicList")]
-    public class UIEditorMagicList:UILogicResident
+    public sealed class UIEditorMagicList:UILogicResident
     {
         private InputField _searchInputField;
         private Transform _content;
         private GameObject _searchElementEntityPrefab;
 
+        private GameObject _confirmBtn;
+        
+        
         //选择器
         private SelectorHandler _selectorHandler;
         private List<string> _context;
@@ -38,6 +39,8 @@ namespace GameScripts.RunTime.EditorMagic
             _searchInputField.onValueChanged.AddListener(OnSearchInputValueChanged);
             _content = variableArray.Get<Transform>("content");
             _searchElementEntityPrefab = variableArray.Get<GameObject>("searchElementEntity");
+            _confirmBtn = variableArray.Get<Button>("confirmBtn").gameObject;
+            
             variableArray.Get<Button>("confirmBtn").onClick.AddListener(OnClickConfirm);
             variableArray.Get<Button>("closeBtn").onClick.AddListener(Close);
             variableArray.Get<Button>("addBtn").onClick.AddListener(OnClickAdd);
@@ -54,39 +57,46 @@ namespace GameScripts.RunTime.EditorMagic
             Main.m_ReferencePool.Despawns(_elements);
             _searchInputField.text = "";
             _element = null;
-        
+       
+            _confirmBtn.SetActive(false);
+            
             //2.生成数据
-            foreach (var value in EditorMagicManager.MagicDatas)
+            foreach (var fileName in EditorMagicManager.MagicDatas.Keys)
             {
-                var element = Main.m_ReferencePool.Spawn<SearchElement>();
-                var entity = Main.Clone(_searchElementEntityPrefab, _content);
-                element.Fill(entity,value.Name,OnSelect);
-                _elements.Add(element);
+                SpawnElement(fileName);
             }
+            
+            EditorMagicManager.OnCreateMagic += OnCreateMagic;
+            EditorMagicManager.OnDeleteMagic += OnDeleteMagic;
         }
 
-        private void xxxxx()
+        public override void OnClose()
         {
-            
-            //
-            
-            _magicDatas.Clear();
-            var path = "Assets/GameRes/MagicFile";
-            // 遍历目录下的所有文件
-            var files = Directory.GetFiles(path);
-            foreach (var file in files)
-            {
-                // 检查文件扩展名是否为 .jso
-                if (!Path.GetExtension(file).Equals(".json", System.StringComparison.OrdinalIgnoreCase)) continue;
-                var textAsset = AssetDatabase.LoadAssetAtPath<TextAsset>(file);
+            EditorMagicManager.OnCreateMagic -= OnCreateMagic;
+            EditorMagicManager.OnDeleteMagic -= OnDeleteMagic;
+        }
 
-                if (textAsset == null) continue;
-              
-                // var mapData = MagicData .Deserialize(textAsset.text);
-                // _magicDatas.Add(mapData);
-            }
+        private void OnCreateMagic(string fileName)
+        {
+            SpawnElement(fileName);
         }
         
+        private void OnDeleteMagic(string fileName)
+        {
+            var element = _elements.Find(e => e.Context == fileName);
+            if (element == null) return;
+            _elements.Remove(element);
+            Main.m_ReferencePool.Despawn(element);
+        }
+
+        private void SpawnElement(string context)
+        {
+            var element = Main.m_ReferencePool.Spawn<SearchElement>();
+            var entity = Main.Clone(_searchElementEntityPrefab, _content);
+            element.Fill(entity,context,OnSelect);
+            _elements.Add(element);
+        }
+      
         
         private void OnSearchInputValueChanged(string newValue)
         {
@@ -111,8 +121,10 @@ namespace GameScripts.RunTime.EditorMagic
             {
                 element.SetSelectedActive(false);
             }
-            obj.SetSelectedActive(true);
+           
             _element = obj;
+            _element.SetSelectedActive(true);
+            _confirmBtn.SetActive(true);
         }
         
         private void OnClickConfirm()
@@ -129,14 +141,15 @@ namespace GameScripts.RunTime.EditorMagic
         
         private void OnClickDelete()
         {
-           
-            
+            if (_element == null) return;
+            EditorMagicManager.DeleteMagicFile(_element.Context);
+            _element = null;
+            _confirmBtn.SetActive(false);
         }
 
         private void OnClickAdd()
         {
             Main.m_UI.OpenUI<UIEditorMagicNew>();
-            
         }
     }
 }
