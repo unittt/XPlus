@@ -1146,6 +1146,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: StartTimeBox
       objectReference: {fileID: 0}
+    - target: {fileID: 8287989132129642621, guid: 2fd9a869f0c42c04d869e85dfac2a609, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8421334117534281070, guid: 2fd9a869f0c42c04d869e85dfac2a609, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

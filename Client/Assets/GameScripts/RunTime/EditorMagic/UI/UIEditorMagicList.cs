@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using GameScript.RunTime.UI.Search;
 using GameScripts.RunTime.Magic;
-using GameScripts.RunTime.Utility.Selector;
 using HT.Framework;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,11 +20,6 @@ namespace GameScripts.RunTime.EditorMagic
 
         private GameObject _confirmBtn;
         
-        
-        //选择器
-        private SelectorHandler _selectorHandler;
-        private List<string> _context;
-
         //元素集合
         private List<SearchElement> _elements;
         private SearchElement _element;
@@ -47,7 +41,6 @@ namespace GameScripts.RunTime.EditorMagic
             variableArray.Get<Button>("deleteBtn").onClick.AddListener(OnClickDelete);
 
             _elements = new List<SearchElement>();
-            _context = new List<string>();
             _magicDatas = new List<MagicData>();
         }
         
@@ -57,7 +50,6 @@ namespace GameScripts.RunTime.EditorMagic
             Main.m_ReferencePool.Despawns(_elements);
             _searchInputField.text = "";
             _element = null;
-       
             _confirmBtn.SetActive(false);
             
             //2.生成数据
@@ -131,9 +123,8 @@ namespace GameScripts.RunTime.EditorMagic
         {
             if (_element != null)
             {
-                //设置值
-                var obj = _selectorHandler.GetValue(_element.Context);
-                // _callBack?.Invoke(obj);
+                //编辑这个法术
+                EditorMagicManager.EditorMagic(_element.Context);
             }
             
             Close();

@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using GameScripts.RunTime.Magic.Command;
 using GameScripts.RunTime.Utility.Variable;
 using HT.Framework;
-using Unity.Plastic.Newtonsoft.Json;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -17,70 +17,111 @@ namespace GameScripts.RunTime.EditorMagic
     public sealed class UIEditorMagicBuildCmd : UILogicResident
     {
         private static Type ComplexType = typeof(ComplexBase);
-        private Dictionary<Type, GameObject> _t2BtnOption;
+        private List<CommandOption> _cmdOptions;
 
         private Transform _argContent;
         private GameObject _argBoxPrefab;
         private GameObject _complexArgBoxPrefab;
+        private InputField _startInputField;
         
         private List<ArgBoxEntityBase> _argBoxEntities = new();
 
+        private Type CmdType => _curCommand?.GetType();
+
         //当前指令数据
-        private CommandBase commandBase;
+        private CommandBase _curCommand;
+
+        //替换的索引
+        private int _replaceIndex;
 
         public override void OnInit()
         {
             var variableArray = UIEntity.GetComponent<VariableBehaviour>().Container;
             var commandBtnPrefab = variableArray.Get<GameObject>("commandBtn");
-            var commandBtnParent  = variableArray.Get<Transform>("commandBtnParent");
+            var commandBtnParent = variableArray.Get<Transform>("commandBtnParent");
             _argContent = variableArray.Get<Transform>("argContent");
             _argBoxPrefab = variableArray.Get<GameObject>("argBox");
             _complexArgBoxPrefab = variableArray.Get<GameObject>("complexArgBox");
 
-            variableArray.Get<InputField>("startInputField");
+            _startInputField = variableArray.Get<InputField>("startInputField");
+            _startInputField.onValueChanged.AddListener(OnStartTimeValueChanged);
             variableArray.Get<Button>("confirmBtn").onClick.AddListener(OnClickConfirm);
-            variableArray.Get<Button>("closeBtn").onClick.AddListener(Close);;
+            variableArray.Get<Button>("closeBtn").onClick.AddListener(Close);
             
-            
-            //1.查找所有指令
-            var types = ReflectionToolkit.GetTypesInRunTimeAssemblies(type => type.IsSubclassOf(typeof(CommandBase)) && !type.IsAbstract);
 
-            var c2t = new Dictionary<CommandAttribute, Type>();
-            var commandAttributes = new List<CommandAttribute>();
-            foreach (var type in types)
+            // 1.指令排序
+            var sortedDic = EditorMagicManager.T2AInstance.OrderBy(pair => pair.Value).ThenBy(pair => pair.Key)
+                .ToList();
+            //2.实例化指令按钮
+            _cmdOptions = new List<CommandOption>();
+            foreach (var pair in sortedDic)
             {
-                var attribute = type.GetCustomAttribute<CommandAttribute>();
-                commandAttributes.Add(attribute);
-                c2t.Add(attribute, type);
-            }
-            //2.指令排序
-            commandAttributes.Sort((x, y) => x.Sort.CompareTo(y.Sort));
-            
-            //3.实例化指令按钮
-            _t2BtnOption = new Dictionary<Type, GameObject>();
-            foreach (var commandAttribute in commandAttributes)
-            {
-                var cmdType = c2t[commandAttribute];
-                var commandBtn = Main.Clone(commandBtnPrefab, commandBtnParent,false);
-                commandBtn.GetComponentByChild<Text>("Label").text = commandAttribute.WrapName;
-                commandBtn.GetComponent<Button>().onClick.AddListener(() => { ShowCmd(cmdType);});
-                _t2BtnOption.Add(cmdType, commandBtn.FindChildren("sprite"));
+                var entity = Main.Clone(commandBtnPrefab, commandBtnParent, false);
+                var commandOption = new CommandOption(entity, pair.Key, pair.Value.WrapName, ShowCmd);
+                _cmdOptions.Add(commandOption);
             }
         }
 
-        
+        private void OnStartTimeValueChanged(string arg0)
+        {
+            float.TryParse(arg0, out var value);
+            if (_curCommand != null)
+            {
+                _curCommand.StartTime = value;
+            }
+        }
+
+
         public override void OnOpen(params object[] args)
         {
-            base.OnOpen(args);
+            _curCommand = null;
+            _replaceIndex = -1;
+            _startInputField.SetTextWithoutNotify(string.Empty);
+            if (args is { Length: > 0 })
+            {
+                _replaceIndex = (int)args[0];
+                var command = args[1].Cast<CommandBase>();
+                var type = command.GetType();
+                foreach (var option in _cmdOptions)
+                {
+                    option.SetActive(option.CmdType == type);
+                }
+
+                ShowCmd(command);
+            }
+            else
+            {
+                foreach (var option in _cmdOptions)
+                {
+                    option.SetActive(true);
+                }
+
+                ShowCmd(_cmdOptions[0].CmdType);
+            }
         }
         
         private void ShowCmd(Type cmdType)
         {
-            foreach (var expr in _t2BtnOption)
-            {
-                expr.Value.SetActive(expr.Key == cmdType);
-            }
+            if (CmdType == cmdType) return;
 
+            //实例化指令
+            var curCommand = Activator.CreateInstance(cmdType).Cast<CommandBase>();
+            ShowCmd(curCommand);
+        }
+
+        
+        private void ShowCmd(CommandBase command)
+        {
+            //记录指令的类型
+            _curCommand = command;
+
+            //高亮选中的标签
+            foreach (var commandOption in _cmdOptions)
+            {
+                commandOption.SetSelectActive(commandOption.CmdType == CmdType);
+            }
+            
+            //清理所有元素
             var maxIndex = _argBoxEntities.Count - 1;
             for (var i = maxIndex; i >= 0; i--)
             {
@@ -88,26 +129,17 @@ namespace GameScripts.RunTime.EditorMagic
             }
             _argBoxEntities.Clear();
             
-            //1.实例化对象
-            commandBase = Activator.CreateInstance(cmdType).Cast<CommandBase>();
-            ShowCmd2(commandBase,cmdType, _argContent);
-
+            CreateCmdFieldView(_curCommand,CmdType, _argContent);
+            _startInputField.SetTextWithoutNotify(_curCommand.StartTime.ToString());
             //刷新
             foreach (var argBoxEntity in _argBoxEntities)
             {
                 argBoxEntity.Refresh();
             }
         }
-
-
         
-        public void ShowCmd(CommandBase command)
-        {
-            var cmdType = command.GetType();
-            
-        }
         
-        private void ShowCmd2(object target, Type cmdType, Transform parent, ArgBoxEntityBase parentArgBox = null)
+        private void CreateCmdFieldView(object target, Type cmdType, Transform parent, ArgBoxEntityBase parentArgBox = null)
         {
             //2.获取目标的字段
             var fieldInfos = cmdType.GetFields((field) =>
@@ -118,7 +150,6 @@ namespace GameScripts.RunTime.EditorMagic
 
             foreach (var fieldInfo in fieldInfos)
             {
-                
                 var varFieldInfo = new VarFieldInfo(target, fieldInfo);
 
                 //复合参数
@@ -136,7 +167,7 @@ namespace GameScripts.RunTime.EditorMagic
                     _argBoxEntities.Add(complexArgBoxEntity);
                     
                     var target2 = fieldInfo.GetValue(target);
-                    ShowCmd2(target2,fieldInfo.FieldType, complexArgBoxEntity.Container, complexArgBoxEntity);
+                    CreateCmdFieldView(target2,fieldInfo.FieldType, complexArgBoxEntity.Container, complexArgBoxEntity);
                 }
                 else
                 {
@@ -163,15 +194,49 @@ namespace GameScripts.RunTime.EditorMagic
         
         private void OnClickConfirm()
         {
-            if (commandBase != null)
+            if (_curCommand == null) return;
+
+            //为替换
+            if (_replaceIndex >= 0)
             {
-                // JsonConvert.
-                // var faceTo = commandBase.Cast<FaceTo>();
-                // Log.Info(faceTo.randomPosition.x_max.ToString());
-                var json = JsonUtility.ToJson(commandBase);
-                Log.Info(json);
+                EditorMagicManager.ReplaceCmd(_replaceIndex, _curCommand);
+            }
+            else
+            {
+                //增加指令
+                EditorMagicManager.AddCmd(_curCommand);
+            }
+           
+            Close();
+        }
+
+
+        #region 指令标签选项
+        private class CommandOption
+        {
+            private GameObject _entity;
+            private GameObject _select;
+            public Type CmdType { get; }
+
+            public CommandOption(GameObject entity ,Type cmdType, string label, Action<Type> callBack)
+            {
+                _entity = entity;
+                CmdType = cmdType;
+                _entity.GetComponentByChild<Text>("Label").text = label;
+                _entity.GetComponent<Button>().onClick.AddListener(() => { callBack(CmdType);});
+                _select = _entity.FindChildren("sprite");
+            }
+
+            public void SetSelectActive(bool active)
+            {
+                _select.SetActive(active);
+            }
+
+            public void SetActive(bool active)
+            {
+                _entity.SetActive(active);
             }
         }
-        
+        #endregion
     }
 }
