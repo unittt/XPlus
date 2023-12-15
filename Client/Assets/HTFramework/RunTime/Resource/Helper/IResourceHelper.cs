@@ -1,8 +1,7 @@
-﻿using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using Object = UnityEngine.Object;
 
 namespace HT.Framework
 {
@@ -11,98 +10,105 @@ namespace HT.Framework
     /// </summary>
     public interface IResourceHelper : IInternalModuleHelper
     {
-        
         /// <summary>
-        /// 当前最新的包裹版本
+        /// 当前的资源加载模式
         /// </summary>
-        string PackageVersion { get; }
-        
+        ResourceLoadMode LoadMode { get; }
         /// <summary>
-        /// 是否完成初始化
+        /// 是否是编辑器模式
         /// </summary>
-        bool IsInitialized { get;}
+        bool IsEditorMode { get; }
+        /// <summary>
+        /// AssetBundle资源加载根路径
+        /// </summary>
+        string AssetBundleRootPath { get; }
+        /// <summary>
+        /// 所有AssetBundle资源包清单的名称
+        /// </summary>
+        string AssetBundleManifestName { get; }
+        /// <summary>
+        /// 缓存的所有AssetBundle包【AB包名称、AB包】
+        /// </summary>
+        Dictionary<string, AssetBundle> AssetBundles { get; }
+        /// <summary>
+        /// 所有AssetBundle资源包清单
+        /// </summary>
+        AssetBundleManifest AssetBundleManifest { get; }
+        /// <summary>
+        /// 所有AssetBundle的Hash128值【AB包名称、Hash128值】
+        /// </summary>
+        Dictionary<string, Hash128> AssetBundleHashs { get; }
+        /// <summary>
+        /// 已加载的所有场景【场景名称、场景】
+        /// </summary>
+        Dictionary<string, Scene> Scenes { get; }
 
         /// <summary>
-        /// 初始化完成
+        /// 设置加载器
         /// </summary>
-        event HTFAction<bool> InitializationCompleted; 
-
+        /// <param name="loadMode">加载模式</param>
+        /// <param name="isEditorMode">是否是编辑器模式</param>
+        /// <param name="manifestName">AB包清单名称</param>
+        void SetLoader(ResourceLoadMode loadMode, bool isEditorMode, string manifestName);
         /// <summary>
-        /// 初始化
+        /// 设置AssetBundle资源根路径（仅当使用AssetBundle加载时有效）
         /// </summary>
-        void Initialize(IUpdateHandler handler);
-        
+        /// <param name="path">AssetBundle资源根路径</param>
+        void SetAssetBundlePath(string path);
         /// <summary>
-        /// 更新package
+        /// 通过名称获取指定的AssetBundle
         /// </summary>
-        /// <param name="handler"></param>
-        void UpdatePackage(IUpdateHandler handler);
-
-      
-        
+        /// <param name="assetBundleName">名称</param>
+        /// <returns>AssetBundle</returns>
+        AssetBundle GetAssetBundle(string assetBundleName);
         /// <summary>
         /// 加载资源（异步）
         /// </summary>
-        /// <param name="location"></param>
+        /// <typeparam name="T">资源类型</typeparam>
+        /// <param name="info">资源信息标记</param>
+        /// <param name="onLoading">加载中事件</param>
+        /// <param name="onLoadDone">加载完成事件</param>
         /// <param name="isPrefab">是否是加载预制体</param>
         /// <param name="parent">预制体加载完成后的父级</param>
         /// <param name="isUI">是否是加载UI</param>
-        /// <typeparam name="T">资源类型</typeparam>
-        /// <returns></returns>
-        UniTask<T> LoadAssetAsync<T>(string location, bool isPrefab, Transform parent, bool isUI) where T : Object;
-        
-        
+        /// <returns>加载协程迭代器</returns>
+        IEnumerator LoadAssetAsync<T>(ResourceInfoBase info, HTFAction<float> onLoading, HTFAction<T> onLoadDone, bool isPrefab, Transform parent, bool isUI) where T : Object;
         /// <summary>
-        /// 获取原生文件文本
+        /// 加载场景（异步）
         /// </summary>
-        /// <param name="location"></param>
-        /// <returns></returns>
-        UniTask<string> LoadRawFileTextAsync(string location);
-
+        /// <param name="info">资源信息标记</param>
+        /// <param name="onLoading">加载中事件</param>
+        /// <param name="onLoadDone">加载完成事件</param>
+        /// <returns>加载协程迭代器</returns>
+        IEnumerator LoadSceneAsync(SceneInfo info, HTFAction<float> onLoading, HTFAction onLoadDone);
         /// <summary>
-        /// 获取原生文件二进制数据
+        /// 卸载资源（异步，Resource模式：卸载未使用的资源，AssetBundle模式：卸载AB包）
         /// </summary>
-        /// <param name="location"></param>
-        /// <returns></returns>
-        UniTask<byte[]> LoadRawFileDataAsync(string location);
-
-        
+        /// <param name="assetBundleName">AB包名称</param>
+        /// <param name="unloadAllLoadedObjects">是否同时卸载所有实体对象</param>
+        /// <returns>卸载协程迭代器</returns>
+        IEnumerator UnLoadAsset(string assetBundleName, bool unloadAllLoadedObjects = false);
         /// <summary>
-        /// 异步加载场景
+        /// 卸载所有资源（异步，Resource模式：卸载未使用的资源，AssetBundle模式：卸载AB包）
         /// </summary>
-        /// <param name="location">场景的定位地址</param>
-        /// <param name="sceneMode">场景加载模式</param>
-        /// <param name="suspendLoad">场景加载到90%自动挂起</param>
-        /// <param name="priority">优先级</param>
-        UniTask<Scene> LoadSceneAsync(string location, HTFAction<float> onLoading = null,
-            LoadSceneMode sceneMode = LoadSceneMode.Single, bool suspendLoad = false, int priority = 100);
-
-
+        /// <param name="unloadAllLoadedObjects">是否同时卸载所有实体对象</param>
+        /// <returns>卸载协程迭代器</returns>
+        IEnumerator UnLoadAllAsset(bool unloadAllLoadedObjects = false);
         /// <summary>
-        /// 获取资源信息的路径列表
+        /// 卸载场景（异步）
         /// </summary>
-        /// <param name="tag">标签</param>
-        /// <param name="isAddress">是否为可寻址路径</param>
-        /// <returns></returns>
-        string[] GetAssetPath(string tag, bool isAddress);
-        
+        /// <param name="info">资源信息标记</param>
+        /// <returns>卸载协程迭代器</returns>
+        IEnumerator UnLoadScene(SceneInfo info);
         /// <summary>
-        ///  卸载资源
+        /// 卸载所有场景（异步）
         /// </summary>
-        /// <param name="obj"></param>
-        void UnLoadAsset(Object obj);
-
-        /// <summary>
-        /// 释放场景
-        /// </summary>
-        /// <param name="sceneName"></param>
-        /// <returns></returns>
-        UniTask UnLoadScene(string sceneName);
-
+        /// <returns>卸载协程迭代器</returns>
+        IEnumerator UnLoadAllScene();
         /// <summary>
         /// 清理内存，释放空闲内存（异步）
         /// </summary>
-        /// <returns></returns>
-        UniTask ClearMemory();
+        /// <returns>协程迭代器</returns>
+        IEnumerator ClearMemory();
     }
 }

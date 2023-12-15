@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace HT.Framework
@@ -54,31 +53,44 @@ namespace HT.Framework
         bool IsDisplayMask { get; set; }
 
         /// <summary>
+        /// 设置预定义
+        /// </summary>
+        /// <param name="defineUINames">预定义的UI名称</param>
+        /// <param name="defineUIEntitys">预定义的UI实体</param>
+        void SetDefine(List<string> defineUINames, List<GameObject> defineUIEntitys);
+        /// <summary>
+        /// 添加预定义（如果已存在则覆盖，已打开的UI不受影响，销毁后再次打开生效）
+        /// </summary>
+        /// <param name="defineUIName">预定义的UI名称</param>
+        /// <param name="defineUIEntity">预定义的UI实体</param>
+        void AddDefine(string defineUIName, GameObject defineUIEntity);
+
+        /// <summary>
         /// 预加载常驻UI
         /// </summary>
         /// <param name="type">常驻UI逻辑类</param>
         /// <returns>加载协程</returns>
-        UniTask<UILogicResident> PreloadingResidentUI(Type type);
+        Coroutine PreloadingResidentUI(Type type);
         /// <summary>
         /// 预加载非常驻UI
         /// </summary>
         /// <param name="type">非常驻UI逻辑类</param>
         /// <returns>加载协程</returns>
-        UniTask<UILogicTemporary> PreloadingTemporaryUI(Type type);
+        Coroutine PreloadingTemporaryUI(Type type);
         /// <summary>
         /// 打开常驻UI
         /// </summary>
         /// <param name="type">常驻UI逻辑类</param>
         /// <param name="args">可选参数</param>
         /// <returns>加载协程</returns>
-        UniTask<UILogicResident> OpenResidentUI(Type type, params object[] args);
+        Coroutine OpenResidentUI(Type type, params object[] args);
         /// <summary>
         /// 打开非常驻UI
         /// </summary>
         /// <param name="type">非常驻UI逻辑类</param>
         /// <param name="args">可选参数</param>
         /// <returns>加载协程</returns>
-        UniTask<UILogicTemporary> OpenTemporaryUI(Type type, params object[] args);
+        Coroutine OpenTemporaryUI(Type type, params object[] args);
         /// <summary>
         /// 获取已经打开的UI
         /// </summary>

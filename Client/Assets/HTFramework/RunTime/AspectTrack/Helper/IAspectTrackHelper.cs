@@ -4,18 +4,11 @@ using System.Reflection;
 namespace HT.Framework
 {
     /// <summary>
-    /// 切面代理追踪器的助手接口
+    /// 切面代理器的助手接口
     /// </summary>
     public interface IAspectTrackHelper : IInternalModuleHelper
     {
-        /// <summary>
-        /// 所有的代理对象【真实对象、代理对象】
-        /// </summary>
-        Dictionary<IAspectTrackObject, IAspectTrackObject> ProxyObjects { get; }
-        /// <summary>
-        /// 所有的代理者【真实对象，代理者】
-        /// </summary>
-        Dictionary<IAspectTrackObject, object> Proxys { get; }
+#if !DISABLE_ASPECTTRACK
         /// <summary>
         /// 全局拦截条件
         /// </summary>
@@ -42,6 +35,13 @@ namespace HT.Framework
         /// 清空所有拦截条件
         /// </summary>
         void ClearInterceptCondition();
+        /// <summary>
+        /// 是否拦截一个方法的调用
+        /// </summary>
+        /// <param name="methodBase">方法</param>
+        /// <param name="args">参数</param>
+        /// <returns>是否被拦截</returns>
+        bool IsIntercept(MethodBase methodBase, object[] args);
 
         /// <summary>
         /// 创建代理者
@@ -72,5 +72,6 @@ namespace HT.Framework
         /// 清空所有代理者、代理对象
         /// </summary>
         void ClearProxyer();
+#endif
     }
 }

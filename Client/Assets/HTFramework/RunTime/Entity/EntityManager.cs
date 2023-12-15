@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace HT.Framework
@@ -25,8 +24,14 @@ namespace HT.Framework
         /// </summary>
         public bool IsHideAll
         {
-            set => _helper.IsHideAll = value;
-            get => _helper.IsHideAll;
+            set
+            {
+                _helper.IsHideAll = value;
+            }
+            get
+            {
+                return _helper.IsHideAll;
+            }
         }
 
         public override void OnInit()
@@ -41,20 +46,24 @@ namespace HT.Framework
         /// </summary>
         /// <typeparam name="T">实体逻辑类</typeparam>
         /// <param name="entityName">实体指定名称（为 <None> 时默认使用实体逻辑类名称）</param>
+        /// <param name="onLoading">创建实体过程进度回调</param>
+        /// <param name="onLoadDone">创建实体完成回调</param>
         /// <returns>加载协程</returns>
-        public async UniTask<T> CreateEntity<T>(string entityName = "<None>") where T : EntityLogicBase
+        public Coroutine CreateEntity<T>(string entityName = "<None>", HTFAction<float> onLoading = null, HTFAction<EntityLogicBase> onLoadDone = null) where T : EntityLogicBase
         {
-            return await _helper.CreateEntity<T>(typeof(T), entityName);
+            return _helper.CreateEntity(typeof(T), entityName, onLoading, onLoadDone);
         }
         /// <summary>
         /// 创建实体
         /// </summary>
         /// <param name="type">实体逻辑类</param>
         /// <param name="entityName">实体指定名称（为 <None> 时默认使用实体逻辑类名称）</param>
+        /// <param name="onLoading">创建实体过程进度回调</param>
+        /// <param name="onLoadDone">创建实体完成回调</param>
         /// <returns>加载协程</returns>
-        public async UniTask<EntityLogicBase> CreateEntity(Type type, string entityName = "<None>")
+        public Coroutine CreateEntity(Type type, string entityName = "<None>", HTFAction<float> onLoading = null, HTFAction<EntityLogicBase> onLoadDone = null)
         {
-            return await _helper.CreateEntity<EntityLogicBase>(type, entityName);
+            return _helper.CreateEntity(type, entityName, onLoading, onLoadDone);
         }
         /// <summary>
         /// 销毁实体

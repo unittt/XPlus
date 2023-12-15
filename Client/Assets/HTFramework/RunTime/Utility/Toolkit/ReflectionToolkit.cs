@@ -14,7 +14,7 @@ namespace HT.Framework
         /// </summary>
         private static HashSet<string> RunTimeAssemblies = new HashSet<string>() {
             "Assembly-CSharp", "HTFramework.RunTime", "HTFramework.AI.RunTime", "HTFramework.ILHotfix.RunTime", "HTFramework.GC.RunTime",
-            "UnityEngine", "UnityEngine.CoreModule", "UnityEngine.UI", "UnityEngine.PhysicsModule","Game.RunTime" };
+            "UnityEngine", "UnityEngine.CoreModule", "UnityEngine.UI", "UnityEngine.PhysicsModule" };
 
         /// <summary>
         /// 添加自定义程序集到运行时程序域（建议在类的【静态构造方法】中添加，以使其位于框架的所有行为之前）

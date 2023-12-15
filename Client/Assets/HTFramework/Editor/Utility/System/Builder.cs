@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using AssetBundleBrowser;
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
 using UnityEditor.Callbacks;
@@ -66,7 +67,19 @@ namespace HT.Framework
                 return;
             }
 
+            //蚀刻当前版本号到运行时程序
+            VersionInfo versionInfo = AssetDatabase.LoadAssetAtPath<VersionInfo>("Assets/HTFramework/Editor/Utility/Version/Version.asset");
+            Main main = FindObjectOfType<Main>();
+            if (main != null && versionInfo != null)
+            {
+                main.Version = versionInfo.CurrentVersion.GetFullNumber();
+                EditorUtility.SetDirty(main);
+            }
+
             PreProcessBuildEvent?.Invoke(options);
+
+            EditorApplication.ExecuteMenuItem("File/Save");
+            EditorApplication.ExecuteMenuItem("File/Save Project");
 
             BuildPlayerWindow.DefaultBuildMethods.BuildPlayer(options);
         }
@@ -138,7 +151,7 @@ namespace HT.Framework
             {
                 if (GUI.Button(new Rect(position.width - 422, position.height - 31, 123, 18), "Build AssetBundles"))
                 {
-                    // AssetBundleBrowserMain.ShowWindow();
+                    AssetBundleBrowserMain.ShowWindow();
                 }
             }
             if (GUI.Button(new Rect(position.width - 294, position.height - 31, 52, 18), "Check"))
@@ -192,12 +205,11 @@ namespace HT.Framework
             Main main = FindObjectOfType<Main>();
             if (main != null)
             {
-                _isShowBuildABButton = true;
-                // ResourceManager resource = main.GetComponentByChild<ResourceManager>("Resource");
-                // if (resource != null && resource.Mode == ResourceLoadMode.AssetBundle)
-                // {
-                //     _isShowBuildABButton = true;
-                // }
+                ResourceManager resource = main.GetComponentByChild<ResourceManager>("Resource");
+                if (resource != null && resource.Mode == ResourceLoadMode.AssetBundle)
+                {
+                    _isShowBuildABButton = true;
+                }
             }
         }
         private void Check()

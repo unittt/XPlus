@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace HT.Framework
@@ -113,33 +112,50 @@ namespace HT.Framework
                 return _helper.IsDisplayMask;
             }
         }
-        
+
+        public override void OnInit()
+        {
+            base.OnInit();
+
+            _helper.SetDefine(DefineUINames, DefineUIEntitys);
+        }
+
+        /// <summary>
+        /// 添加预定义（如果已存在则覆盖，已打开的UI不受影响，销毁后再次打开生效）
+        /// </summary>
+        /// <param name="defineUIName">预定义的UI名称</param>
+        /// <param name="defineUIEntity">预定义的UI实体</param>
+        public void AddDefine(string defineUIName, GameObject defineUIEntity)
+        {
+            _helper.AddDefine(defineUIName, defineUIEntity);
+        }
+
         /// <summary>
         /// 预加载UI
         /// </summary>
         /// <typeparam name="T">UI逻辑类</typeparam>
         /// <returns>加载协程</returns>
-        public async  UniTask<T> PreloadingUI<T>() where T : UILogicBase
+        public Coroutine PreloadingUI<T>() where T : UILogicBase
         {
-            return (await PreloadingUI(typeof(T))).Cast<T>();
+            return PreloadingUI(typeof(T));
         }
         /// <summary>
         /// 预加载UI
         /// </summary>
         /// <param name="type">UI逻辑类</param>
         /// <returns>加载协程</returns>
-        public async UniTask<UILogicBase> PreloadingUI(Type type)
+        public Coroutine PreloadingUI(Type type)
         {
             if (type.IsAbstract)
                 return null;
 
             if (type.IsSubclassOf(typeof(UILogicResident)))
             {
-                return await _helper.PreloadingResidentUI(type);
+                return _helper.PreloadingResidentUI(type);
             }
             else if (type.IsSubclassOf(typeof(UILogicTemporary)))
             {
-                return await _helper.PreloadingTemporaryUI(type);
+                return _helper.PreloadingTemporaryUI(type);
             }
             return null;
         }
@@ -149,9 +165,9 @@ namespace HT.Framework
         /// <typeparam name="T">UI逻辑类</typeparam>
         /// <param name="args">可选参数</param>
         /// <returns>加载协程</returns>
-        public async UniTask<T> OpenUI<T>(params object[] args) where T : UILogicBase
+        public Coroutine OpenUI<T>(params object[] args) where T : UILogicBase
         {
-            return (await OpenUI(typeof(T), args)).Cast<T>();
+            return OpenUI(typeof(T), args);
         }
         /// <summary>
         /// 打开UI
@@ -159,18 +175,18 @@ namespace HT.Framework
         /// <param name="type">UI逻辑类</param>
         /// <param name="args">可选参数</param>
         /// <returns>加载协程</returns>
-        public async UniTask<UILogicBase> OpenUI(Type type, params object[] args)
+        public Coroutine OpenUI(Type type, params object[] args)
         {
             if (type.IsAbstract)
                 return null;
 
             if (type.IsSubclassOf(typeof(UILogicResident)))
             {
-                return await _helper.OpenResidentUI(type, args);
+                return _helper.OpenResidentUI(type, args);
             }
             else if (type.IsSubclassOf(typeof(UILogicTemporary)))
             {
-                return await _helper.OpenTemporaryUI(type, args);
+                return _helper.OpenTemporaryUI(type, args);
             }
             return null;
         }

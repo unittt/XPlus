@@ -9,12 +9,12 @@ namespace HT.Framework
     /// <summary>
     /// 默认的热更新管理器助手
     /// </summary>
-    public sealed class DefaultHotfixHelper : IHotfixHelper
+    internal sealed class DefaultHotfixHelper : IHotfixHelper
     {
         private HotfixManager _module;
 
         /// <summary>
-        /// 热更新管理器
+        /// 所属的内置模块
         /// </summary>
         public IModuleManager Module { get; set; }
         /// <summary>
@@ -57,18 +57,17 @@ namespace HT.Framework
         /// <summary>
         /// 助手准备工作
         /// </summary>
-        public async void OnReady()
+        public void OnReady()
         {
             if (_module.IsEnableHotfix)
             {
-                // if (Main.m_Resource.Mode == ResourceLoadMode.Resource)
-                // {
-                //     throw new HTFrameworkException(HTFrameworkModule.Hotfix, "热更新初始化失败：热更新库不支持使用Resource加载模式！");
-                // }
+                if (Main.m_Resource.Mode == ResourceLoadMode.Resource)
+                {
+                    throw new HTFrameworkException(HTFrameworkModule.Hotfix, "热更新初始化失败：热更新库不支持使用Resource加载模式！");
+                }
 
-                // var info = new AssetInfo(_module.HotfixDllAssetBundleName, _module.HotfixDllAssetsPath, "");
-                // var asset = await Main.m_Resource.LoadAsset<TextAsset>(info,null);
-                // HotfixDllLoadDone(asset);
+                AssetInfo info = new AssetInfo(_module.HotfixDllAssetBundleName, _module.HotfixDllAssetsPath, "");
+                Main.m_Resource.LoadAsset<TextAsset>(info, null, HotfixDllLoadDone);
             }
         }
         /// <summary>
@@ -196,9 +195,7 @@ namespace HT.Framework
         private Delegate FixMethod(HotfixMethodType methodType, string targetName, Type type)
         {
             if (!_module.IsEnableHotfix)
-            {
                 return null;
-            }
 
             if (FixedDelegates[methodType].ContainsKey(targetName))
             {

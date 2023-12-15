@@ -4,14 +4,18 @@ using System.Reflection;
 namespace HT.Framework
 {
     /// <summary>
-    /// 默认的切面代理追踪器助手
+    /// 默认的切面代理器助手
     /// </summary>
-    public sealed class DefaultAspectTrackHelper : IAspectTrackHelper
+    internal sealed class DefaultAspectTrackHelper : IAspectTrackHelper
     {
         /// <summary>
-        /// 切面代理追踪器
+        /// 所属的内置模块
         /// </summary>
         public IModuleManager Module { get; set; }
+
+#if !DISABLE_ASPECTTRACK
+        private const string VOIDSIGN = "Void";
+
         /// <summary>
         /// 所有的代理对象【真实对象、代理对象】
         /// </summary>
@@ -24,6 +28,7 @@ namespace HT.Framework
         /// 全局拦截条件
         /// </summary>
         public Dictionary<string, HTFFunc<MethodBase, object[], bool>> InterceptConditions { get; private set; } = new Dictionary<string, HTFFunc<MethodBase, object[], bool>>();
+#endif
 
         /// <summary>
         /// 初始化助手
@@ -45,8 +50,10 @@ namespace HT.Framework
         /// </summary>
         public void OnTerminate()
         {
+#if !DISABLE_ASPECTTRACK
             ClearInterceptCondition();
             ClearProxyer();
+#endif
         }
         /// <summary>
         /// 暂停助手
@@ -59,6 +66,7 @@ namespace HT.Framework
         public void OnResume()
         { }
 
+#if !DISABLE_ASPECTTRACK
         /// <summary>
         /// 新增拦截条件
         /// </summary>
@@ -101,6 +109,36 @@ namespace HT.Framework
         public void ClearInterceptCondition()
         {
             InterceptConditions.Clear();
+        }
+        /// <summary>
+        /// 是否拦截一个方法的调用
+        /// </summary>
+        /// <param name="methodBase">方法</param>
+        /// <param name="args">参数</param>
+        /// <returns>是否被拦截</returns>
+        public bool IsIntercept(MethodBase methodBase, object[] args)
+        {
+            bool isVoid = false;
+            MethodInfo info = methodBase as MethodInfo;
+            if (info != null)
+            {
+                isVoid = info.ReturnType.Name == VOIDSIGN;
+            }
+
+            if (isVoid)
+            {
+                foreach (var condition in InterceptConditions)
+                {
+                    if (condition.Value != null)
+                    {
+                        if (condition.Value.Invoke(methodBase, args))
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
         }
 
         /// <summary>
@@ -154,7 +192,7 @@ namespace HT.Framework
             }
             else
             {
-                Log.Warning($"获取代理对象失败：真实对象 {realObject.ToString()} 并不存在代理对象！");
+                Log.Warning($"获取代理对象失败：真实对象 {realObject} 并不存在代理对象！");
                 return null;
             }
         }
@@ -171,7 +209,7 @@ namespace HT.Framework
             }
             else
             {
-                Log.Warning($"获取代理者失败：真实对象 {realObject.ToString()} 并不存在代理者！");
+                Log.Warning($"获取代理者失败：真实对象 {realObject} 并不存在代理者！");
                 return null;
             }
         }
@@ -183,5 +221,6 @@ namespace HT.Framework
             ProxyObjects.Clear();
             Proxys.Clear();
         }
+#endif
     }
 }

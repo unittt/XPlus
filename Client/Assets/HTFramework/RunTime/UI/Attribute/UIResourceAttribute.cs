@@ -8,13 +8,17 @@ namespace HT.Framework
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public sealed class UIResourceAttribute : Attribute
     {
-        public string Location { get; private set; }
+        public string AssetBundleName { get; private set; }
+        public string AssetPath { get; private set; }
+        public string ResourcePath { get; private set; }
         public UIType EntityType { get; private set; }
         public string WorldUIDomainName { get; private set; }
-        
-        public UIResourceAttribute(string location, UIType entityType = UIType.Overlay, string worldUIDomainName = "World")
+
+        public UIResourceAttribute(string assetBundleName, string assetPath, string resourcePath, UIType entityType = UIType.Overlay, string worldUIDomainName = "World")
         {
-            Location = location;
+            AssetBundleName = assetBundleName;
+            AssetPath = assetPath;
+            ResourcePath = resourcePath;
             EntityType = entityType;
             WorldUIDomainName = worldUIDomainName;
         }

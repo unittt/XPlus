@@ -15,17 +15,32 @@ namespace HT.Framework
         {
             base.OnInspectorDefaultGUI();
 
+#if DISABLE_ASPECTTRACK
+            GUI.color = Color.red;
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Disabled", EditorStyles.boldLabel);
+            EditorGUILayout.EndHorizontal();
+            GUI.color = Color.white;
+#else
             PropertyField(nameof(AspectTrackManager.IsEnableAspectTrack), "Enable Track");
 
             if (Target.IsEnableAspectTrack)
             {
                 PropertyField(nameof(AspectTrackManager.IsEnableIntercept), "Enable Intercept");
             }
+#endif
         }
         protected override void OnInspectorRuntimeGUI()
         {
             base.OnInspectorRuntimeGUI();
 
+#if DISABLE_ASPECTTRACK
+            GUI.color = Color.red;
+            EditorGUILayout.BeginHorizontal();
+            EditorGUILayout.LabelField("Disabled", EditorStyles.boldLabel);
+            EditorGUILayout.EndHorizontal();
+            GUI.color = Color.white;
+#else
             GUILayout.BeginHorizontal();
             GUILayout.Label("Intercept Conditions: ");
             GUILayout.EndHorizontal();
@@ -41,9 +56,10 @@ namespace HT.Framework
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Clear Conditions"))
             {
-                Target.InterceptConditions.Clear();
+                Target.ClearInterceptCondition();
             }
             GUILayout.EndHorizontal();
+#endif
         }
     }
 }

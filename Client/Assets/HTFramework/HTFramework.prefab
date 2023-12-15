@@ -458,6 +458,7 @@ MonoBehaviour:
   IsEnabledLogWarning: 1
   IsEnabledLogError: 1
   IsAllowSceneAddBuild: 0
+  _version: 
 --- !u!1 &1704541190228656
 GameObject:
   m_ObjectHideFlags: 0
@@ -1479,7 +1480,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4571235384173770934}
   m_Layer: 0
-  m_Name: UIEntity
+  m_Name: UIRoot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2218,7 +2219,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   HelperType: <None>
-  RootPath: 0
 --- !u!1 &8939765184236815034
 GameObject:
   m_ObjectHideFlags: 0

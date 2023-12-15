@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace HT.Framework
@@ -26,7 +25,13 @@ namespace HT.Framework
         /// <summary>
         /// 域的UI根节点
         /// </summary>
-        public RectTransform WorldUIRoot => _worldUIRootRect;
+        public RectTransform WorldUIRoot
+        {
+            get
+            {
+                return _worldUIRootRect;
+            }
+        }
 
         public UIWorldDomain(string name, GameObject canvasTem)
         {
@@ -59,7 +64,7 @@ namespace HT.Framework
         {
             foreach (var ui in _worldUIs)
             {
-                var uiLogic = ui.Value;
+                UILogicBase uiLogic = ui.Value;
 
                 if (!uiLogic.IsCreated)
                     continue;
@@ -90,30 +95,35 @@ namespace HT.Framework
         /// <param name="type">常驻UI逻辑类</param>
         /// <param name="entity">UI实体</param>
         /// <returns>加载协程</returns>
-        public async UniTask<UILogicResident> PreloadingResidentUI(Type type, GameObject entity)
+        public Coroutine PreloadingResidentUI(Type type, GameObject entity)
         {
             if (_worldUIs.ContainsKey(type))
             {
-                var ui = _worldUIs[type];
+                UILogicBase ui = _worldUIs[type];
 
                 if (ui.IsCreated)
-                    return ui.Cast<UILogicResident>();
+                    return null;
 
                 if (entity != null)
                 {
                     ui.UIEntity = Main.Clone(entity, _worldResidentPanel);
+                    ui.UIEntity.SetLayerIncludeChildren(_worldUIRoot.gameObject.layer);
+                    ui.OnInit();
+                    return null;
                 }
                 else
                 {
-                    ui.UIEntity = await Main.m_Resource.LoadPrefab(type.GetCustomAttribute<UIResourceAttribute>().Location, _worldResidentPanel, true);
+                    return Main.m_Resource.LoadPrefab(new PrefabInfo(type.GetCustomAttribute<UIResourceAttribute>()), _worldResidentPanel, null, (obj) =>
+                    {
+                        ui.UIEntity = obj;
+                        ui.UIEntity.SetLayerIncludeChildren(_worldUIRoot.gameObject.layer);
+                        ui.OnInit();
+                    }, true);
                 }
-                ui.UIEntity.SetLayerIncludeChildren(_worldUIRoot.gameObject.layer);
-                ui.OnInit();
-                return ui.Cast<UILogicResident>();
             }
             else
             {
-                throw new HTFrameworkException(HTFrameworkModule.UI, string.Format("预加载UI失败：UI对象 {0} 并未存在！", type.Name));
+                throw new HTFrameworkException(HTFrameworkModule.UI, $"预加载UI失败：UI对象 {type.Name} 并未存在！");
             }
         }
         /// <summary>
@@ -122,30 +132,35 @@ namespace HT.Framework
         /// <param name="type">非常驻UI逻辑类</param>
         /// <param name="entity">UI实体</param>
         /// <returns>加载协程</returns>
-        public async UniTask<UILogicTemporary> PreloadingTemporaryUI(Type type, GameObject entity)
+        public Coroutine PreloadingTemporaryUI(Type type, GameObject entity)
         {
             if (_worldUIs.ContainsKey(type))
             {
-                var ui = _worldUIs[type];
+                UILogicBase ui = _worldUIs[type];
 
                 if (ui.IsCreated)
-                    return ui.Cast<UILogicTemporary>();
+                    return null;
 
                 if (entity != null)
                 {
                     ui.UIEntity = Main.Clone(entity, _worldTemporaryPanel);
+                    ui.UIEntity.SetLayerIncludeChildren(_worldUIRoot.gameObject.layer);
+                    ui.OnInit();
+                    return null;
                 }
                 else
                 {
-                    ui.UIEntity = await Main.m_Resource.LoadPrefab(type.GetCustomAttribute<UIResourceAttribute>().Location, _worldTemporaryPanel, true);
+                    return Main.m_Resource.LoadPrefab(new PrefabInfo(type.GetCustomAttribute<UIResourceAttribute>()), _worldTemporaryPanel, null, (obj) =>
+                    {
+                        ui.UIEntity = obj;
+                        ui.UIEntity.SetLayerIncludeChildren(_worldUIRoot.gameObject.layer);
+                        ui.OnInit();
+                    }, true);
                 }
-                ui.UIEntity.SetLayerIncludeChildren(_worldUIRoot.gameObject.layer);
-                ui.OnInit();
-                return ui.Cast<UILogicTemporary>();
             }
             else
             {
-                throw new HTFrameworkException(HTFrameworkModule.UI, string.Format("预加载UI失败：UI对象 {0} 并未存在！", type.Name));
+                throw new HTFrameworkException(HTFrameworkModule.UI, $"预加载UI失败：UI对象 {type.Name} 并未存在！");
             }
         }
         /// <summary>
@@ -155,31 +170,41 @@ namespace HT.Framework
         /// <param name="entity">UI实体</param>
         /// <param name="args">可选参数</param>
         /// <returns>加载协程</returns>
-        public async UniTask<UILogicResident> OpenResidentUI(Type type, GameObject entity, params object[] args)
+        public Coroutine OpenResidentUI(Type type, GameObject entity, params object[] args)
         {
             if (_worldUIs.ContainsKey(type))
             {
-                var ui = _worldUIs[type] as UILogicResident;
+                UILogicResident ui = _worldUIs[type] as UILogicResident;
 
                 if (ui.IsOpened)
-                    return ui;
+                    return null;
 
                 if (!ui.IsCreated)
                 {
                     if (entity != null)
                     {
                         ui.UIEntity = Main.Clone(entity, _worldResidentPanel);
+                        ui.UIEntity.SetLayerIncludeChildren(_worldUIRoot.gameObject.layer);
+                        ui.UIEntity.transform.SetAsLastSibling();
+                        ui.UIEntity.SetActive(true);
+                        ui.OnInit();
+                        ui.OnOpen(args);
+                        ui.OnPlaceTop();
+                        return null;
                     }
                     else
                     {
-                        ui.UIEntity = await Main.m_Resource.LoadPrefab(type.GetCustomAttribute<UIResourceAttribute>().Location, _worldResidentPanel, true);
+                        return Main.m_Resource.LoadPrefab(new PrefabInfo(type.GetCustomAttribute<UIResourceAttribute>()), _worldResidentPanel, null, (obj) =>
+                        {
+                            ui.UIEntity = obj;
+                            ui.UIEntity.SetLayerIncludeChildren(_worldUIRoot.gameObject.layer);
+                            ui.UIEntity.transform.SetAsLastSibling();
+                            ui.UIEntity.SetActive(true);
+                            ui.OnInit();
+                            ui.OnOpen(args);
+                            ui.OnPlaceTop();
+                        }, true);
                     }
-                    ui.UIEntity.SetLayerIncludeChildren(_worldUIRoot.gameObject.layer);
-                    ui.UIEntity.transform.SetAsLastSibling();
-                    ui.UIEntity.SetActive(true);
-                    ui.OnInit();
-                    ui.OnOpen(args);
-                    ui.OnPlaceTop();
                 }
                 else
                 {
@@ -188,13 +213,12 @@ namespace HT.Framework
                     ui.OnOpen(args);
                     ui.OnPlaceTop();
                 }
-
-                return ui;
             }
             else
             {
                 throw new HTFrameworkException(HTFrameworkModule.UI, $"打开UI失败：UI对象 {type.Name} 并未存在！");
             }
+            return null;
         }
         /// <summary>
         /// 打开非常驻UI
@@ -203,11 +227,11 @@ namespace HT.Framework
         /// <param name="entity">UI实体</param>
         /// <param name="args">可选参数</param>
         /// <returns>加载协程</returns>
-        public async UniTask<UILogicTemporary> OpenTemporaryUI(Type type, GameObject entity, params object[] args)
+        public Coroutine OpenTemporaryUI(Type type, GameObject entity, params object[] args)
         {
             if (_worldUIs.ContainsKey(type))
             {
-                var ui = _worldUIs[type] as UILogicTemporary;
+                UILogicTemporary ui = _worldUIs[type] as UILogicTemporary;
 
                 if (ui.IsOpened)
                     return null;
@@ -225,16 +249,23 @@ namespace HT.Framework
                     if (entity != null)
                     {
                         ui.UIEntity = Main.Clone(entity, _worldTemporaryPanel);
+                        ui.UIEntity.SetLayerIncludeChildren(_worldUIRoot.gameObject.layer);
+                        ui.UIEntity.SetActive(true);
+                        ui.OnInit();
+                        ui.OnOpen(args);
+                        return null;
                     }
                     else
                     {
-                        ui.UIEntity = await Main.m_Resource.LoadPrefab(type.GetCustomAttribute<UIResourceAttribute>().Location,_worldTemporaryPanel, true);
+                        return Main.m_Resource.LoadPrefab(new PrefabInfo(type.GetCustomAttribute<UIResourceAttribute>()), _worldTemporaryPanel, null, (obj) =>
+                        {
+                            ui.UIEntity = obj;
+                            ui.UIEntity.SetLayerIncludeChildren(_worldUIRoot.gameObject.layer);
+                            ui.UIEntity.SetActive(true);
+                            ui.OnInit();
+                            ui.OnOpen(args);
+                        }, true);
                     }
-                    ui.UIEntity.SetLayerIncludeChildren(_worldUIRoot.gameObject.layer);
-                    ui.UIEntity.SetActive(true);
-                    ui.OnInit();
-                    ui.OnOpen(args);
-                    return ui;
                 }
                 else
                 {
@@ -244,7 +275,7 @@ namespace HT.Framework
             }
             else
             {
-                throw new HTFrameworkException(HTFrameworkModule.UI, string.Format("打开UI失败：UI对象 {0} 并未存在！", type.Name));
+                throw new HTFrameworkException(HTFrameworkModule.UI, $"打开UI失败：UI对象 {type.Name} 并未存在！");
             }
             return null;
         }
@@ -341,8 +372,6 @@ namespace HT.Framework
                     return;
                 
                 ui.OnDestroy();
-                
-                Main.m_Resource.UnLoadAsset(ui.UIEntity);
                 Main.Kill(ui.UIEntity);
                 ui.UIEntity = null;
             }
