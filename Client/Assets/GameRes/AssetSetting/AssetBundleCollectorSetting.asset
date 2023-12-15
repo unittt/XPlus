@@ -12,21 +12,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185f6993d5150494d98da50e26cb1c25, type: 3}
   m_Name: AssetBundleCollectorSetting
   m_EditorClassIdentifier: 
-  ShowPackageView: 0
-  EnableAddressable: 1
-  LocationToLower: 0
-  IncludeAssetGUID: 0
-  UniqueBundleName: 0
+  ShowPackageView: 1
   ShowEditorAlias: 1
+  UniqueBundleName: 0
   Packages:
   - PackageName: DefaultPackage
     PackageDesc: 
+    EnableAddressable: 1
+    LocationToLower: 0
+    IncludeAssetGUID: 0
+    IgnoreDefaultType: 1
+    AutoCollectShaders: 1
     Groups:
-    - GroupName: battle
-      GroupDesc: "\u6218\u6597"
-      AssetTags: 
-      ActiveRuleName: EnableGroup
-      Collectors: []
     - GroupName: shader
       GroupDesc: "\u7740\u8272\u5668"
       AssetTags: 
@@ -67,7 +64,7 @@ MonoBehaviour:
         CollectorGUID: f56de74f04e1f0c49b68f54cf2194ee3
         CollectorType: 0
         AddressRuleName: AddressByFileName
-        PackRuleName: PackRawFile
+        PackRuleName: PackSeparately
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
@@ -76,10 +73,10 @@ MonoBehaviour:
       AssetTags: 
       ActiveRuleName: EnableGroup
       Collectors:
-      - CollectPath: Assets/GameRes/Atlas/StaticAtlas
-        CollectorGUID: e123e379b8b414c4ba93ff9f2a0f833c
+      - CollectPath: Assets/GameRes/Atlas/StaticAtlas/ActivityAtlas
+        CollectorGUID: df7638676a8530d48a0ee4f0d5aeecd2
         CollectorType: 0
-        AddressRuleName: AddressByFilePath
+        AddressRuleName: AddressByGroupAndFileName
         PackRuleName: PackDirectory
         FilterRuleName: CollectSprite
         AssetTags: 
@@ -92,8 +89,8 @@ MonoBehaviour:
       - CollectPath: Assets/GameRes/Atlas/DynamicAtlas
         CollectorGUID: 0f0b8993cb95e6e4b98950baeba28be1
         CollectorType: 0
-        AddressRuleName: AddressByFilePath
-        PackRuleName: PackSeparately
+        AddressRuleName: AddressDisable
+        PackRuleName: PackCollector
         FilterRuleName: CollectSprite
         AssetTags: 
         UserData: 

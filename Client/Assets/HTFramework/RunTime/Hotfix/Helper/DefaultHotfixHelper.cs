@@ -59,16 +59,16 @@ namespace HT.Framework
         /// </summary>
         public void OnReady()
         {
-            if (_module.IsEnableHotfix)
-            {
-                if (Main.m_Resource.Mode == ResourceLoadMode.Resource)
-                {
-                    throw new HTFrameworkException(HTFrameworkModule.Hotfix, "热更新初始化失败：热更新库不支持使用Resource加载模式！");
-                }
-
-                AssetInfo info = new AssetInfo(_module.HotfixDllAssetBundleName, _module.HotfixDllAssetsPath, "");
-                Main.m_Resource.LoadAsset<TextAsset>(info, null, HotfixDllLoadDone);
-            }
+            // if (_module.IsEnableHotfix)
+            // {
+            //     if (Main.m_Resource.Mode == ResourceLoadMode.Resource)
+            //     {
+            //         throw new HTFrameworkException(HTFrameworkModule.Hotfix, "热更新初始化失败：热更新库不支持使用Resource加载模式！");
+            //     }
+            //
+            //     AssetInfo info = new AssetInfo(_module.HotfixDllAssetBundleName, _module.HotfixDllAssetsPath, "");
+            //     Main.m_Resource.LoadAsset<TextAsset>(info, null, HotfixDllLoadDone);
+            // }
         }
         /// <summary>
         /// 刷新助手

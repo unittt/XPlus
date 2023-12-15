@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace HT.Framework
@@ -158,57 +159,35 @@ namespace HT.Framework
                 }
             }
         }
-
+        
         /// <summary>
         /// 创建实体
         /// </summary>
         /// <param name="type">实体逻辑类</param>
         /// <param name="entityName">实体指定名称（为 <None> 时默认使用实体逻辑类名称）</param>
-        /// <param name="onLoading">创建实体过程进度回调</param>
-        /// <param name="onLoadDone">创建实体完成回调</param>
         /// <returns>加载协程</returns>
-        public Coroutine CreateEntity(Type type, string entityName, HTFAction<float> onLoading, HTFAction<EntityLogicBase> onLoadDone)
+        public async UniTask<T> CreateEntity<T>(Type type, string entityName) where T : EntityLogicBase
         {
-            EntityResourceAttribute attribute = type.GetCustomAttribute<EntityResourceAttribute>();
-            if (attribute != null)
+            var attribute = type.GetCustomAttribute<EntityResourceAttribute>();
+            if (attribute == null) return null;
+            if (!Entities.ContainsKey(type))
+                throw new HTFrameworkException(HTFrameworkModule.Entity, "创建实体失败：实体对象 " + type.Name + " 并未存在！");
+            
+            if (attribute.IsUseObjectPool && ObjectPools[type].Count > 0)
             {
-                if (Entities.ContainsKey(type))
-                {
-                    if (attribute.IsUseObjectPool && ObjectPools[type].Count > 0)
-                    {
-                        EntityLogicBase entityLogic = GenerateEntity(type, ObjectPools[type].Dequeue(), entityName == "<None>" ? type.Name : entityName);
-
-                        onLoading?.Invoke(1);
-                        onLoadDone?.Invoke(entityLogic);
-                        return null;
-                    }
-                    else
-                    {
-                        if (_defineEntities.ContainsKey(type.FullName) && _defineEntities[type.FullName] != null)
-                        {
-                            EntityLogicBase entityLogic = GenerateEntity(type, Main.Clone(_defineEntities[type.FullName], _entitiesGroup[type].transform), entityName == "<None>" ? type.Name : entityName);
-
-                            onLoading?.Invoke(1);
-                            onLoadDone?.Invoke(entityLogic);
-                            return null;
-                        }
-                        else
-                        {
-                            return Main.m_Resource.LoadPrefab(new PrefabInfo(attribute), _entitiesGroup[type].transform, onLoading, (obj) =>
-                            {
-                                EntityLogicBase entityLogic = GenerateEntity(type, obj, entityName == "<None>" ? type.Name : entityName);
-
-                                onLoadDone?.Invoke(entityLogic);
-                            });
-                        }
-                    }
-                }
-                else
-                {
-                    throw new HTFrameworkException(HTFrameworkModule.Entity, $"创建实体失败：实体对象 {type.Name} 并未存在！");
-                }
+                var entityLogic = GenerateEntity(type, ObjectPools[type].Dequeue(), entityName == "<None>" ? type.Name : entityName);
+                return  entityLogic.Cast<T>();
             }
-            return null;
+
+            if (_defineEntities.ContainsKey(type.FullName) && _defineEntities[type.FullName] != null)
+            {
+                var entityLogic = GenerateEntity(type, Main.Clone(_defineEntities[type.FullName], _entitiesGroup[type].transform), entityName == "<None>" ? type.Name : entityName);
+                return entityLogic.Cast<T>();
+            }
+
+            var obj = await Main.m_Resource.LoadPrefab(attribute.Location, _entitiesGroup[type].transform);
+            return GenerateEntity(type, obj, entityName == "<None>" ? type.Name : entityName).Cast<T>();
+
         }
         /// <summary>
         /// 销毁实体

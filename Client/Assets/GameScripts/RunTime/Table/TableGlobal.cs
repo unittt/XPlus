@@ -2,6 +2,7 @@ using HT.Framework;
 using cfg;
 using Cysharp.Threading.Tasks;
 using Luban;
+using UnityEngine;
 
 
 /// <summary>
@@ -18,14 +19,11 @@ public class TableGlobal
     
     public static async UniTask Init()
     {
-        var bytesInstances = await Main.m_Resource.LoadRawFileDataByTag("data",true);
-        // foreach (var info in assetInfos)
-        // {
-        //     var bytes = await Main.m_Resource.LoadRawFileDataAsync(info);
-        //     bytesInstances.Add(info.Address, bytes);
-        // }
-
-        Instance = new Tables((file) => new ByteBuf(bytesInstances[file]));
+      
+        // var bytesInstances = await Main.m_Resource.LoadRawFileDataByTag("data");
+        
+        var bytesInstances = await Main.m_Resource.LoadAssetByTag<TextAsset>("data");
+        Instance = new Tables((file) => new ByteBuf(bytesInstances[file].bytes));
     }
 }
 

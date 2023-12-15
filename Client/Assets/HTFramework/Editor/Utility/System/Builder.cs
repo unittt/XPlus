@@ -206,7 +206,12 @@ namespace HT.Framework
             if (main != null)
             {
                 ResourceManager resource = main.GetComponentByChild<ResourceManager>("Resource");
-                if (resource != null && resource.Mode == ResourceLoadMode.AssetBundle)
+                // if (resource != null && resource.Mode == ResourceLoadMode.AssetBundle)
+                // {
+                //     _isShowBuildABButton = true;
+                // }
+                
+                if (resource != null)
                 {
                     _isShowBuildABButton = true;
                 }
