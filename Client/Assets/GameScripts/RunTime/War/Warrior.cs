@@ -19,8 +19,8 @@ namespace GameScripts.RunTime.War
         public ActorEntity _actor;
         private Busy _busy;
         private Busy currentStatus;
-        
 
+        public int m_ID;
         #region 行为
         public void GoBack()
         {
@@ -169,10 +169,30 @@ namespace GameScripts.RunTime.War
         #endregion
 
         public override int Layer => LayerConfig.War;
+        public int MagicID;
 
         public bool IsBusy(string passivereborn)
         {
             return false;
+        }
+
+        /// <summary>
+        /// 设置播放的施法ID
+        /// </summary>
+        /// <param name="magicID"></param>
+        public void SetPlayMagicID(int magicID)
+        {
+            
+        }
+
+        public void SetOriginPos(Vector3 pos)
+        {
+            
+        }
+        
+        public Vector3 GetOriginPos()
+        {
+            return Vector3.zero;
         }
     }
     

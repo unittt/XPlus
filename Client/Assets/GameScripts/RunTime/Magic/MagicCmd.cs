@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using GameScripts.RunTime.Magic.Command;
+using GameScripts.RunTime.War;
 using HT.Framework;
 using UnityEngine;
 
@@ -32,13 +34,23 @@ namespace GameScripts.RunTime.Magic
             // 在 C# 中，你可能需要一个 switch 语句或者字典来映射方法名称到具体的实现
         }
         
-        // public Vector3 CalcPos(PositionInfo posInfo, AttackObject atkObj, VictimObject vicObj, bool faceDir)
-        // {
-        //     // 这里应实现计算位置的逻辑
-        //     // 伪代码：Vector3 position = CalculatePositionBasedOn(posInfo, atkObj, vicObj, faceDir);
-        //     // return position;
-        //     return new Vector3();
-        // }
+        public Vector3 CalcPos(ComplexPosition posInfo, Warrior atkObj, Warrior vicObj, bool faceDir)
+        {
+            var vPos = MagicTools.GetLocalPosByType(magicUnit.m_RunEnv, posInfo.BasePosition,atkObj, vicObj);
+         
+            //--NOTE:追击状态直接跳到目标的前面
+            Vector3 vPrePos = Vector3.zero;
+            if (magicUnit.m_IsPursued)
+            {
+                vPrePos = vicObj.GetOriginPos();
+            }
+
+            var oRelative = MagicTools.GetRelativeObj(posInfo.BasePosition, atkObj, vicObj, faceDir, vPrePos);
+            vPos += MagicTools.CalcRelativePos(oRelative, posInfo.RelativeAngle, posInfo.RelativeDistance);
+            vPos = MagicTools.CalcDepth(vPos, posInfo.Depth);
+            MagicManager.Current.ResetCalcPosObject();
+            return vPos;
+        }
         
         public void Reset()
         {

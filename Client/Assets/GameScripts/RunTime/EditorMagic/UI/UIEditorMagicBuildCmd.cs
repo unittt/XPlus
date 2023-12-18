@@ -28,7 +28,7 @@ namespace GameScripts.RunTime.EditorMagic
         private Type CmdType => _curCommand?.GetType();
 
         //当前指令数据
-        private CommandBase _curCommand;
+        private CommandData _curCommand;
 
         //替换的索引
         private int _replaceIndex;
@@ -76,7 +76,7 @@ namespace GameScripts.RunTime.EditorMagic
             if (args is { Length: > 0 })
             {
                 _replaceIndex = (int)args[0];
-                var command = args[1].Cast<CommandBase>();
+                var command = args[1].Cast<CommandData>();
                 var type = command.GetType();
                 foreach (var option in _cmdOptions)
                 {
@@ -101,12 +101,12 @@ namespace GameScripts.RunTime.EditorMagic
             if (CmdType == cmdType) return;
 
             //实例化指令
-            var curCommand = Activator.CreateInstance(cmdType).Cast<CommandBase>();
+            var curCommand = Activator.CreateInstance(cmdType).Cast<CommandData>();
             ShowCmd(curCommand);
         }
 
         
-        private void ShowCmd(CommandBase command)
+        private void ShowCmd(CommandData command)
         {
             //记录指令的类型
             _curCommand = command;

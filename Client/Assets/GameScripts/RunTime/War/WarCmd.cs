@@ -9,6 +9,7 @@ namespace GameScripts.RunTime.War
 {
     public class WarCmd : IReference
     {
+        
         public int CmdIndex { get; private set; }
 
         public bool IsUsed { get; private set; }
@@ -31,6 +32,9 @@ namespace GameScripts.RunTime.War
         }
         
         
+        /// <summary>
+        /// 清除变化
+        /// </summary>
         public void ClearVary()
         {
             foreach (var pair in m_VaryInfo)
@@ -39,6 +43,10 @@ namespace GameScripts.RunTime.War
             }
         }
 
+        /// <summary>
+        /// 清除战士变化
+        /// </summary>
+        /// <param name="wid"></param>
         private void ClearWarriorVary(int wid)
         {
             // AssetDatabase.(value)
@@ -107,6 +115,12 @@ namespace GameScripts.RunTime.War
             }
         }
 
+        public void CheckDelVary()
+        {
+            
+        }
+        
+
         private void CheckPassiveRebornVary(Dictionary<string, object> dVary, int wid)
         {
            
@@ -125,12 +139,45 @@ namespace GameScripts.RunTime.War
 
         }
 
+        public object GetVary(int wid, string key)
+        {
+            if (m_VaryInfo.TryGetValue(wid, out var d))
+            {
+                if (d.ContainsKey(key))
+                {
+                    return d[key];
+                }
+            }
+
+            return null;
+        }
+
+        public bool TryGetWarriorVary(int wid, out Dictionary<string, object> d)
+        {
+            return m_VaryInfo.TryGetValue(wid, out d);
+        }
+        
 
         public void Reset()
         {
             CmdIndex = 0;
             IsUsed = false;
             m_VaryInfo.Clear();
+        }
+
+        public Vary GetWarriorVary(int warriorMID)
+        {
+            return null;
+        }
+
+        public void LocakVary(object vary, bool b)
+        {
+            
+        }
+
+        public void LockVary(Vary vary, bool p1)
+        {
+        
         }
     }
 }

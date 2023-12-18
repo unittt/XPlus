@@ -16,7 +16,7 @@ namespace GameScripts.RunTime.EditorMagic
 
         public int Index { get; private set; }
 
-        public void Fill(GameObject entity,CommandBase command, int index, Action<int,bool> callBack)
+        public void Fill(GameObject entity,CommandData command, int index, Action<int,bool> callBack)
         {
             _entity = entity;
             _callBack = callBack;

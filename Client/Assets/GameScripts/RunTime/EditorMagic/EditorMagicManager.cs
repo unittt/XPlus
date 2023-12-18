@@ -43,7 +43,7 @@ namespace GameScripts.RunTime.EditorMagic
             //1.添加自定义程序集到运行时程序域
             ReflectionToolkit.AddRunTimeAssembly("EditorMagic");
             //2.查找所有指令
-            var types = ReflectionToolkit.GetTypesInRunTimeAssemblies(type => type.IsSubclassOf(typeof(CommandBase)) && !type.IsAbstract);
+            var types = ReflectionToolkit.GetTypesInRunTimeAssemblies(type => type.IsSubclassOf(typeof(CommandData)) && !type.IsAbstract);
 
             T2AInstance = new Dictionary<Type, CommandAttribute>();
             foreach (var type in types)
@@ -173,7 +173,7 @@ namespace GameScripts.RunTime.EditorMagic
         /// 添加指令
         /// </summary>
         /// <param name="cmd"></param>
-        public static void AddCmd(CommandBase cmd)
+        public static void AddCmd(CommandData cmd)
         {
             _curMagicData.Commands.Add(cmd);
             // _curMagicData.Commands.Sort((x, y) => x.StartTime.CompareTo(y.StartTime));
@@ -186,7 +186,7 @@ namespace GameScripts.RunTime.EditorMagic
         /// </summary>
         /// <param name="index"></param>
         /// <param name="cmd"></param>
-        public static void ReplaceCmd(int index, CommandBase cmd)
+        public static void ReplaceCmd(int index, CommandData cmd)
         {
             _curMagicData.Commands[index] = cmd;
             // _curMagicData.Commands.Sort((x, y) => x.StartTime.CompareTo(y.StartTime));
