@@ -191,5 +191,25 @@ namespace GameScripts.RunTime.Model
                 model.CrossFade(code,iDuration, normalizedTime);
             }
         }
+        
+        
+        /// <summary>
+        /// 连续动画的播放
+        /// </summary>
+        /// <param name="actionName"></param>
+        /// <returns></returns>
+        public bool PlayCombo(string actionName)
+        {
+            return false;
+        }
+
+        /// <summary>
+        /// 连击击中发生时触发这些回调函数
+        /// </summary>
+        /// <param name="callBack"></param>
+        public void SetComboHitEvent(Action callBack)
+        {
+            
+        }
     }
 }
