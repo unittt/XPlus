@@ -196,7 +196,7 @@ namespace GameScripts.RunTime.EditorMagic
 
         private static void CommandsSort(MagicData magicData)
         {
-            magicData.Commands.OrderBy(c => c.StartTime).ThenBy(c => T2AInstance[c.GetType()].Sort).ToList();
+            magicData.Commands = magicData.Commands.OrderBy(c => c.StartTime).ThenBy(c => T2AInstance[c.GetType()].Sort).ToList();
         }
         
         /// <summary>

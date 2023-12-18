@@ -12,7 +12,7 @@ namespace GameScripts.RunTime.Magic
     public sealed class MagicData
     {
         
-        public readonly List<CommandBase> Commands  = new();
+        public List<CommandBase> Commands  = new();
         
         // 当需要序列化时调用这个方法
         public byte[] SerializeCommands()
