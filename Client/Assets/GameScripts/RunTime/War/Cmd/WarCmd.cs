@@ -7,7 +7,7 @@ using UnityEditor;
 
 namespace GameScripts.RunTime.War
 {
-    public class WarCmd : IReference
+    public abstract class WarCmd : IReference
     {
         
         public int CmdIndex { get; private set; }

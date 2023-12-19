@@ -12,24 +12,28 @@ using Luban;
 
 namespace cfg.SkillModule
 {
-public sealed partial class SchoolSkill : Luban.BeanBase
+public abstract partial class SkillBean : Luban.BeanBase
 {
-    public SchoolSkill(ByteBuf _buf) 
+    public SkillBean(ByteBuf _buf) 
     {
         Id = _buf.ReadInt();
         Name = _buf.ReadString();
         Icon = _buf.ReadInt();
+        ElementType = (SkillModule.EElementType)_buf.ReadInt();
         Funcdesc = _buf.ReadString();
-        Rolecreatedesc = _buf.ReadString();
     }
 
-    public static SchoolSkill DeserializeSchoolSkill(ByteBuf _buf)
+    public static SkillBean DeserializeSkillBean(ByteBuf _buf)
     {
-        return new SkillModule.SchoolSkill(_buf);
+        switch (_buf.ReadInt())
+        {
+            case SkillModule.SchoolActiveSkill.__ID__: return new SkillModule.SchoolActiveSkill(_buf);
+            default: throw new SerializationException();
+        }
     }
 
     /// <summary>
-    /// 门派技能编号
+    /// 技能编号
     /// </summary>
     public readonly int Id;
     /// <summary>
@@ -41,18 +45,16 @@ public sealed partial class SchoolSkill : Luban.BeanBase
     /// </summary>
     public readonly int Icon;
     /// <summary>
+    /// 元素
+    /// </summary>
+    public readonly SkillModule.EElementType ElementType;
+    /// <summary>
     /// 功效描述
     /// </summary>
     public readonly string Funcdesc;
-    /// <summary>
-    /// 创建角色使用的功效描述
-    /// </summary>
-    public readonly string Rolecreatedesc;
    
-    public const int __ID__ = -1380575572;
-    public override int GetTypeId() => __ID__;
 
-    public  void ResolveRef(Tables tables)
+    public virtual void ResolveRef(Tables tables)
     {
         
         
@@ -67,8 +69,8 @@ public sealed partial class SchoolSkill : Luban.BeanBase
         + "id:" + Id + ","
         + "name:" + Name + ","
         + "icon:" + Icon + ","
+        + "elementType:" + ElementType + ","
         + "funcdesc:" + Funcdesc + ","
-        + "rolecreatedesc:" + Rolecreatedesc + ","
         + "}";
     }
 }

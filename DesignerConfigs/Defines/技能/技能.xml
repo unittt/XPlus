@@ -1,11 +1,39 @@
 <module name="SkillModule">
 
-<bean name="SchoolSkill">
-		<var name="id" type="int" comment="门派技能编号"/>
+<bean name="SkillBean">
+		<var name="id" type="int" comment="技能编号"/>
 		<var name="name" type="string" comment="技能名字"/>
 		<var name="icon" type="int" comment="技能图标"/>
+		<var name="element_type" type="EElementType" comment="元素"/>
 		<var name="funcdesc" type="string" comment="功效描述"/>
-		<var name="rolecreatedesc" type="string" comment="创建角色使用的功效描述"/>
 	</bean>
-	<table name="TbSchoolSkill" value="SchoolSkill" index="id" input="技能/skill_school.xlsx"/>
+
+
+<!--师门技能技能等级参数-->
+<bean name="SchoolSkillLVArg">
+	<var name="learnLimit" type="int" comment="技能学习限制"/>
+	<var name="skillpointLearn" type="int" comment="学习消耗技能点"/>
+	<var name="client_range" type="int" comment="作用人数，客户端表现使用"/>
+	<var name="client_hpResume" type="int" comment="使用消耗气血，客户端表现使用"/>
+	<var name="client_mpResume" type="int" comment="使用消耗法术，客户端表现使用"/>
+	<var name="client_aura_resume" type="int" comment="使用消耗灵气，客户端表现使用"/>
+	<var name="desc" type="string" comment="描述"/>
+</bean>
+
+
+
+<!--师门主动技能-->
+<bean name="SchoolActiveSkill" parent = "SkillBean">
+		<var name="school" type="SystemModule.ESchoolType" comment="门派"/>
+		<var name="client_skillAttackType" type="EAttackType" comment="客户端使用，攻击方式(物理,法术)说明"/>
+		<var name="pfid" type="int" comment="法术编号"/>
+		<var name="rolecreatedesc" type="string" comment="创建角色使用的功效描述"/>
+		<var name="sortOrder" type="int" comment="技能面板的显示顺序，值越大越后"/>
+		<var name="init_level" type="int" comment="初始等级"/>
+		<var name="LevelArgList" type="list,SchoolSkillLVArg" comment="技能等级"/>
+	</bean>
+	<table name="TbSchoolActiveSkill" value="SchoolActiveSkill" index="id" input="技能/门派主动技能.xlsx"/>
+	
+	
+	
 </module>

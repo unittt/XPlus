@@ -60,7 +60,10 @@ namespace Pb.Mmo.Common
         public int max_hp;
         public int max_mp;
         public int aura; //灵气
-        public int status; //状态,1:活着,2:死亡
+        /// <summary>
+        /// 状态,1:活着,2:死亡
+        /// </summary>
+        public int status;
         public int auto_perform; //自动战斗招式
         public int is_auto; //是否自动战斗
         public int max_sp ; //最大怒气
@@ -81,10 +84,10 @@ namespace Pb.Mmo.Common
     /// 基础信息
     /// </summary>
 
-    public class BaseWarrior
+    public  class BaseWarrior
     {
         /// <summary>
-        /// 战士唯一标识符
+        /// 在房间中的唯一标识符
         /// </summary>
         public int wid;
         /// <summary>
@@ -100,21 +103,31 @@ namespace Pb.Mmo.Common
     /// <summary>
     /// 玩家
     /// </summary>
-    public class PlayerWarrior
+    public class PlayerWarrior : BaseWarrior
     {
-        public BaseWarrior baseWarrior;
         /// <summary>
         /// 玩家的唯一标识符
         /// </summary>
         public int pid = 2;
+
+        /// <summary>
+        /// 是否为指挥
+        /// </summary>
+        public bool appoint;
+
+        /// <summary>
+        /// true 每回合清除 false 每回合不清除
+        /// </summary>
+        public bool appointop;
+
+        public List<PerformUnit> pflist;
     }
     
     /// <summary>
     /// npc
     /// </summary>
-    public class NpcWarrior
+    public class NpcWarrior :BaseWarrior
     {
-        public BaseWarrior baseWarrior;
         /// <summary>
         /// 特殊npc标志
         /// </summary>
@@ -124,9 +137,8 @@ namespace Pb.Mmo.Common
     /// <summary>
     /// 召唤兽
     /// </summary>
-    public class SumWarrior
+    public class SumWarrior : BaseWarrior
     {
-        public BaseWarrior baseWarrior;
         /// <summary>
         /// 主人
         /// </summary>
@@ -135,13 +147,21 @@ namespace Pb.Mmo.Common
         /// 召唤兽唯一标识符
         /// </summary>
         public int sum_id = 4;
+        
+        public List<PerformUnit> pflist;
     }
     
     /// <summary>
     /// 伙伴
     /// </summary>
-    public class PartnerWarrior
+    public class PartnerWarrior : BaseWarrior
     {
-        public BaseWarrior baseWarrior;
+        
+        /// <summary>
+        /// 玩家的唯一标识符
+        /// </summary>
+        public int pid = 2;
+        
+        public List<PerformUnit> pflist;
     }
 }

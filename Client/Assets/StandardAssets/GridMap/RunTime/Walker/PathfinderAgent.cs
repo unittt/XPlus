@@ -266,7 +266,7 @@ namespace GridMap.RunTime.Walker
             LookRotationByPosition(pos);
             //当前的世界坐标，节点的状态
             var position = MoveTransform.position;
-            MapManager.Instance.TryGetNode(position, out var nodeTag);
+            MapManager.Current.TryGetNode(position, out var nodeTag);
             //更新
             OnUpdateMove?.Invoke(position,nodeTag);
         }
@@ -289,7 +289,7 @@ namespace GridMap.RunTime.Walker
             startPos.z = 0;
             endPos.z = 0;
      
-            if (useLine && MapManager.Instance.IsLinePath(startPos, endPos))
+            if (useLine && MapManager.Current.IsLinePath(startPos, endPos))
             {
                 OnLinePathCallback(endPos);
                 return;

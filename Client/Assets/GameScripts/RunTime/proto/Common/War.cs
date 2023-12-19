@@ -9,13 +9,13 @@ namespace Pb.Mmo.Common
     public class GS2CShowWar
     {
         public int war_id = 1;
-        public int war_type = 2;
+        public string war_type;
         public int sky_war = 3;
         public int weather = 4;
         /// <summary>
         /// 是否为boss战
         /// </summary>
-        public int is_bosswar = 5;
+        public bool is_bosswar = false;
         public string tollgate_group; // 关卡组
         public int tollgate_id = 7; // 关卡id
         public int barrage_show = 8; // 弹幕显示 0-不显示 1-显示名字+弹幕 2-显示弹幕
@@ -91,10 +91,34 @@ namespace Pb.Mmo.Common
     
     
 
-    public class GS2CWarAddWarrior
+    // public class GS2CWarAddWarrior
+    // {
+    //     /// <summary>
+    //     /// 战斗的唯一标识符
+    //     /// </summary>
+    //     public int war_id = 1;
+    //     /// <summary>
+    //     /// 阵营
+    //     /// </summary>
+    //     public int camp_id = 2;
+    //
+    //     public PlayerWarrior warrior;
+    //     public NpcWarrior npcwarrior;
+    //     public SumWarrior sumwarrior;
+    //     public PartnerWarrior partnerwarrior;
+    //     public int is_summon = 12; //战斗中召唤入场
+    // }
+
+    
+    /// <summary>
+    /// /// <summary>
+    /// /*1 player,2 npc,3 summon,4 partner,5 roplayer,6 rosummon,7 ropartner */
+    /// </summary>
+    /// </summary>
+    public abstract class AddWarrior
     {
         /// <summary>
-        /// 战斗的唯一标识符
+        /// 房间的唯一标识符
         /// </summary>
         public int war_id = 1;
         /// <summary>
@@ -102,59 +126,40 @@ namespace Pb.Mmo.Common
         /// </summary>
         public int camp_id = 2;
 
-        public PlayerWarrior warrior;
-        public NpcWarrior npcwarrior;
-        public SumWarrior sumwarrior;
-        public PartnerWarrior partnerwarrior;
-        public int is_summon = 12; //战斗中召唤入场
+        /// <summary>
+        /// 是否立即执行插入
+        /// </summary>
+        public bool add_type;
+
+        /// <summary>
+        /// 战斗中召唤入场
+        /// </summary>
+        public bool is_summon;
     }
 
     
     /// <summary>
     /// 玩家战士进入战斗
     /// </summary>
-    public class GS2CWarAddPlayerWarrior
+    public class GS2CWarAddPlayerWarrior:AddWarrior
     {
-        /// <summary>
-        /// 战斗的唯一标识符
-        /// </summary>
-        public int war_id;
-        /// <summary>
-        /// 阵营
-        /// </summary>
-        public int camp_id;
         /// <summary>
         /// 战士
         /// </summary>
         public PlayerWarrior warrior;
     }
     
-    public class GS2CWarAddNpcWarrior
+    
+    public class GS2CWarAddNpcWarrior:AddWarrior
     {
-        /// <summary>
-        /// 战斗的唯一标识符
-        /// </summary>
-        public int war_id = 1;
-        /// <summary>
-        /// 阵营
-        /// </summary>
-        public int camp_id = 2;
         /// <summary>
         /// 战士
         /// </summary>
         public NpcWarrior warrior;
     }
     
-    public class GS2CWarAddSumWarrior
+    public class GS2CWarAddSumWarrior:AddWarrior
     {
-        /// <summary>
-        /// 战斗的唯一标识符
-        /// </summary>
-        public int war_id = 1;
-        /// <summary>
-        /// 阵营
-        /// </summary>
-        public int camp_id = 2;
         /// <summary>
         /// 战士
         /// </summary>
@@ -164,16 +169,8 @@ namespace Pb.Mmo.Common
     /// <summary>
     /// 伙伴
     /// </summary>
-    public class GS2CWarAddPartnerWarrior
+    public class GS2CWarAddPartnerWarrior:AddWarrior
     {
-        /// <summary>
-        /// 战斗的唯一标识符
-        /// </summary>
-        public int war_id = 1;
-        /// <summary>
-        /// 阵营
-        /// </summary>
-        public int camp_id = 2;
         /// <summary>
         /// 战士
         /// </summary>
@@ -203,11 +200,11 @@ namespace Pb.Mmo.Common
     public class GS2CPlayerWarriorEnter
     {
         /// <summary>
-        /// 房间的唯一标识
+        /// 房间唯一标识
         /// </summary>
         public int war_id = 1;
         /// <summary>
-        /// 玩家的唯一标识
+        /// 玩家在房间中的唯一标识
         /// </summary>
         public int wid = 2;
         /// <summary>
@@ -215,4 +212,37 @@ namespace Pb.Mmo.Common
         /// </summary>
         public List<int> sum_list;
     }
+
+
+
+    /// <summary>
+    /// 战斗喊话
+    /// </summary>
+    public class GS2CWarriorSpeak
+    {
+        /// <summary>
+        /// 房间唯一标识
+        /// </summary>
+        public int war_id = 1;
+        public int wid = 1;
+        public string content;
+        /// <summary>
+        /// 0.perform开始(默认即时生效) 1.受击时 2.perform结束
+        /// </summary>
+        public int flag;
+        /// <summary>
+        /// 0 气泡. 1.窗口
+        /// </summary>
+        public int show_type;
+    }
+    
+    /// <summary>
+    /// 战斗有序喊话
+    /// </summary>
+    public class SpeekInfo
+    {
+        public int wid = 1;
+        public string content;
+    }
+    
 }

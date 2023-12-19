@@ -69,11 +69,11 @@ namespace GridMap
         /// </summary>
         public Rect CameraViewRect =>CameraHelper.GetCameraViewRect();
 
-        public static MapManager Instance { get; private set; }
+        public static MapManager Current { get; private set; }
 
         void Awake()
         {
-            Instance = this;
+            Current = this;
             GraphHelper = RegisterHelper<GraphHelper>();
             BlockHelper = RegisterHelper<BlockHelper>();
             CameraHelper = RegisterHelper<CameraHelper>();
@@ -228,5 +228,20 @@ namespace GridMap
             return _mapData.TryGetNode(worldPos, out nodeTag);
         }
         #endregion
+
+        /// <summary>
+        /// 显示地图
+        /// </summary>
+        /// <param name="pbDataMapID"></param>
+        /// <param name="vector2"></param>
+        public void ShowMap(int pbDataMapID, Vector2 vector2)
+        {
+            
+        }
+
+        public void ShowMap(MapData mapData, bool isDynamics = true)
+        {
+            
+        }
     }
 }

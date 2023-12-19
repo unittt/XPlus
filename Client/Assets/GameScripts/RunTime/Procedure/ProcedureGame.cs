@@ -57,7 +57,7 @@ namespace GameScript.RunTime.Procedure
             _mapWalkerEntity.AssembleModel(modelInfo);
             var mapTouchController = GameObject.Find("Touch").GetComponent<MapTouchController>();
             mapTouchController._walker = _mapWalkerEntity.Agent;
-            MapManager.Instance.SetFollow(_mapWalkerEntity.Entity.transform);
+            MapManager.Current.SetFollow(_mapWalkerEntity.Entity.transform);
             
         }
         

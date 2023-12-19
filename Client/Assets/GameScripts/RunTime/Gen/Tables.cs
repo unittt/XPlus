@@ -15,7 +15,7 @@ public partial class Tables
 {
     public BuffModule.TbBuff TbBuff {get; }
     public WarModule.TbWarPosition TbWarPosition {get; }
-    public SkillModule.TbSchoolSkill TbSchoolSkill {get; }
+    public SkillModule.TbSchoolActiveSkill TbSchoolActiveSkill {get; }
     public SystemModule.TbRoleType TbRoleType {get; }
     public SystemModule.TbSchool TbSchool {get; }
 
@@ -23,7 +23,7 @@ public partial class Tables
     {
         TbBuff = new BuffModule.TbBuff(loader("buffmodule_tbbuff"));
         TbWarPosition = new WarModule.TbWarPosition(loader("warmodule_tbwarposition"));
-        TbSchoolSkill = new SkillModule.TbSchoolSkill(loader("skillmodule_tbschoolskill"));
+        TbSchoolActiveSkill = new SkillModule.TbSchoolActiveSkill(loader("skillmodule_tbschoolactiveskill"));
         TbRoleType = new SystemModule.TbRoleType(loader("systemmodule_tbroletype"));
         TbSchool = new SystemModule.TbSchool(loader("systemmodule_tbschool"));
         ResolveRef();
@@ -33,7 +33,7 @@ public partial class Tables
     {
         TbBuff.ResolveRef(this);
         TbWarPosition.ResolveRef(this);
-        TbSchoolSkill.ResolveRef(this);
+        TbSchoolActiveSkill.ResolveRef(this);
         TbRoleType.ResolveRef(this);
         TbSchool.ResolveRef(this);
     }
