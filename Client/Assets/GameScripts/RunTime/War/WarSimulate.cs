@@ -15,7 +15,11 @@ namespace GameScripts.RunTime.War
     {
         private int war_id = 1;
         private int war_pid = 1;
-        
+        /// <summary>
+        /// 近战施法
+        /// </summary>
+        private List<int> meleeMagic = new() {1101,1102,1104,1105,1106,1107,1601,1602,1603,1604,1606,1607,7301,7302,7303,8301,8302,8303,8101,8102,8103,8104,8201,8202,8203,101};
+
         public void FirstSpecityWar()
         {
             war_id = AttrManager.Current.pid;
@@ -259,9 +263,76 @@ namespace GameScripts.RunTime.War
                 bout_id = 1,
                 left_time = 30
             };
+            
+            //回合开始
             NetWar.Current.GS2CWarBoutStart(gs2CWarBoutStart);
         }
 
+        private void Bout1()
+        {
+            //boss
+            // 技能攻击
+            const int skillID = 101;
+
+            var bossMagic = new GS2CWarSkill
+            {
+                war_id = war_id,
+                skill_id = skillID,
+                magic_id = 1,
+                action_wlist = new List<int> { 16 },
+                select_wlist = new List<int> { 1 }
+            };
+            NetWar.Current.GS2CWarSkill(bossMagic);
+            
+            //受击
+            var allyDamageList = new List<int> { -4000 };
+
+            for (var i = 0; i < allyDamageList.Count; i++)
+            {
+                var gs2CWarDamage = new GS2CWarDamage
+                {
+                    war_id = war_id,
+                    wid = i + 1,
+                    type = 0,
+                    damage = allyDamageList[i],
+                    isCrt = true
+                };
+                NetWar.Current.GS2CWarDamage(gs2CWarDamage);
+            }
+            
+            //状态
+            var allyStatusList = new List<int> { 8000 };
+            for (var i = 0; i < allyStatusList.Count; i++)
+            {
+                var gs2CWarWarriorStatus = new GS2CWarWarriorStatus
+                {
+                    war_id = war_id,
+                    wid = i + 1,
+                    type = 2,
+                  
+                    Status =  new WarriorStatus
+                    {
+                        hp =allyStatusList[i],
+                        sp = 45
+                    }
+                };
+                NetWar.Current.GS2CWarWarriorStatus(gs2CWarWarriorStatus);
+            }
+
+            if (meleeMagic.Contains(skillID))
+            {
+                NetWar.Current.GS2CWarGoback(new GS2CWarGoback{war_id = war_id, action_wid = 1});
+            }
+            
+            //回合结束
+            var boutEnd = new GS2CWarBoutEnd
+            {
+                war_id = war_id
+            };
+            NetWar.Current.GS2CWarBoutEnd(boutEnd);
+        }
+        
+        
         private void GS2CWarPaopao(GS2CWarriorSpeak gs2CWarriorSpeak)
         {
             var warPaoPao = Main.m_ReferencePool.Spawn<WarPaoPao>();

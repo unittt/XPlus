@@ -80,15 +80,52 @@ namespace Pb.Mmo.Common
     }
 
     public class GS2CWarDamage {
+        /// <summary>
+        /// 房间id
+        /// </summary>
         public int war_id = 1;
+        /// <summary>
+        /// 战士id
+        /// </summary>
         public int wid = 2;
-        public int type = 3;           /* 1 miss 2 defense */
-        public int iscrit = 4;         /* 1 crit */
+        /// <summary>
+        /// 1 miss 2 防守
+        /// </summary>
+        public int type = 3; 
+        /// <summary>
+        /// 是否暴击
+        /// </summary>
+        public bool isCrt; 
+        /// <summary>
+        /// 伤害
+        /// </summary>
         public int damage = 5;
-        public int hited_effect = 6;   //是否表现受击动作
+        /// <summary>
+        /// 是否表现受击动作
+        /// </summary>
+        public int hited_effect = 6;   
     }
-    
-    
+
+
+    /// <summary>
+    /// 刷新状态
+    /// </summary>
+    public class GS2CWarWarriorStatus
+    {
+        public int war_id;
+        public int wid;
+        public int type;
+        public  WarriorStatus Status;
+    }
+
+    /// <summary>
+    /// Gobake
+    /// </summary>
+    public class GS2CWarGoback
+    {
+        public int war_id;
+        public int action_wid;
+    }
     
 
     // public class GS2CWarAddWarrior
@@ -244,5 +281,7 @@ namespace Pb.Mmo.Common
         public int wid = 1;
         public string content;
     }
+    
+    
     
 }

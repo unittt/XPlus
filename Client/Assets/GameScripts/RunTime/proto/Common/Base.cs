@@ -65,7 +65,7 @@ namespace Pb.Mmo.Common
         /// </summary>
         public int status;
         public int auto_perform; //自动战斗招式
-        public int is_auto; //是否自动战斗
+        public bool is_auto; //是否自动战斗
         public int max_sp ; //最大怒气
         public int sp; //怒气
         public int item_use_cnt1 ; //使用3级药或酒

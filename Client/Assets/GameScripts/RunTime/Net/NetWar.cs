@@ -146,5 +146,101 @@ namespace GameScripts.RunTime.Net
                 WarManager.Current.SetFightSummons(warEnter.sum_list);
             }
         }
+
+        /// <summary>
+        /// 释放技能
+        /// </summary>
+        /// <param name="bossMagic"></param>
+        public void GS2CWarSkill(GS2CWarSkill bossMagic)
+        {
+            //如果战场编号不一致 return
+            if ( WarManager.Current.WarID != bossMagic.war_id)
+            {
+                return;
+            }
+
+            var cmd = Main.m_ReferencePool.Spawn<MagicCmd>();
+            cmd.atkid_list = bossMagic.action_wlist;
+            cmd.vicid_list = bossMagic.select_wlist;
+            //无视服务端的变量名skill_id， magic_id
+            //客户端法术只有magic_id， magic_index
+            cmd.magic_id = bossMagic.skill_id;
+            cmd.magic_index = bossMagic.magic_id;
+
+            // WarManager.Current.AddBoutMagicInfo(bossMagic.action_wlist[1], bossMagic.select_wlist, bossMagic.skill_id,
+                // bossMagic.magic_id, cmd.ID);
+            //插入指令
+            WarManager.Current.InsertCmd(cmd);
+        }
+
+        /// <summary>
+        /// 处理伤害
+        /// </summary>
+        /// <param name="gs2CWarDamage"></param>
+        public void GS2CWarDamage(GS2CWarDamage gs2CWarDamage)
+        {
+            //如果战场编号不一致 return
+            if ( WarManager.Current.WarID != gs2CWarDamage.war_id)
+            {
+                return;
+            }
+            var cmd = Main.m_ReferencePool.Spawn<WarDamageCmd>();
+            cmd.wid = gs2CWarDamage.wid;
+            cmd.type = gs2CWarDamage.type;
+            cmd.damage = gs2CWarDamage.damage;
+            cmd.iscrit = gs2CWarDamage.damage;
+            WarManager.Current.InsertCmd(cmd);
+        }
+
+        /// <summary>
+        /// 更新状态
+        /// </summary>
+        /// <param name="gs2CWarWarriorStatus"></param>
+        public void GS2CWarWarriorStatus(GS2CWarWarriorStatus gs2CWarWarriorStatus)
+        {
+            //如果战场编号不一致 return
+            if ( WarManager.Current.WarID != gs2CWarWarriorStatus.war_id)
+            {
+                return;
+            }
+
+            if (gs2CWarWarriorStatus.Status.cmd == 1)
+            {
+                if ( WarManager.Current.TryGetWarrior(gs2CWarWarriorStatus.wid,out var warrior))
+                {
+                    // warrior.SetOrderDone(true);
+                }
+               
+            }
+
+            if (gs2CWarWarriorStatus.wid == WarManager.Current.m_HeroWid && gs2CWarWarriorStatus.Status.is_auto)
+            {
+                //设置玩家为自动战斗
+                // WarManager.Current.SetAutoWar(status.is_auto, false);
+            }
+            
+            var cmd = Main.m_ReferencePool.Spawn<WarriorStatusCmd>();
+            cmd.wid = gs2CWarWarriorStatus.wid;
+            cmd.status = gs2CWarWarriorStatus.Status;
+            WarManager.Current.InsertCmd(cmd);
+        }
+
+        /// <summary>
+        /// 归位
+        /// </summary>
+        /// <param name="gs2CWarGoback"></param>
+        public void GS2CWarGoback(GS2CWarGoback gs2CWarGoback)
+        {
+            //如果战场编号不一致 return
+            if ( WarManager.Current.WarID != gs2CWarGoback.war_id)
+            {
+                return;
+            }
+            
+            var cmd = Main.m_ReferencePool.Spawn<GoBackCmd>();
+            cmd.wid_list = gs2CWarGoback.action_wid;
+            cmd.wait = true;
+            WarManager.Current.InsertCmd(cmd);
+        }
     }
 }

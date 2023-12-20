@@ -1,16 +1,18 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using GameScript.RunTime.Network;
 using HT.Framework;
-using UnityEditor;
 
 namespace GameScripts.RunTime.War
 {
     public abstract class WarCmd : IReference
     {
-        
-        public int CmdIndex { get; private set; }
+
+        private static int RefID;
+        /// <summary>
+        /// 指令编号
+        /// </summary>
+        public int ID { get; private set; }
 
         public bool IsUsed { get; private set; }
         public Action CallBack;
@@ -19,7 +21,7 @@ namespace GameScripts.RunTime.War
 
         public void Fill(Action action)
         {
-            CmdIndex =  Interlocked.Increment(ref WarManager.Current.CmdIndex);
+            ID =  Interlocked.Increment(ref RefID);
             CallBack = action;
         }
 
@@ -160,7 +162,7 @@ namespace GameScripts.RunTime.War
 
         public void Reset()
         {
-            CmdIndex = 0;
+            ID = 0;
             IsUsed = false;
             m_VaryInfo.Clear();
         }
