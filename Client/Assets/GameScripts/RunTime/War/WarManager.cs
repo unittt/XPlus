@@ -335,5 +335,27 @@ namespace GameScripts.RunTime.War
         {
           
         }
+
+
+        private List<WarCmd> m_CmdList;
+        private bool m_WaitTime;
+
+        public void UpdateCmds()
+        {
+            if (m_WaitTime)return;
+
+            while (m_CmdList.Count > 0)
+            {
+                var cmd = m_CmdList[0];
+                if (cmd.IsUsed)
+                {
+                    m_CmdList.Remove(cmd);
+                }
+                else
+                {
+                    cmd.Execute();
+                }
+            }
+        }
     }
 }
