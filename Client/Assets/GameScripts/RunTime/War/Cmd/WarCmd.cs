@@ -26,7 +26,7 @@ namespace GameScripts.RunTime.War
         }
 
 
-        public void Execute()
+        public virtual void Execute()
         {
             if (IsUsed)return;
             IsUsed = true;

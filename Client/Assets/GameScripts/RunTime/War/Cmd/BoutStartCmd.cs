@@ -7,5 +7,10 @@ namespace GameScripts.RunTime.War
     {
         public int bout_id;
         public int left_time;
+
+        public override void Execute()
+        {
+            base.Execute();
+        }
     }
 }

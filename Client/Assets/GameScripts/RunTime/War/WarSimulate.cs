@@ -272,7 +272,7 @@ namespace GameScripts.RunTime.War
         {
             //boss
             // 技能攻击
-            const int skillID = 101;
+            var skillID = 101;
 
             var bossMagic = new GS2CWarSkill
             {
@@ -324,12 +324,76 @@ namespace GameScripts.RunTime.War
                 NetWar.Current.GS2CWarGoback(new GS2CWarGoback{war_id = war_id, action_wid = 1});
             }
             
+            //许仙三魂攻击
+            skillID = 1301;
+            var partner1Magic = new GS2CWarSkill
+            {
+                war_id = war_id,
+                skill_id = skillID,
+                magic_id = 1,
+                action_wlist = new List<int> { 2 },
+                select_wlist = new List<int> { 16 }
+            };
+            NetWar.Current.GS2CWarSkill(partner1Magic);
+            
+            //受击
+            var enemyDamageList = new List<int> { -2233 };
+
+            for (var i = 0; i < enemyDamageList.Count; i++)
+            {
+                var gs2CWarDamage = new GS2CWarDamage
+                {
+                    war_id = war_id,
+                    wid = i + 1,
+                    type = 0,
+                    damage = enemyDamageList[i],
+                    isCrt = true
+                };
+                NetWar.Current.GS2CWarDamage(gs2CWarDamage);
+            }
+            
+            
+            //状态
+            var enemyStatusList = new List<int> { 11767 };
+            for (var i = 0; i < enemyStatusList.Count; i++)
+            {
+                var gs2CWarWarriorStatus = new GS2CWarWarriorStatus
+                {
+                    war_id = war_id,
+                    wid = 16 + i,
+                    type = 2,
+                  
+                    Status =  new WarriorStatus
+                    {
+                        hp = enemyStatusList[i],
+                        sp = 45
+                    }
+                };
+                NetWar.Current.GS2CWarWarriorStatus(gs2CWarWarriorStatus);
+            }
+            
+            //如果为近战攻击
+            if (meleeMagic.Contains(skillID))
+            {
+                NetWar.Current.GS2CWarGoback(new GS2CWarGoback{war_id = war_id, action_wid = 1});
+            }
+            
             //回合结束
             var boutEnd = new GS2CWarBoutEnd
             {
                 war_id = war_id
             };
             NetWar.Current.GS2CWarBoutEnd(boutEnd);
+            
+            
+            //回合开始
+            var gs2CWarBoutStart = new GS2CWarBoutStart
+            {
+                war_id = war_id,
+                bout_id = 2,
+                left_time = 30
+            };
+            NetWar.Current.GS2CWarBoutStart(gs2CWarBoutStart);
         }
         
         
