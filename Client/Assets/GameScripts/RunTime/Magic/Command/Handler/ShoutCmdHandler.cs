@@ -1,6 +1,9 @@
 namespace GameScripts.RunTime.Magic.Command.Handler
 {
-    public class ShoutCmdHandler:CmdHandlerBase< ShoutCmd>
+    /// <summary>
+    /// 喊招处理
+    /// </summary>
+    public class ShoutCmdHandler:CmdHandlerBase<ShoutCmd>
     {
         protected override void OnFill(ShoutCmd commandData)
         {

@@ -124,7 +124,7 @@ namespace Pb.Mmo.Common
     public class GS2CWarGoback
     {
         public int war_id;
-        public int action_wid;
+        public List<int> action_wid;
     }
     
 

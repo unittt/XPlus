@@ -5,6 +5,13 @@ namespace GameScripts.RunTime.War
     /// </summary>
     public class DelWarriorCmd:WarCmd
     {
+        public int wid;
         
+        protected override void OnExecute()
+        {
+            base.OnExecute();
+            //找到战士
+            //删除战士
+        }
     }
 }

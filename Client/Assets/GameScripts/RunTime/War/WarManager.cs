@@ -47,7 +47,11 @@ namespace GameScripts.RunTime.War
         private bool _isWarStart;
         private int _chatMsgCnt;
         #endregion
-
+        
+        /// <summary>
+        /// 是否刚刚开始战斗
+        /// </summary>
+        private static bool m_IsWarStart;
 
         /// <summary>
         /// 当前协议属于哪一Bout(回合)
@@ -155,9 +159,28 @@ namespace GameScripts.RunTime.War
         /// 回合开始
         /// </summary>
         /// <param name="data"></param>
-        public static void WarBoutStart(GS2CWarBoutStart data)
+        public void WarBoutStart(GS2CWarBoutStart data)
         {
-            
+            if (m_IsWarStart)
+            {
+                //战斗刚开始 刷新所有位置
+                RefreshAllPos();
+            }
+        
+            //记录回合
+            //遍历战士
+            //触发战士的回合开始
+        }
+
+        /// <summary>
+        /// 刷新全部站位
+        /// </summary>
+        private void RefreshAllPos()
+        {
+            // --刷新全部站位
+            // for wid, oWarrior in pairs(self.m_Warriors) do
+            //     oWarrior:UpdateOriginPos()
+            // end
         }
 
         /// <summary>
@@ -339,6 +362,8 @@ namespace GameScripts.RunTime.War
 
         private List<WarCmd> m_CmdList;
         private bool m_WaitTime;
+        
+   
 
         public void UpdateCmds()
         {
@@ -356,6 +381,59 @@ namespace GameScripts.RunTime.War
                     cmd.Execute();
                 }
             }
+        }
+
+        /// <summary>
+        /// 添加回合释放信息
+        /// </summary>
+        public void AddBoutMagicInfo()
+        {
+            
+        }
+
+        public void WarBoutStart(int boutID, int leftTime)
+        {
+            
+        }
+
+        public void BoutEnd()
+        {
+           //设置当前为回合结束
+        }
+
+        public  Warrior GetWarriorByPos(int campID, int warriorPos)
+        {
+          return null;
+        }
+
+        /// <summary>
+        /// 根据阵营和坐标删除战士
+        /// </summary>
+        /// <param name="campID"></param>
+        /// <param name="warriorPos"></param>
+        public  void DelWarriorByCampAndPos(int campID, int warriorPos)
+        {
+            //1.阵营和坐标查找到战士
+            //2.删除战士
+        }
+
+        /// <summary>
+        /// 删除战士
+        /// </summary>
+        /// <param name="wid"></param>
+        public void DelWarrior(int wid)
+        {
+            
+        }
+
+        public void AddWarrior(Warrior warrior)
+        {
+            
+        }
+
+        public Warrior GetWarrior(int wid)
+        {
+            return null;
         }
     }
 }

@@ -207,7 +207,7 @@ namespace GameScript.RunTime.UI
 			{
 				if (!_skillInstances.TryGetValue(skillID, out var entity))
 				{
-					var schoolSkill = TableGlobal.Instance.TbSchoolSkill[skillID];
+					var schoolSkill = TableGlobal.Instance.TbSchoolActiveSkill[skillID];
 					entity = await LoadSkill(schoolSkill);
 					_skillInstances.Add(skillID, entity);
 				}
@@ -221,7 +221,7 @@ namespace GameScript.RunTime.UI
 			tg.isOn = true;
 		}
 
-		private async UniTask<GameObject> LoadSkill(SchoolSkill skill)
+		private async UniTask<GameObject> LoadSkill(SchoolActiveSkill skill)
 		{
 
 			//角色对应的门派
@@ -247,7 +247,7 @@ namespace GameScript.RunTime.UI
 
 		private void OnSwitchSkill(int skillID)
 		{
-			_skillDes.text = TableGlobal.Instance.TbSchoolSkill[skillID].Rolecreatedesc;
+			_skillDes.text = TableGlobal.Instance.TbSchoolActiveSkill[skillID].Rolecreatedesc;
 		}
 
 		public override void OnDestroy()

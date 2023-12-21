@@ -321,7 +321,7 @@ namespace GameScripts.RunTime.War
 
             if (meleeMagic.Contains(skillID))
             {
-                NetWar.Current.GS2CWarGoback(new GS2CWarGoback{war_id = war_id, action_wid = 1});
+                NetWar.Current.GS2CWarGoback(new GS2CWarGoback{war_id = war_id, action_wid = { 1}});
             }
             
             //许仙三魂攻击
@@ -375,7 +375,7 @@ namespace GameScripts.RunTime.War
             //如果为近战攻击
             if (meleeMagic.Contains(skillID))
             {
-                NetWar.Current.GS2CWarGoback(new GS2CWarGoback{war_id = war_id, action_wid = 1});
+                NetWar.Current.GS2CWarGoback(new GS2CWarGoback{war_id = war_id, action_wid = {1}});
             }
             
             //回合结束

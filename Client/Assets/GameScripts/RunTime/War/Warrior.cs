@@ -116,18 +116,25 @@ namespace GameScripts.RunTime.War
 
         public void FaceDefault()
         {
-            var angle = GetDefalutRotateAngle();
+            var angle = GetDefaultRotateAngle();
             if (LocalEulerAngles != angle)
             {
                 Entity.transform.DOLocalRotate(angle, 0.1f);
             }
         }
 
-        private Vector3 GetDefalutRotateAngle()
+        /// <summary>
+        /// 获得默认的角度
+        /// </summary>
+        /// <returns></returns>
+        public Vector3 GetDefaultRotateAngle()
         {
             return Vector3.zero;
         }
         #endregion
+
+
+   
         
         public Vector3 LocalPosition =>  Entity.transform.localPosition;
 
@@ -169,6 +176,8 @@ namespace GameScripts.RunTime.War
         #endregion
 
         public override int Layer => LayerConfig.War;
+        public Transform RotateObj { get; set; }
+
         public int MagicID;
 
         public bool IsBusy(string passivereborn)

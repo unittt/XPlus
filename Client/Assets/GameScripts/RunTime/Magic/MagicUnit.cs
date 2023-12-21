@@ -99,5 +99,19 @@ namespace GameScripts.RunTime.Magic
             vicObjs.Clear();
             
         }
+
+        /// <summary>
+        /// 获得第一个受击者
+        /// </summary>
+        /// <returns></returns>
+        public Warrior GetVicObjFirst()
+        {
+            return null;
+        }
+
+        public void GetTargets(bool isAlly, bool isAtk, bool isVic, bool isAlive, List<Warrior> warriors)
+        {
+           
+        }
     }
 }

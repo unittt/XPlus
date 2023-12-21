@@ -1,4 +1,5 @@
 using cfg.WarModule;
+using Pb.Mmo.Common;
 using UnityEngine;
 
 namespace GameScripts.RunTime.War
@@ -45,9 +46,9 @@ namespace GameScripts.RunTime.War
         // }
 
 
-        // public void CreateWarrior()
-        // {
-        //     
-        // }
+        public static Warrior CreateWarrior(int campId,BaseWarrior baseWarrior)
+        {
+            return null;
+        }
     }
 }
