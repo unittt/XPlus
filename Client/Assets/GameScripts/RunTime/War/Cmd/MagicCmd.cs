@@ -35,7 +35,19 @@ namespace GameScripts.RunTime.War
             {
                 return;
             }
-            
+
+            //被动技能
+            var dAtkVary = GetWarriorVary(atkid);
+            var passiveMaxIndex = dAtkVary.trigger_passive.Count - 1;
+            for (var i = passiveMaxIndex; i >= 0; i--)
+            {
+                var oCmd = dAtkVary.trigger_passive[i];
+                //获得被动技能数据
+                oCmd.Execute();
+                //移除技能
+                dAtkVary.trigger_passive.Remove(oCmd);
+            }
+            // oCmd:CheckNotifyCmds(dAtkVary, 0)
         }
     }
 }

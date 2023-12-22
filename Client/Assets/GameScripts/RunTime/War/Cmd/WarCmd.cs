@@ -59,9 +59,10 @@ namespace GameScripts.RunTime.War
         public bool IsUsed { get; private set; }
         public Action CallBack;
 
-        private Dictionary<int, Dictionary<string, object>> m_VaryInfo = new();
-
+        
         public WarCmdStatus Status { get; private set; }
+
+        public Dictionary<int, Vary> m_VaryInfo;
 
         public void Fill(Action action)
         {
@@ -124,32 +125,33 @@ namespace GameScripts.RunTime.War
             // 逻辑实现，根据游戏的具体需求
             if (m_VaryInfo.TryGetValue(wid, out var dVary))
             {
-                if (WarManager.Current.TryGetWarrior(wid, out var oWarrior) && oWarrior.IsBusy("PassiveReborn"))
-                {
-                    CheckPassiveRebornVary(dVary, wid);
-                    return;
-                }
-
+                // if (WarManager.Current.TryGetWarrior(wid, out var oWarrior) && oWarrior.IsBusy("PassiveReborn"))
+                // {
+                //     CheckPassiveRebornVary(dVary, wid);
+                //     return;
+                // }
+                
+                
                 var keys = new List<string> { "damage_list", "addMp_list", "buff_list" };
-                foreach (var key in keys)
-                {
-                    if (dVary.ContainsKey(key))
-                    {
-                        var list = dVary[key];
-                        if (list != null)
-                        {
-                            // foreach (var oCmd in list)
-                            // {
-                            //     oCmd.Execute();
-                            // }
-                        }
+                // foreach (var key in keys)
+                // {
+                //     if (dVary.ContainsKey(key))
+                //     {
+                //         var list = dVary[key];
+                //         if (list != null)
+                //         {
+                //             // foreach (var oCmd in list)
+                //             // {
+                //             //     oCmd.Execute();
+                //             // }
+                //         }
+                //
+                //         dVary[key] = null;
+                //     }
+                // }
 
-                        dVary[key] = null;
-                    }
-                }
-
-                if (oWarrior is not null)
-                {
+                // if (oWarrior is not null)
+                // {
                     // if (dVary.ContainsKey("hp_list") && dVary["hp_list"] != null)
                     // {
                     //     var lHP = dVary["hp_list"];
@@ -170,19 +172,19 @@ namespace GameScripts.RunTime.War
                     // }
                     //
                     // oWarrior.UpdateStatus(dVary);
-                }
-                else if (dVary.ContainsKey("add_warriorcmd"))
-                {
-                    var oAddCmd = dVary["add_warriorcmd"];
-                    if (oAddCmd != null)
-                    {
-                        // oAddCmd.Execute();
-                    }
-
-                    dVary["add_warriorcmd"] = null;
-                }
-
-                dVary["hp_list"] = null;
+                // }
+                // else if (dVary.ContainsKey("add_warriorcmd"))
+                // {
+                //     var oAddCmd = dVary["add_warriorcmd"];
+                //     if (oAddCmd != null)
+                //     {
+                //         // oAddCmd.Execute();
+                //     }
+                //
+                //     dVary["add_warriorcmd"] = null;
+                // }
+                //
+                // dVary["hp_list"] = null;
             }
         }
 
@@ -199,33 +201,36 @@ namespace GameScripts.RunTime.War
 
         public void SetVary(int wid, string key, object v)
         {
-            if (!m_VaryInfo.TryGetValue(wid, out var d))
-            {
-                //实例化一个对象出来
-                d = new Dictionary<string, object>();
-            }
-
-            d[key] = v;
-            m_VaryInfo[wid] = d;
+            // if (!m_VaryInfo.TryGetValue(wid, out var d))
+            // {
+            //     //实例化一个对象出来
+            //     d = new Dictionary<string, object>();
+            // }
+            //
+            // d[key] = v;
+            // m_VaryInfo[wid] = d;
 
         }
 
         public object GetVary(int wid, string key)
         {
-            if (m_VaryInfo.TryGetValue(wid, out var d))
-            {
-                if (d.ContainsKey(key))
-                {
-                    return d[key];
-                }
-            }
-
+            // if (m_VaryInfo.TryGetValue(wid, out var d))
+            // {
+            //     if (d.ContainsKey(key))
+            //     {
+            //         return d[key];
+            //     }
+            // }
+            //
             return null;
         }
 
-        public bool TryGetWarriorVary(int wid, out Dictionary<string, object> d)
+        public Vary GetWarriorVary(int wid)
         {
-            return m_VaryInfo.TryGetValue(wid, out d);
+            if (m_VaryInfo.TryGetValue(wid, out var vary)) return vary;
+            vary = new Vary();
+            m_VaryInfo.Add(wid, vary);
+            return vary;
         }
         
 
@@ -236,12 +241,7 @@ namespace GameScripts.RunTime.War
             m_VaryInfo.Clear();
             Status = WarCmdStatus.Idle;
         }
-
-        public Vary GetWarriorVary(int warriorMID)
-        {
-            return null;
-        }
-
+        
         public void LocakVary(object vary, bool b)
         {
             

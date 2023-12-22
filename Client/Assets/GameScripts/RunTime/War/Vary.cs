@@ -15,5 +15,6 @@ namespace GameScripts.RunTime.War
 
         public Dictionary<string, string> CmdDic;
         public int? ProtectId;
+        public List<TriggerPassiveSkill> trigger_passive;
     }
 }
