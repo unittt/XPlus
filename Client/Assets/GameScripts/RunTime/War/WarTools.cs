@@ -1,4 +1,6 @@
 using cfg.WarModule;
+using Cysharp.Threading.Tasks;
+using HT.Framework;
 using Pb.Mmo.Common;
 using UnityEngine;
 
@@ -46,9 +48,16 @@ namespace GameScripts.RunTime.War
         // }
 
 
-        public static Warrior CreateWarrior(int campId,BaseWarrior baseWarrior)
-        {
-            return null;
-        }
+        
+        
+        
+        // public static async UniTask<Warrior> CreateWarrior(int campId,BaseWarrior baseWarrior)
+        // {
+        //     var warrior = await Main.m_Entity.CreateEntity<Warrior>();
+        //
+        //     baseWarrior.wid;
+        //     warrior.AssembleModel();
+        //     return warrior;
+        // }
     }
 }

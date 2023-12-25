@@ -20,7 +20,7 @@ namespace GameScripts.RunTime.War
         /// </summary>
         private List<int> meleeMagic = new() {1101,1102,1104,1105,1106,1107,1601,1602,1603,1604,1606,1607,7301,7302,7303,8301,8302,8303,8101,8102,8103,8104,8201,8202,8203,101};
 
-        public void FirstSpecityWar()
+        public void FirstSpecifyWar()
         {
             war_id = AttrManager.Current.pid;
             
@@ -32,7 +32,7 @@ namespace GameScripts.RunTime.War
                 is_bosswar = true,
                 sky_war = 0,
                 weather = 2,
-                map_id = 0,
+                map_id = 1010,
                 x = 0,
                 y = 0
             };
@@ -40,15 +40,15 @@ namespace GameScripts.RunTime.War
 
             //2.加人
             AddWarriors();
-            
-            //3.回合开始
-            var gs2CWarBoutStart = new GS2CWarBoutStart
-            {
-                war_id = war_id,
-                bout_id = 1,
-                left_time = 30
-            };
-            NetWar.Current.GS2CWarBoutStart(gs2CWarBoutStart);
+            //
+            // //3.回合开始
+            // var gs2CWarBoutStart = new GS2CWarBoutStart
+            // {
+            //     war_id = war_id,
+            //     bout_id = 1,
+            //     left_time = 30
+            // };
+            // NetWar.Current.GS2CWarBoutStart(gs2CWarBoutStart);
 
             
             //4.回合1
@@ -128,7 +128,7 @@ namespace GameScripts.RunTime.War
             {
                 addPlayerWarrior.warrior.status.model_info.figure = 1110;
                 addPlayerWarrior.warrior.status.model_info.shape = 1110;
-                addPlayerWarrior.warrior.status.model_info.weapon = 21006;
+                addPlayerWarrior.warrior.status.model_info.weapon = 1;
             }
             else
             {
@@ -145,6 +145,7 @@ namespace GameScripts.RunTime.War
             warriorEnter.wid = 1;
             NetWar.Current.GS2CPlayerWarriorEnter(warriorEnter);
             
+            Log.Info("--------------------------111");
             AddPartnerWarrior("许仙三魂",21011,2,2,2);
             AddPartnerWarrior("许仙七魄",21012,3,3,3);
             

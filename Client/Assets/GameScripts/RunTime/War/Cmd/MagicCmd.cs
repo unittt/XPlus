@@ -18,9 +18,7 @@ namespace GameScripts.RunTime.War
 
         public override void Execute()
         {
-            //1.获取攻击者对象
-            //2.处理被动技能 检查攻击者是否有由魔法命令触发的被动技能（trigger_passive）。如果有，就执行这些被动命令。
-            //3.检查并通知命令：调用 oCmd:CheckNotifyCmds 可能基于攻击者的状态或条件处理命令的其他方面。
+            
             //4.处理弹幕命令：如果有与弹幕相关的特定命令（infoBulletBarrage_cmd），则执行该命令。
             //5.处理受害者 ID 和附加动作：如果没有指定受害者 ID（vicid_list），则对攻击者执行额外动作，如插入删除或生存命令。
             //6.处理说话命令：遍历所有战士，并执行与他们相关的任何说话命令（speek_cmd）。
@@ -30,13 +28,14 @@ namespace GameScripts.RunTime.War
             //10.处理返回命令：如果攻击者有返回命令，根据某些条件执行或忽略它。
             //11.处理保护机制：对每个受害者检查是否有保护机制（如一个战士跑去保护另一个），并执行相关动作。
             
+            //1.获取攻击者对象
             var atkObj = WarManager.Current.GetWarrior(atkid);
             if (atkObj is null)
             {
                 return;
             }
 
-            //被动技能
+            //2.处理被动技能 检查攻击者是否有由魔法命令触发的被动技能（trigger_passive）。如果有，就执行这些被动命令。
             var dAtkVary = GetWarriorVary(atkid);
             var passiveMaxIndex = dAtkVary.trigger_passive.Count - 1;
             for (var i = passiveMaxIndex; i >= 0; i--)
@@ -47,7 +46,11 @@ namespace GameScripts.RunTime.War
                 //移除技能
                 dAtkVary.trigger_passive.Remove(oCmd);
             }
+            
+            //3.检查并通知命令：调用 oCmd:CheckNotifyCmds 可能基于攻击者的状态或条件处理命令的其他方面。
             // oCmd:CheckNotifyCmds(dAtkVary, 0)
+            
+            
         }
     }
 }

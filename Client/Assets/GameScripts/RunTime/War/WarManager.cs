@@ -1,18 +1,17 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using GameScripts.RunTime.Attr;
+using GridMap;
 using HT.Framework;
 using Pb.Mmo.Common;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace GameScripts.RunTime.War
 {
     /// <summary>
     /// 战斗管理器
     /// </summary>
-    public sealed class WarManager : SingletonBehaviourBase<WarManager>
+    public sealed class WarManager : SingletonBehaviourBase<WarManager>,IUpdateFrame
     {
 
 
@@ -60,7 +59,7 @@ namespace GameScripts.RunTime.War
     
         
 
-        private List<WarCmd> _cmdList;
+        private List<WarCmd> _cmdList = new List<WarCmd>();
         /// <summary>
         /// 盟友阵营
         /// </summary>
@@ -81,30 +80,38 @@ namespace GameScripts.RunTime.War
         /// 启动战斗
         /// </summary>
         /// <param name="gs2CShowWar"></param>
-        public void Start(GS2CShowWar gs2CShowWar)
+        public async UniTaskVoid Start(GS2CShowWar gs2CShowWar)
         {
-            if (AttrManager.Current.pid == 0)
-            {
-                Log.Error("pid为0，标识客户端已进入重登流程");
-                return;
-            }
-            
-            //清理数据
+            // if (AttrManager.Current.pid == 0)
+            // {
+            //     Log.Error("pid为0，标识客户端已进入重登流程");
+            //     return;
+            // }
+           
+            //1.清理数据
             Clear();
-            //1.关闭移动
+            //2.重置数据
+            ResetFields(gs2CShowWar);
+            //3.关闭移动
             WarTouch.SetLock(false);
             
-            //2.播放背景音乐
+            //4.播放背景音乐
             _bout = 1;
             _actionFlag = 1;
             _isWarStart = true;
             _chatMsgCnt = 0;
             
+            //加载地图数据
+            var textAsset = await Main.m_Resource.LoadAsset<TextAsset>("mapdata_1010");
+            var mapData = MapData.Deserialize(textAsset.text);
+            MapManager.Current.SetMapData(mapData);
+            MapManager.Current.ShowByPosition(new Vector2(gs2CShowWar.x, gs2CShowWar.y));
             
             _root.gameObject.SetActive(true);
             //触发战斗开始事件
+            m_WaitTime = true;
         }
-
+        
 
         private void ResetFields(GS2CShowWar gs2CShowWar)
         {
@@ -359,28 +366,29 @@ namespace GameScripts.RunTime.War
           
         }
 
-
-        private List<WarCmd> m_CmdList;
-        private bool m_WaitTime;
         
-   
+        private bool m_WaitTime;
+
+        
+        public void OnUpdateFrame()
+        {
+            UpdateCmds();
+        }
 
         public void UpdateCmds()
         {
-            if (m_WaitTime)return;
+            if (m_WaitTime || _cmdList.Count == 0)return;
 
-            while (m_CmdList.Count > 0)
+            var cmd = _cmdList[0];
+            if (cmd.Status == WarCmdStatus.Idle)
             {
-                var cmd = m_CmdList[0];
-                if (cmd.IsUsed)
-                {
-                    m_CmdList.Remove(cmd);
-                }
-                else
-                {
-                    cmd.Execute();
-                }
+                cmd.Execute();
             }
+
+            if (cmd.Status != WarCmdStatus.Completed) return;
+            //移除
+            _cmdList.Remove(cmd);
+            Main.m_ReferencePool.Despawn(cmd);
         }
 
         /// <summary>

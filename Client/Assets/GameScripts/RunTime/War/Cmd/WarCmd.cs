@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Cysharp.Threading.Tasks;
 using HT.Framework;
 
 namespace GameScripts.RunTime.War
@@ -73,18 +72,11 @@ namespace GameScripts.RunTime.War
 
         public virtual void Execute()
         {
-            var cancelToken = new CancellationToken();
-            ExecuteInternal(cancelToken).Forget();
-        }
-
-        private async UniTaskVoid ExecuteInternal(CancellationToken token)
-        {
-            Status = WarCmdStatus.Wait;
-            await UniTask.WaitUntil(IsCanExecute, cancellationToken: token);
+            if (!IsCanExecute())return;
             Status = WarCmdStatus.Running;
-            OnExecute();
+            OnExecute();;
         }
-
+        
         /// <summary>
         /// 是否能够执行
         /// </summary>
@@ -103,6 +95,21 @@ namespace GameScripts.RunTime.War
             // return null;
         }
 
+
+        /// <summary>
+        /// 设置为完成
+        /// </summary>
+        public void SetCompleted()
+        {
+            if (Status == WarCmdStatus.Completed) return;
+            Status = WarCmdStatus.Completed;
+            OnCompleted();
+        }
+
+        protected void OnCompleted()
+        {
+            
+        }
         
         /// <summary>
         /// 清除变化
@@ -259,10 +266,6 @@ namespace GameScripts.RunTime.War
         /// 闲置
         /// </summary>
         Idle,
-        /// <summary>
-        /// 等待
-        /// </summary>
-        Wait,
         /// <summary>
         /// 运行中
         /// </summary>

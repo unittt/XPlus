@@ -89,24 +89,16 @@ namespace GameScripts.RunTime.Model
         /// 装配演员
         /// </summary>
         /// <param name="modelInfo"></param>
-        public virtual void AssembleModel(ModelInfo modelInfo)
+        public async UniTask AssembleModel(ModelInfo modelInfo)
         {
             ModelInfo = modelInfo;
-            AssembleModel().Forget();
-        }
-        
-        /// <summary>
-        /// 装配模型
-        /// </summary>
-        private async UniTaskVoid AssembleModel()
-        {
             foreach (var model in _models)
             {
                 await model.CreateEntity();
             }
             OnAssembleModelFinish();
         }
-
+        
         protected virtual void OnAssembleModelFinish()
         {
             

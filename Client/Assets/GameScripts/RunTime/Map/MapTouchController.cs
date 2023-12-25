@@ -42,6 +42,6 @@ public sealed class MapTouchController : MonoBehaviour
         var hit = Physics2D.Raycast(mousePosition, Vector2.zero, Mathf.Infinity, LayerMask);
         OnMouseDown?.Invoke(mousePosition, hit.collider?.gameObject);
         
-        _walker.WalkTo(mousePosition);
+        _walker?.WalkTo(mousePosition);
     }
 }

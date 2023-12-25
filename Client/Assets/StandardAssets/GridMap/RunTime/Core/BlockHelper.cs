@@ -125,7 +125,7 @@ namespace GridMap
         /// 动态刷新Block
         /// </summary>
         /// <param name="rect"></param>
-        private void DynamicsRefreshBlockByRect(Rect rect)
+        internal void DynamicsRefreshBlockByRect(Rect rect)
         {
             if (!MapManager.IsDynamics)return;
             

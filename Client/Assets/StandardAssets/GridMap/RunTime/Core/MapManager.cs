@@ -116,6 +116,12 @@ namespace GridMap
                 helper.OnSetMapData(mapData);
             }
         }
+
+        public void ShowByPosition(Vector2 position)
+        {
+            CameraHelper.SetPosition(position);
+            BlockHelper.DynamicsRefreshBlockByRect(CameraHelper.GetCameraViewRect());
+        }
         
         /// <summary>
         /// 网格图参数发生改变
@@ -228,20 +234,5 @@ namespace GridMap
             return _mapData.TryGetNode(worldPos, out nodeTag);
         }
         #endregion
-
-        /// <summary>
-        /// 显示地图
-        /// </summary>
-        /// <param name="pbDataMapID"></param>
-        /// <param name="vector2"></param>
-        public void ShowMap(int pbDataMapID, Vector2 vector2)
-        {
-            
-        }
-
-        public void ShowMap(MapData mapData, bool isDynamics = true)
-        {
-            
-        }
     }
 }

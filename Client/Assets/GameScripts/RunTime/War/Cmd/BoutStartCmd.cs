@@ -25,6 +25,7 @@ namespace GameScripts.RunTime.War
         protected override void OnExecute()
         {
             WarManager.Current.WarBoutStart(bout_id, left_time);
+            // Status = WarCmdStatus.Completed;
         }
     }
 }

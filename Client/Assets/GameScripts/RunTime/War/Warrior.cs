@@ -203,6 +203,21 @@ namespace GameScripts.RunTime.War
         {
             return Vector3.zero;
         }
+
+        public void TriggerPassiveSkill(int pfid)
+        {
+         
+        }
+
+        public void UpdateAutoMagic()
+        {
+           
+        }
+
+        public void ShowWarAnim()
+        {
+            
+        }
     }
     
     

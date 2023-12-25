@@ -1,8 +1,6 @@
 using GameScripts.RunTime.War;
-using GridMap;
 using HT.Framework;
 using Pb.Mmo.Common;
-using UnityEngine;
 
 namespace GameScripts.RunTime.Net
 {
@@ -28,7 +26,6 @@ namespace GameScripts.RunTime.Net
             }
             
             WarManager.Current.Start(pbData);
-            MapManager.Current.ShowMap(pbData.map_id, new Vector2(pbData.x, pbData.y));
         }
 
         
@@ -71,12 +68,13 @@ namespace GameScripts.RunTime.Net
         /// <param name="addPlayerWarrior"></param>
         public void GS2CWarAddWarrior(GS2CWarAddPlayerWarrior addPlayerWarrior)
         {
+          
             //如果战场编号不一致 return
             if ( WarManager.Current.WarID != addPlayerWarrior.war_id)
             {
                 return;
             }
-            
+           
             //判断是不是当前玩家
             if (addPlayerWarrior.warrior.pid == WarManager.Current.GetHeroPid())
             {
@@ -96,10 +94,9 @@ namespace GameScripts.RunTime.Net
 
             //添加玩家指令
             var addWarriorCmd =  Main.m_ReferencePool.Spawn<AddWarriorCmd>();
-            addWarriorCmd.Warrior = addPlayerWarrior.warrior;
+            addWarriorCmd.BaseWarrior = addPlayerWarrior.warrior;
             addWarriorCmd.camp_id = addPlayerWarrior.camp_id;
             addWarriorCmd.is_summon = addPlayerWarrior.is_summon;
-
             //插入指令
             WarManager.Current.InsertCmd(addWarriorCmd);
         }
@@ -108,7 +105,7 @@ namespace GameScripts.RunTime.Net
         {
             //添加玩家指令
             var addWarriorCmd =  Main.m_ReferencePool.Spawn<AddWarriorCmd>();
-            addWarriorCmd.Warrior = addNpcWarrior.warrior;
+            addWarriorCmd.BaseWarrior = addNpcWarrior.warrior;
             addWarriorCmd.camp_id = addNpcWarrior.camp_id;
             addWarriorCmd.is_summon = addNpcWarrior.is_summon;
 
@@ -120,7 +117,7 @@ namespace GameScripts.RunTime.Net
         {
             //添加玩家指令
             var addWarriorCmd =  Main.m_ReferencePool.Spawn<AddWarriorCmd>();
-            addWarriorCmd.Warrior = addPartnerWarrior.warrior;
+            addWarriorCmd.BaseWarrior = addPartnerWarrior.warrior;
             addWarriorCmd.camp_id = addPartnerWarrior.camp_id;
             addWarriorCmd.is_summon = addPartnerWarrior.is_summon;
 

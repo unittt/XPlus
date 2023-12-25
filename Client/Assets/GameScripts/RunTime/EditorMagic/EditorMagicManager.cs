@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Cysharp.Threading.Tasks;
 using GameScript.RunTime.Procedure;
 using GameScripts.RunTime.Magic;
 using GameScripts.RunTime.Magic.Command;
+using GameScripts.RunTime.War;
 using HT.Framework;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace GameScripts.RunTime.EditorMagic
 {
@@ -87,9 +90,19 @@ namespace GameScripts.RunTime.EditorMagic
                 MagicDatas.Add(textAsset.name, textAsset.bytes);
             }
 
-            Main.m_UI.OpenUI<UIEditorMagic>();
+            InitLoad().Forget();
+          
         }
 
+        private static async UniTaskVoid InitLoad()
+        {
+            await Main.m_Resource.LoadSceneAsync("Game",null,LoadSceneMode.Additive);
+            await Main.m_UI.OpenUI<UIEditorMagic>();
+
+            WarSimulate simulate = new WarSimulate();
+            simulate.FirstSpecifyWar();
+        }
+        
         /// <summary>
         /// 编辑法术
         /// </summary>

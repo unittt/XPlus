@@ -58,6 +58,18 @@ namespace GridMap
 
 
         /// <summary>
+        /// 设置position
+        /// </summary>
+        /// <param name="position"></param>
+        public void SetPosition(Vector2 position)
+        {
+            var pos =  _mainCamera.transform.position;
+            pos.x = position.x;
+            pos.y = position.y;
+            _mainCamera.transform.position = pos;
+        }
+
+        /// <summary>
         /// 获得相机的可视区域
         /// </summary>
         /// <returns></returns>
