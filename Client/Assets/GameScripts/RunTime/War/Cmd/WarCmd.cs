@@ -61,7 +61,7 @@ namespace GameScripts.RunTime.War
         
         public WarCmdStatus Status { get; private set; }
 
-        public Dictionary<int, Vary> m_VaryInfo;
+        public Dictionary<int, Vary> m_VaryInfo = new Dictionary<int, Vary>();
 
         public void Fill(Action action)
         {
@@ -70,11 +70,12 @@ namespace GameScripts.RunTime.War
         }
 
 
-        public virtual void Execute()
+        public bool TryExecute()
         {
-            if (!IsCanExecute())return;
+            if (Status != WarCmdStatus.Idle || !IsCanExecute()) return false;
             Status = WarCmdStatus.Running;
-            OnExecute();;
+            OnExecute();
+            return true;
         }
         
         /// <summary>
@@ -241,7 +242,7 @@ namespace GameScripts.RunTime.War
         }
         
 
-        public void Reset()
+        public virtual void Reset()
         {
             ID = 0;
             IsUsed = false;

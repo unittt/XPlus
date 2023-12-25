@@ -1,3 +1,4 @@
+using cfg.WarModule;
 using Cysharp.Threading.Tasks;
 using HT.Framework;
 using Pb.Mmo.Common;
@@ -23,8 +24,6 @@ namespace GameScripts.RunTime.War
                //删除对象
                WarManager.Current.DelWarriorByCampAndPos(camp_id, BaseWarrior.pos);
            }
-           
-           Log.Info($"-----------------加载{camp_id}");
            CreateEntity().Forget();
         }
 
@@ -36,7 +35,10 @@ namespace GameScripts.RunTime.War
             //装载模型
             await warrior.AssembleModel(BaseWarrior.status.model_info);
             //设置坐标
-            
+            // warrior.SetOriginPos(WarTools.GetPositionByCampAndIndex(ECamp.A,  BaseWarrior.pos));
+            var camp = (ECamp)camp_id;
+            warrior.Entity.transform.position = WarTools.GetPositionByCampAndIndex(camp, BaseWarrior.pos);
+            warrior.Entity.transform.localEulerAngles = WarTools.GetDefalutRotateAngle(camp);
             //如果是玩家 或者召唤物
             if (BaseWarrior is PlayerWarrior or SumWarrior)
             {

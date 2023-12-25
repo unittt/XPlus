@@ -59,7 +59,7 @@ namespace GameScripts.RunTime.War
     
         
 
-        private List<WarCmd> _cmdList = new List<WarCmd>();
+        private List<WarCmd> _cmdList = new();
         /// <summary>
         /// 盟友阵营
         /// </summary>
@@ -80,7 +80,7 @@ namespace GameScripts.RunTime.War
         /// 启动战斗
         /// </summary>
         /// <param name="gs2CShowWar"></param>
-        public async UniTaskVoid Start(GS2CShowWar gs2CShowWar)
+        public async UniTaskVoid StartWar(GS2CShowWar gs2CShowWar)
         {
             // if (AttrManager.Current.pid == 0)
             // {
@@ -109,7 +109,7 @@ namespace GameScripts.RunTime.War
             
             _root.gameObject.SetActive(true);
             //触发战斗开始事件
-            m_WaitTime = true;
+            m_WaitTime = false;
         }
         
 
@@ -332,18 +332,18 @@ namespace GameScripts.RunTime.War
         public void InsertCmd(WarCmd warCmd)
         {
             //如果是结束
-            if (warCmd is BoutEndCmd)
-            {
-                for (var i = 0; i < _cmdList.Count; i++)
-                {
-                    if (_cmdList[i] is not BoutStartCmd) continue;
-                    _cmdList[i + 1] = warCmd;
-                    return;
-                }
-                
-                warCmd.Execute();
-                return;
-            }
+            // if (warCmd is BoutEndCmd)
+            // {
+            //     for (var i = 0; i < _cmdList.Count; i++)
+            //     {
+            //         if (_cmdList[i] is not BoutStartCmd) continue;
+            //         _cmdList[i + 1] = warCmd;
+            //         return;
+            //     }
+            //     
+            //     warCmd.TryExecute();
+            //     return;
+            // }
             
             _cmdList.Add(warCmd);
         }
@@ -367,22 +367,22 @@ namespace GameScripts.RunTime.War
         }
 
         
-        private bool m_WaitTime;
+        private bool m_WaitTime = true;
 
-        
+
         public void OnUpdateFrame()
         {
             UpdateCmds();
         }
 
-        public void UpdateCmds()
+        private void UpdateCmds()
         {
             if (m_WaitTime || _cmdList.Count == 0)return;
 
             var cmd = _cmdList[0];
             if (cmd.Status == WarCmdStatus.Idle)
             {
-                cmd.Execute();
+                cmd.TryExecute();
             }
 
             if (cmd.Status != WarCmdStatus.Completed) return;

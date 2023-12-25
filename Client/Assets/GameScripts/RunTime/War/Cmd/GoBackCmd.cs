@@ -7,7 +7,7 @@ namespace GameScripts.RunTime.War
         public List<int>  wid_list;
         public bool wait;
 
-        public override void Execute()
+        protected override void OnExecute()
         {
             foreach (var wid in wid_list)
             {

@@ -100,7 +100,7 @@ namespace GameScripts.RunTime.War
             var addPlayerWarrior = new GS2CWarAddPlayerWarrior
             {
                 war_id = war_id,
-                camp_id = 1,
+                camp_id = 0,
                 warrior = new PlayerWarrior
                 {
                     wid = 1,
@@ -145,17 +145,15 @@ namespace GameScripts.RunTime.War
             warriorEnter.wid = 1;
             NetWar.Current.GS2CPlayerWarriorEnter(warriorEnter);
             
-            Log.Info("--------------------------111");
-            AddPartnerWarrior("许仙三魂",21011,2,2,2);
-            AddPartnerWarrior("许仙七魄",21012,3,3,3);
-            
-            
+        
+            AddPartnerWarrior("许仙三魂",3106,2,2,2);
+            AddPartnerWarrior("许仙七魄",3106,3,3,3);
             
             // 敌方========================================================================
             
             var addNpcWarrior = new GS2CWarAddNpcWarrior
             {
-                camp_id = 2,
+                camp_id = 1,
                 war_id = war_id,
                 warrior = new NpcWarrior
                 {
@@ -186,7 +184,7 @@ namespace GameScripts.RunTime.War
         {
             var addPartnerWarrior = new GS2CWarAddPartnerWarrior
             {
-                camp_id = 1,
+                camp_id = 0,
                 war_id = war_id,
                 warrior = new PartnerWarrior
                 {
@@ -211,6 +209,7 @@ namespace GameScripts.RunTime.War
                         model_info = new ModelInfo
                         {
                             figure = figure,
+                            shape = figure
                         }
                     }
                 }

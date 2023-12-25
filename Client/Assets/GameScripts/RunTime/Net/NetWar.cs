@@ -25,7 +25,7 @@ namespace GameScripts.RunTime.Net
                 // WarManager.Current.m_IsPlayRecord
             }
             
-            WarManager.Current.Start(pbData);
+            WarManager.Current.StartWar(pbData);
         }
 
         

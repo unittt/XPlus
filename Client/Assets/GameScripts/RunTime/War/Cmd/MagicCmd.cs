@@ -16,7 +16,8 @@ namespace GameScripts.RunTime.War
         public int magic_index;
 
 
-        public override void Execute()
+        
+        protected override void OnExecute()
         {
             
             //4.处理弹幕命令：如果有与弹幕相关的特定命令（infoBulletBarrage_cmd），则执行该命令。
@@ -42,7 +43,7 @@ namespace GameScripts.RunTime.War
             {
                 var oCmd = dAtkVary.trigger_passive[i];
                 //获得被动技能数据
-                oCmd.Execute();
+                oCmd.TryExecute();
                 //移除技能
                 dAtkVary.trigger_passive.Remove(oCmd);
             }

@@ -42,10 +42,10 @@ namespace GameScripts.RunTime.War
             return new Vector3(0, 130, 0);
         }
 
-        // public static void xxxxxx()
-        // {
-        //     TableGlobal.Instance.TbWarPosition.GetPosition()
-        // }
+        public static Vector3 GetPositionByCampAndIndex(ECamp camp, int index)
+        {
+            return TableGlobal.Instance.TbWarPosition.GetPosition(camp, index);
+        }
 
 
         

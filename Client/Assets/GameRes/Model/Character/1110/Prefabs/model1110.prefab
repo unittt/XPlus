@@ -230,7 +230,6 @@ GameObject:
   - component: {fileID: 4000013725215880}
   - component: {fileID: 95000010312979324}
   - component: {fileID: 2454030492155921191}
-  - component: {fileID: 3109016489780774844}
   m_Layer: 0
   m_Name: model1110
   m_TagString: Untagged
@@ -325,28 +324,6 @@ MonoBehaviour:
       objectValue: {fileID: 4000012759938090}
       dataValue: 
       variableType: 2
---- !u!114 &3109016489780774844
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000012131937294}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 65b1629e99c826944b2ca59715aa6098, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  animName: attack1
-  effectLen: 1
-  effectSerial1:
-  - {fileID: 0}
-  effectSerial2:
-  - 
-  soundLen: 1
-  soundSerial1:
-  - 
-  soundSerial2: 00000000
 --- !u!1 &1000012173506178
 GameObject:
   m_ObjectHideFlags: 0
