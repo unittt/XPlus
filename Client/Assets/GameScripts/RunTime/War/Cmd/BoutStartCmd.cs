@@ -1,5 +1,3 @@
-using Cysharp.Threading.Tasks;
-
 namespace GameScripts.RunTime.War
 {
     /// <summary>
@@ -7,25 +5,19 @@ namespace GameScripts.RunTime.War
     /// </summary>
     public class BoutStartCmd : WarCmd
     {
+        /// <summary>
+        /// 回合id
+        /// </summary>
         public int bout_id;
+        /// <summary>
+        /// 倒计时
+        /// </summary>
         public int left_time;
         
-        protected override bool IsCanExecute()
-        {
-            //1.等待所有的指令执行完成
-            //2.调用BoutStart(bout_id, left_time);
-            return base.IsCanExecute();
-        }
-
-        // protected override void OnExecute()
-        // {
-        //     WarManager.Current.WarBoutStart(bout_id, left_time);
-        // }
-
         protected override void OnExecute()
         {
             WarManager.Current.WarBoutStart(bout_id, left_time);
-            // Status = WarCmdStatus.Completed;
+            SetCompleted();
         }
     }
 }

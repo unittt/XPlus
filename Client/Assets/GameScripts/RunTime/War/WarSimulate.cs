@@ -40,15 +40,15 @@ namespace GameScripts.RunTime.War
 
             //2.加人
             AddWarriors();
-            //
-            // //3.回合开始
-            // var gs2CWarBoutStart = new GS2CWarBoutStart
-            // {
-            //     war_id = war_id,
-            //     bout_id = 1,
-            //     left_time = 30
-            // };
-            // NetWar.Current.GS2CWarBoutStart(gs2CWarBoutStart);
+       
+            //3.回合开始
+            var gs2CWarBoutStart = new GS2CWarBoutStart
+            {
+                war_id = war_id,
+                bout_id = 1,
+                left_time = 30
+            };
+            NetWar.Current.GS2CWarBoutStart(gs2CWarBoutStart);
 
             
             //4.回合1

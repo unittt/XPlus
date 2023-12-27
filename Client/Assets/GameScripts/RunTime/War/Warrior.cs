@@ -218,6 +218,33 @@ namespace GameScripts.RunTime.War
         {
             
         }
+
+
+        /// <summary>
+        /// 用于存储与战斗相关的一些浮动（动态变化的）信息。具体来说，m_FloatHitInfo 似乎用于追踪和管理角色在战斗中的某些特定状态或事件
+        /// down_timer、restore_timer：这些可能是与计时相关的字段，用于追踪某些状态或效果的持续时间。
+        /// first_atkid、last_atk_id：这些字段可能用于存储首次攻击者和最后一次攻击者的标识符（ID），这在处理连击、反击或特殊事件时可能非常有用。
+        /// atkids：这个字段可能是一个包含攻击者ID的列表或集合，用于追踪战斗中涉及的所有攻击者
+        /// record：这个布尔类型的字段可能用于指示是否应该记录或激活某些功能或状态
+        /// </summary>
+        private object m_FloatHitInfo; 
+
+        /// <summary>
+        /// 回合开始
+        /// </summary>
+        public void Bout()
+        {
+          
+            //1.刷新回合的所有参数
+            //2.处理buff 的回合开始
+            //3.处理施法cd
+            //4.清理战斗相关的浮动信息
+            // m_FloatHitInfo.first_atkid = 0;
+            // m_FloatHitInfo.atkids = null;
+            // m_FloatHitInfo.record = false;
+            // m_FloatHitInfo.laset_atk_id = 0;
+            //5.检查错误
+        }
     }
     
     

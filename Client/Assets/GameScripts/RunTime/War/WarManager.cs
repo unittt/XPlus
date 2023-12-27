@@ -53,11 +53,17 @@ namespace GameScripts.RunTime.War
         private static bool m_IsWarStart;
 
         /// <summary>
+        /// 当前回合数
+        /// </summary>
+        public int m_Bout { get; private set; }
+        
+        /// <summary>
         /// 当前协议属于哪一Bout(回合)
         /// </summary>
         public int m_ProtoBout { get; set; }
-    
-        
+
+
+
 
         private List<WarCmd> _cmdList = new();
         /// <summary>
@@ -168,15 +174,21 @@ namespace GameScripts.RunTime.War
         /// <param name="data"></param>
         public void WarBoutStart(GS2CWarBoutStart data)
         {
+            
             if (m_IsWarStart)
             {
                 //战斗刚开始 刷新所有位置
                 RefreshAllPos();
             }
-        
+            
             //记录回合
+            m_Bout = data.bout_id;
             //遍历战士
-            //触发战士的回合开始
+            foreach (var warrior in _warriors.Values)
+            {
+                //触发战士的回合开始
+                warrior.Bout();
+            }
         }
 
         /// <summary>
@@ -399,9 +411,14 @@ namespace GameScripts.RunTime.War
             
         }
 
+        /// <summary>
+        /// 回合开始
+        /// </summary>
+        /// <param name="boutID"></param>
+        /// <param name="leftTime"></param>
         public void WarBoutStart(int boutID, int leftTime)
         {
-            
+            _bout = boutID;
         }
 
         public void BoutEnd()
