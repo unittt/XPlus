@@ -52,7 +52,7 @@ namespace GameScripts.RunTime.War
 
             
             //4.回合1
-
+            Bout0();
             //5.回合2
             //6.回合3
         }
