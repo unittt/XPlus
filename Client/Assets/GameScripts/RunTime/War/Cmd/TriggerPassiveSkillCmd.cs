@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using HT.Framework;
 
 namespace GameScripts.RunTime.War
 {
@@ -14,14 +15,21 @@ namespace GameScripts.RunTime.War
 
         protected override void OnExecute()
         {
-            if ( WarManager.Current.TryGetWarrior(wid,out var warrior))
+            
+            $"CWarCmd.TriggerPassiveSkill 指令触发被动技能 {pfid.ToString()}".Info();
+            if (!WarManager.Current.TryGetWarrior(wid,out var warrior))
             {
-                warrior.TriggerPassiveSkill(pfid);
-                //执行技能
-                
-                
-                
+                return;
             }
+            
+            //触发被动技能
+            warrior.TriggerPassiveSkill(pfid, keyList);
+
+            if (keyList is null || keyList.Count == 0)
+            {
+                return;
+            }
+            
         }
     }
 }

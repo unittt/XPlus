@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using GameScript.RunTime.Config;
@@ -21,6 +22,10 @@ namespace GameScripts.RunTime.War
         private Busy currentStatus;
 
         public int m_ID;
+
+
+        private int m_arge_5703 = 0;
+        private int m_arge_5704 = 0;
         #region 行为
         public void GoBack()
         {
@@ -204,9 +209,68 @@ namespace GameScripts.RunTime.War
             return Vector3.zero;
         }
 
-        public void TriggerPassiveSkill(int pfid)
+        public void TriggerPassiveSkill(int pfid, Dictionary<string, int> keyList)
         {
-         
+
+            var needTip = true;
+
+            if (pfid == 5703)
+            {
+                //狂暴
+                needTip = m_arge_5703 == 0;
+                m_arge_5703 = needTip ? 1 : 0;
+                if (needTip)
+                {
+                    AddBindObj("warrior_statu_5703");
+                }
+                else
+                {
+                    DelBindObj("warrior_statu_5703");
+                }
+            }
+            else if (pfid == 5704)
+            {
+                //好战
+            }
+
+            if (needTip)
+            {
+                //获得被动技能数据
+                // var passiveData = DataTools.GetMaigcPassiveData(pfid);
+                
+            }
+
+            if (keyList != null)
+            {
+                foreach (var pair in keyList)
+                {
+                    if (pair.Key == "ghost")
+                    {
+                        RefeshStatusGohst(pfid, pair.Key, pair.Value);
+                    }
+                }
+            }
+        }
+
+        private void DelBindObj(string warriorStatu)
+        {
+            
+        }
+
+        private void AddBindObj(string warriorStatu)
+        {
+           
+        }
+
+        /// <summary>
+        /// 魄实现
+        /// </summary>
+        /// <param name="pfid"></param>
+        /// <param name="pairKey"></param>
+        /// <param name="pairValue"></param>
+        private void RefeshStatusGohst(int pfid, string pairKey, int pairValue)
+        {
+           
         }
 
         public void UpdateAutoMagic()

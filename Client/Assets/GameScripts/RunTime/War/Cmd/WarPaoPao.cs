@@ -1,3 +1,5 @@
+using HT.Framework;
+
 namespace GameScripts.RunTime.War
 {
     public class WarPaoPao : WarCmd
@@ -14,9 +16,6 @@ namespace GameScripts.RunTime.War
             //显示Boss的 oView:AddMsg(oWarrior.m_Actor.m_Shape, v.content, 2)
             //等待几秒关闭 不阻塞进程
             
-            
-            //如果为角色消息
-            //
         }
     }
 }

@@ -6,7 +6,7 @@ TextureImporter:
   serializedVersion: 12
   mipmaps:
     mipMapMode: 0
-    enableMipMap: 1
+    enableMipMap: 0
     sRGBTexture: 1
     linearTexture: 0
     fadeOut: 0
@@ -36,13 +36,13 @@ TextureImporter:
     filterMode: 1
     aniso: 1
     mipBias: 0
-    wrapU: 0
-    wrapV: 0
+    wrapU: 1
+    wrapV: 1
     wrapW: 0
-  nPOTScale: 1
+  nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 0
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -51,9 +51,9 @@ TextureImporter:
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
-  alphaIsTransparency: 0
-  spriteTessellationDetail: -1
-  textureType: 0
+  alphaIsTransparency: 1
+  spriteTessellationDetail: 0
+  textureType: 8
   textureShape: 1
   singleChannelComponent: 0
   flipbookRows: 1
@@ -127,18 +127,323 @@ TextureImporter:
     forceMaximumCompressionQuality_BC6H_BC7: 0
   spriteSheet:
     serializedVersion: 2
-    sprites: []
-    outline: []
+    sprites:
+    - serializedVersion: 2
+      name: Number7_0
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 90
+        width: 31
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 122f287e37d2f0a4fa61c74f8750c9aa
+      internalID: -1658951507
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Number7_1
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 90
+        width: 21
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4b272868b6b81844b8cb41e173512330
+      internalID: 904722783
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Number7_2
+      rect:
+        serializedVersion: 2
+        x: 90
+        y: 90
+        width: 30
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 89b4bbee7bf46274b82eaffae3133560
+      internalID: -178935530
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Number7_3
+      rect:
+        serializedVersion: 2
+        x: 131
+        y: 90
+        width: 31
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2c5821e082e98f44985724bbd6261fcf
+      internalID: -940781814
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Number7_4
+      rect:
+        serializedVersion: 2
+        x: 174
+        y: 90
+        width: 31
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 213f9ccc0fafc3a4b919c67a9c4c3dfe
+      internalID: 638582908
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Number7_5
+      rect:
+        serializedVersion: 2
+        x: 216
+        y: 91
+        width: 30
+        height: 31
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 17f075650053f65449c823d5f4d605a3
+      internalID: 2024335462
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Number7_6
+      rect:
+        serializedVersion: 2
+        x: 6
+        y: 48
+        width: 30
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9d25ecdc00b4554ca06d15c995d72b2
+      internalID: -1143276081
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Number7_7
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 48
+        width: 29
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ae3c42024d8915646b7ea3ef9f075c91
+      internalID: -274964591
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Number7_8
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 48
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d99db40b5f32f3b47b9d401b99e21554
+      internalID: 1096358070
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Number7_9
+      rect:
+        serializedVersion: 2
+        x: 132
+        y: 48
+        width: 30
+        height: 33
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: aabc6352926370643acae2ba2b38a13a
+      internalID: -25812850
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline:
+    - - {x: -99, y: 19}
+      - {x: -117, y: 19}
+      - {x: -124, y: 3}
+      - {x: -124, y: -14}
+      - {x: -122, y: -18}
+      - {x: -97, y: -18}
+      - {x: -92, y: -14}
+      - {x: -90, y: -10}
+      - {x: -90, y: 7}
+    - - {x: -76, y: 18}
+      - {x: -82, y: 11}
+      - {x: -82, y: -1}
+      - {x: -80, y: -10}
+      - {x: -76, y: -18}
+      - {x: -65, y: -18}
+      - {x: -58, y: -15}
+      - {x: -49, y: 3}
+      - {x: -49, y: 16}
+      - {x: -55, y: 18}
+    - - {x: -32, y: 18}
+      - {x: -41, y: 13}
+      - {x: -41, y: -16}
+      - {x: -39, y: -18}
+      - {x: -11, y: -18}
+      - {x: -6, y: -17}
+      - {x: -5, y: -12}
+      - {x: -5, y: 15}
+      - {x: -10, y: 18}
+    - - {x: 6, y: 19}
+      - {x: 2, y: 12}
+      - {x: 2, y: -8}
+      - {x: 11, y: -18}
+      - {x: 27, y: -18}
+      - {x: 36, y: -9}
+      - {x: 36, y: 12}
+      - {x: 34, y: 19}
+    - - {x: -113, y: 60}
+      - {x: -124, y: 56}
+      - {x: -124, y: 27}
+      - {x: -121, y: 24}
+      - {x: -101, y: 24}
+      - {x: -89, y: 29}
+      - {x: -89, y: 47}
+      - {x: -96, y: 60}
+    - - {x: -73, y: 60}
+      - {x: -78, y: 53}
+      - {x: -78, y: 42}
+      - {x: -71, y: 24}
+      - {x: -57, y: 24}
+      - {x: -53, y: 34}
+      - {x: -53, y: 59}
+      - {x: -55, y: 60}
+    - - {x: -31, y: 60}
+      - {x: -37, y: 55}
+      - {x: -40, y: 51}
+      - {x: -40, y: 28}
+      - {x: -37, y: 24}
+      - {x: -12, y: 24}
+      - {x: -6, y: 37}
+      - {x: -6, y: 58}
+      - {x: -12, y: 60}
+    - - {x: 11, y: 60}
+      - {x: 1, y: 57}
+      - {x: 1, y: 27}
+      - {x: 2, y: 24}
+      - {x: 32, y: 24}
+      - {x: 36, y: 29}
+      - {x: 36, y: 56}
+      - {x: 33, y: 60}
+    - - {x: 72, y: 60}
+      - {x: 56, y: 60}
+      - {x: 46, y: 53}
+      - {x: 44, y: 41}
+      - {x: 44, y: 31}
+      - {x: 47, y: 27}
+      - {x: 57, y: 24}
+      - {x: 70, y: 24}
+      - {x: 79, y: 32}
+      - {x: 79, y: 50}
+      - {x: 78, y: 58}
+    - - {x: 86, y: 60}
+      - {x: 86, y: 29}
+      - {x: 90, y: 25}
+      - {x: 120, y: 25}
+      - {x: 120, y: 60}
     physicsShape: []
     bones: []
-    spriteID: 
-    internalID: 0
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 1537655665
     vertices: []
     indices: 
     edges: []
     weights: []
     secondaryTextures: []
-    nameFileIdTable: {}
+    nameFileIdTable:
+      Number7_0: -1658951507
+      Number7_1: 904722783
+      Number7_2: -178935530
+      Number7_3: -940781814
+      Number7_4: 638582908
+      Number7_5: 2024335462
+      Number7_6: -1143276081
+      Number7_7: -274964591
+      Number7_8: 1096358070
+      Number7_9: -25812850
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0
