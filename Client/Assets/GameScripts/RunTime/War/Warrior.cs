@@ -191,7 +191,7 @@ namespace GameScripts.RunTime.War
         }
 
         /// <summary>
-        /// 设置播放的施法ID
+        /// 设置当前施法的编号
         /// </summary>
         /// <param name="magicID"></param>
         public void SetPlayMagicID(int magicID)
@@ -310,6 +310,4 @@ namespace GameScripts.RunTime.War
             //5.检查错误
         }
     }
-    
-    
 }

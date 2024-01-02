@@ -33,7 +33,6 @@
 		<var name="LevelArgList" type="list,SchoolSkillLVArg" comment="技能等级"/>
 	</bean>
 	<table name="TbSchoolActiveSkill" value="SchoolActiveSkill" index="id" input="技能/门派主动技能.xlsx"/>
-	
-	
+
 	
 </module>

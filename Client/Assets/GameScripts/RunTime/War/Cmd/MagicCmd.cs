@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using GameScripts.RunTime.Magic;
 
 namespace GameScripts.RunTime.War
 {
@@ -14,6 +15,10 @@ namespace GameScripts.RunTime.War
         public List<int> vicid_list;
         public int magic_id;
         public int magic_index;
+        /// <summary>
+        /// 是否追捕
+        /// </summary>
+        public bool IsPursued;
 
 
         
@@ -50,8 +55,13 @@ namespace GameScripts.RunTime.War
             
             //3.检查并通知命令：调用 oCmd:CheckNotifyCmds 可能基于攻击者的状态或条件处理命令的其他方面。
             // oCmd:CheckNotifyCmds(dAtkVary, 0)
+
             
-            
+            var refVicObjs = new List<Warrior>();
+            //7.准备魔法单元和数据：准备一个新的魔法单元（oMagicUnit）并附上相关数据，如攻击者和受害者的引用。这部分涉及设置魔法单元以执行法术或能力
+            MagicManager.Current.NewMagicUnit(magic_id, magic_index, atkObj,refVicObjs, IsPursued).Forget();
+
+
         }
     }
 }

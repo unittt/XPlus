@@ -6,14 +6,23 @@ namespace GameScripts.RunTime.Magic.Command.Handler
 {
     public abstract class CmdHandler: IReference
     {
+        
         public MagicUnit MagicUnit { get; private set; }
+
+        public float StartTime { get; private set; }
+    
 
         public virtual void Fill(CommandData commandData)
         {
-            
+            StartTime = commandData.StartTime;
         }
         
         public virtual void Reset()
+        {
+           
+        }
+        
+        public virtual void Execute()
         {
            
         }
@@ -60,5 +69,7 @@ namespace GameScripts.RunTime.Magic.Command.Handler
 
             MagicUnit.GetTargets(isAlly, isAtk, isVic, isAlive, warriors);
         }
+
+      
     }
 }

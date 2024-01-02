@@ -20,5 +20,18 @@
 </enum>
 
 
+<!-- 
+	元素
+-->
+<enum name="EPassiveSkillType">
+	<var name="fire" alias="火" comment="气血上限"/>
+	<var name="wind" alias="风" comment="法力上限"/>
+	<var name="wind" alias="风" comment="速度"/>
+	<var name="water" alias="水" comment="物理攻击"/>
+	<var name="soil" alias="土" comment="物理命中物理闪避"/>
+	<var name="wind" alias="风" comment="法术攻击"/>
+	<var name="wind" alias="风" comment="法术防御"/>
+</enum>
+
 
 </module>

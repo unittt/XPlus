@@ -203,5 +203,11 @@ namespace GameScripts.RunTime.Model
         {
             
         }
+        
+        
+        public virtual string GetName()
+        {
+            return String.Empty;
+        }
     }
 }

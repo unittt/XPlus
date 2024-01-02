@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using cfg.SkillModule;
-using Cysharp.Threading.Tasks;
 using GameScripts.RunTime.Attr;
 using GameScripts.RunTime.Net;
 using HT.Framework;
@@ -56,6 +55,26 @@ namespace GameScripts.RunTime.War
             //5.回合2
             //6.回合3
         }
+        
+        void ApplyFormula(string formula)
+        {
+            // Example formula: "max_hp=level*9"
+            string[] parts = formula.Split('=');
+            string attribute = parts[0];
+            string expression = parts[1];
+
+            int level = 1; // Example level, this would come from your character data
+            int result = EvaluateExpression(expression, level);
+        }
+        
+        int EvaluateExpression(string expression, int level)
+        {
+            // Simple evaluation logic, expand as needed
+            // For example, replace 'level' with actual level value and evaluate expression
+            expression = expression.Replace("level", level.ToString());
+            return (int)new System.Data.DataTable().Compute(expression, null);
+        }
+        
         
         
         /// <summary>
