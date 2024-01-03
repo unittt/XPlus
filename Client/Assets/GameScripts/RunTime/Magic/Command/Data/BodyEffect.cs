@@ -9,7 +9,7 @@ namespace GameScripts.RunTime.Magic.Command
     public class BodyEffect:CommandData
     {
         [Argument("绑定人")]
-        [SelectHandler(typeof(SelectorHandler_Enum<ExecutorType>))]
+      
         public ExecutorType executor;
         
         [Argument("特效")]

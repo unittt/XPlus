@@ -121,8 +121,8 @@ MonoBehaviour:
         AssetTags: 
         UserData: 
     - GroupName: WarSound
-      GroupDesc: 
-      AssetTags: WarSound
+      GroupDesc: "\u6218\u6597\u97F3\u6548"
+      AssetTags: warsound
       ActiveRuleName: EnableGroup
       Collectors:
       - CollectPath: Assets/GameRes/Audio/Sound/War
@@ -131,5 +131,18 @@ MonoBehaviour:
         AddressRuleName: AddressByFileName
         PackRuleName: PackDirectory
         FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+    - GroupName: MagicEffect
+      GroupDesc: "\u65BD\u6CD5\u7279\u6548"
+      AssetTags: magiceffect
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/GameRes/Effect/Magic
+        CollectorGUID: 2a8a8a7c4b371a5439d567910e2ec190
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectPrefab
         AssetTags: 
         UserData: 

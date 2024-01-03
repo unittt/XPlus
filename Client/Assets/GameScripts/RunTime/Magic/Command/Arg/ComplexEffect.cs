@@ -7,6 +7,7 @@ namespace GameScripts.RunTime.Magic.Command
     public sealed class ComplexEffect : ComplexBase
     {
         [Argument("路径")]
+        [SelectHandler(typeof(SelectorHandler_SkillEff))]
         public string Path;
         
         [Argument("缓存")]

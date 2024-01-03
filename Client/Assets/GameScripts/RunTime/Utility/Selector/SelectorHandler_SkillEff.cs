@@ -2,18 +2,16 @@ using UnityEditor;
 
 namespace GameScripts.RunTime.Utility.Selector
 {
-
     /// <summary>
-    /// 战斗音效选择
+    /// 技能特效选择器
     /// </summary>
-    public class SelectorHandler_WarSound:SelectorHandler
+    public class SelectorHandler_SkillEff : SelectorHandler
     {
-       
 #if UNITY_EDITOR
-        private const string PATH = "Assets/GameRes/Audio/Sound/War";
-        public SelectorHandler_WarSound()
+        private const string PATH = "Assets/GameRes/Effect/Magic";
+        public SelectorHandler_SkillEff()
         {
-            var guids = AssetDatabase.FindAssets("t:AudioClip", new[] { PATH });
+            var guids = AssetDatabase.FindAssets("t:GameObject", new[] { PATH });
             foreach (var guid in guids)
             {
                 var assetPath = AssetDatabase.GUIDToAssetPath(guid);
@@ -22,7 +20,6 @@ namespace GameScripts.RunTime.Utility.Selector
             }
         }
 #endif
-        
         internal override object GetTermValue(string value)
         {
             return value;
