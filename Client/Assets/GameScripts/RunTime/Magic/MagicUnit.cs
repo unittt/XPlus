@@ -107,17 +107,11 @@ namespace GameScripts.RunTime.Magic
 
             for (var i = m_CurCmdIdx; i < _handlerList.Count; i++)
             {
-
-                if ( _handlerList[i].StartTime >= _elapsedTime)
-                {
-                    //开始执行
-                    _handlerList[i].Execute();
-                }
-               
-                
+                if (!(_handlerList[i].StartTime >= _elapsedTime)) continue;
+                //开始执行
+                _handlerList[i].Execute();
+                m_CurCmdIdx++;
             }
-
-
         }
 
 

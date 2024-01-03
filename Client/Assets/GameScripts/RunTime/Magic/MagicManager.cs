@@ -37,8 +37,6 @@ namespace GameScripts.RunTime.Magic
             }
         }
 
-
-  
         
         public void ResetCalcPosObject()
         {

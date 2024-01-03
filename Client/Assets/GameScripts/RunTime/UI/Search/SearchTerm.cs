@@ -5,14 +5,14 @@ using UnityEngine.UI;
 
 namespace GameScript.RunTime.UI.Search
 {
-    public sealed class SearchElement: IReference
+    public sealed class SearchTerm: IReference
     {
         private GameObject _entity;
         private GameObject _selected;
-        private Action<SearchElement> _callback;
+        private Action<SearchTerm> _callback;
         public string Context { get; private set; }
 
-        public void Fill(GameObject entity, string context, Action<SearchElement> callBack)
+        public void Fill(GameObject entity, string context, Action<SearchTerm> callBack)
         {
             _entity = entity;
             Context = context;

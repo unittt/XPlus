@@ -9,11 +9,11 @@ namespace GameScripts.RunTime.Utility.Selector
         
         public SelectorHandler_Bool()
         {
-            Elements.Add(bool.FalseString);
-            Elements.Add(bool.TrueString);
+            Terms.Add(bool.FalseString);
+            Terms.Add(bool.TrueString);
         }
         
-        public override object GetValue(string value)
+        internal override object GetTermValue(string value)
         {
             return value == bool.TrueString;
         }

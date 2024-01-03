@@ -7,19 +7,19 @@ namespace GameScripts.RunTime.Utility.Selector
     /// </summary>
     public abstract class SelectorHandler
     {
-
-        protected List<string> Elements;
+        
+        protected readonly List<string> Terms;
         protected SelectorHandler()
         {
-            Elements = new List<string>();
+            Terms = new List<string>();
         }
 
-        public virtual void GetElementCollection(List<string> eList)
+        internal virtual void GetTerms(List<string> terms)
         {
-            eList.Clear();
-            eList.AddRange(Elements);
+            terms.Clear();
+            terms.AddRange(Terms);
         }
         
-        public abstract object GetValue(string value);
+        internal abstract object GetTermValue(string value);
     }
 }

@@ -21,8 +21,8 @@ namespace GameScripts.RunTime.EditorMagic
         private GameObject _confirmBtn;
         
         //元素集合
-        private List<SearchElement> _elements;
-        private SearchElement _element;
+        private List<SearchTerm> _elements;
+        private SearchTerm term;
 
         private List<MagicData> _magicDatas;
 
@@ -40,7 +40,7 @@ namespace GameScripts.RunTime.EditorMagic
             variableArray.Get<Button>("addBtn").onClick.AddListener(OnClickAdd);
             variableArray.Get<Button>("deleteBtn").onClick.AddListener(OnClickDelete);
 
-            _elements = new List<SearchElement>();
+            _elements = new List<SearchTerm>();
             _magicDatas = new List<MagicData>();
         }
         
@@ -49,7 +49,7 @@ namespace GameScripts.RunTime.EditorMagic
             //1.清理数据
             Main.m_ReferencePool.Despawns(_elements);
             _searchInputField.text = "";
-            _element = null;
+            term = null;
             _confirmBtn.SetActive(false);
             
             //2.生成数据
@@ -83,7 +83,7 @@ namespace GameScripts.RunTime.EditorMagic
 
         private void SpawnElement(string context)
         {
-            var element = Main.m_ReferencePool.Spawn<SearchElement>();
+            var element = Main.m_ReferencePool.Spawn<SearchTerm>();
             var entity = Main.Clone(_searchElementEntityPrefab, _content);
             element.Fill(entity,context,OnSelect);
             _elements.Add(element);
@@ -107,24 +107,24 @@ namespace GameScripts.RunTime.EditorMagic
             }
         }
         
-        private void OnSelect(SearchElement obj)
+        private void OnSelect(SearchTerm obj)
         {
             foreach (var element in _elements)
             {
                 element.SetSelectedActive(false);
             }
            
-            _element = obj;
-            _element.SetSelectedActive(true);
+            term = obj;
+            term.SetSelectedActive(true);
             _confirmBtn.SetActive(true);
         }
         
         private void OnClickConfirm()
         {
-            if (_element != null)
+            if (term != null)
             {
                 //编辑这个法术
-                EditorMagicManager.EditorMagic(_element.Context);
+                EditorMagicManager.EditorMagic(term.Context);
             }
             
             Close();
@@ -132,9 +132,9 @@ namespace GameScripts.RunTime.EditorMagic
         
         private void OnClickDelete()
         {
-            if (_element == null) return;
-            EditorMagicManager.DeleteMagicFile(_element.Context);
-            _element = null;
+            if (term == null) return;
+            EditorMagicManager.DeleteMagicFile(term.Context);
+            term = null;
             _confirmBtn.SetActive(false);
         }
 

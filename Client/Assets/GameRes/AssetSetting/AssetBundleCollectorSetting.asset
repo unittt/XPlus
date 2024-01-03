@@ -120,3 +120,16 @@ MonoBehaviour:
         FilterRuleName: CollectPrefab
         AssetTags: 
         UserData: 
+    - GroupName: WarSound
+      GroupDesc: 
+      AssetTags: WarSound
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/GameRes/Audio/Sound/War
+        CollectorGUID: adb8fa7c9986d614e9ec73bdffcb7886
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
