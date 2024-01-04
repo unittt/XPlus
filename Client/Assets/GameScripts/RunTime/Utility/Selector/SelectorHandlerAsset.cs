@@ -1,23 +1,25 @@
 using UnityEditor;
-using UnityEngine;
 
 namespace GameScripts.RunTime.Utility.Selector
 {
     /// <summary>
     /// 资源筛选
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public abstract class SelectorHandlerAsset<T> : SelectorHandler where T: Object
+    public abstract class SelectorHandlerAsset : SelectorHandler
     {
         /// <summary>
         /// 路径
         /// </summary>
         protected abstract string Path { get; }
-        
+        /// <summary>
+        /// 过滤
+        /// </summary>
+        protected abstract string Filter { get; }
+
 #if UNITY_EDITOR
         public SelectorHandlerAsset()
         {
-            var guids = AssetDatabase.FindAssets($"t:{typeof(T)}", new[] { Path });
+            var guids = AssetDatabase.FindAssets(Filter, new[] { Path });
             foreach (var guid in guids)
             {
                 var assetPath = AssetDatabase.GUIDToAssetPath(guid);

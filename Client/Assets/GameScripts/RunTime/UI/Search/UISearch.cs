@@ -48,7 +48,6 @@ namespace GameScript.RunTime.UI.Search
             _callBack = args[1].Cast<Action<object>>();
             
             //1.清理数据
-            _terms.Clear();
             Main.m_ReferencePool.Despawns(_searchTerms);
             _searchInputField.text = "";
             term = null;

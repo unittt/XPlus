@@ -234,6 +234,10 @@ PrefabInstance:
       propertyPath: DefineUINames.Array.data[0]
       value: <None>
       objectReference: {fileID: 0}
+    - target: {fileID: 114072940458417630, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
+      propertyPath: Limit
+      value: 300
+      objectReference: {fileID: 0}
     - target: {fileID: 114482348189991706, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: DefaultProcedure
       value: GameScript.RunTime.Procedure.ProcedureLauncher

@@ -39,7 +39,7 @@ namespace GameScript.RunTime.UI.Search
         
         public void Reset()
         {
-           Main.Kill(_entity);
+            Main.Kill(_entity);
            _entity = null;
         }
     }
