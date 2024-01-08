@@ -171,10 +171,6 @@ namespace GameScripts.RunTime.Model
         }
         #endregion
 
-        public void AdjustSpeedPlay(string run, float f)
-        {
-            
-        }
         
         public void CrossFade(string code, float iDuration = 0, float normalizedTime = 0)
         {
@@ -209,5 +205,46 @@ namespace GameScripts.RunTime.Model
         {
             return String.Empty;
         }
+
+
+        #region 播放动画
+        public void AdjustSpeedPlayInFrame(string sState, float actionTime, int startFrame, int endFrame)
+        {
+           
+        }
+
+        public void AdjustSpeedPlay(string run, float f)
+        {
+            
+        }
+        
+        public void PlayInFrame(string sState, int startFrame, int endFrame)
+        {
+            
+        }
+
+        public void Play(string sState,float startNormalized = 0, float endNormalized = 0)
+        {
+
+            if (endNormalized > 0)
+            {
+                
+            }
+            
+            
+        }
+
+
+        public void AllModelAnim()
+        {
+            foreach (var model in _models)
+            {
+                
+            }
+            
+            
+        }
+        #endregion
+       
     }
 }

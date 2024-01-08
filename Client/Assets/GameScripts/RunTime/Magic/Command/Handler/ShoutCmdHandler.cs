@@ -7,7 +7,23 @@ namespace GameScripts.RunTime.Magic.Command.Handler
     {
         protected override void OnFill(ShoutCmd commandData)
         {
-            
+            var excutor = MagicUnit.GetAtkObj();
+            // commandData.
+
+            //显示文字
+            if (commandData.show)
+            {
+                // 读取法术的编号 获取法术名称
+                //MagicUnit.MagicID;
+               
+                //执行完毕
+            }
+
+            //播放音效
+            if (commandData.shot)
+            {
+                
+            }
         }
     }
 }

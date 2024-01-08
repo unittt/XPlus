@@ -33,30 +33,30 @@ namespace GameScripts.RunTime.Magic.Command.Handler
             }
         }
 
-        private void ActorPlay(ActorEntity actor, string actionName,float actionTime = 0, int startFrame = 0, int endFrame = 0)
+        private void ActorPlay(ActorEntity actor, string sState,float actionTime = 0, int startFrame = 0, int endFrame = 0)
         {
-            // if (actionTime > 0)
-            // {
-            //     if (startFrame > 0)
-            //     {
-            //         actor.AdjustSpeedPlayInFrame(sState, iTime, iStartFrame, iEndFrame);
-            //     }
-            //     else
-            //     {
-            //         actor.AdjustSpeedPlay(sState, iTime);
-            //     }
-            // }
-            // else
-            // {
-            //     if (startFrame > 0)
-            //     {
-            //         actor.PlayInFrame(sState, iStartFrame, iEndFrame);
-            //     }
-            //     else
-            //     {
-            //         actor.Play(sState);
-            //     }
-            // }
+            if (actionTime > 0)
+            {
+                if (startFrame > 0)
+                {
+                    actor.AdjustSpeedPlayInFrame(sState, actionTime, startFrame, endFrame);
+                }
+                else
+                {
+                    actor.AdjustSpeedPlay(sState, actionTime);
+                }
+            }
+            else
+            {
+                if (startFrame > 0)
+                {
+                    actor.PlayInFrame(sState, startFrame, endFrame);
+                }
+                else
+                {
+                    actor.Play(sState);
+                }
+            }
         }
     }
 }

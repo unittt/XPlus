@@ -10,6 +10,9 @@ namespace GameScripts.RunTime.Magic.Command
         [Argument("存在时间")]
         public float alive_time = 1.5f;
         
+        /// <summary>
+        /// 是否显示文字
+        /// </summary>
         [Argument("显示文字")]
         [SelectHandler(typeof(SelectorHandler_Bool))]
         public bool show;
