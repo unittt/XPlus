@@ -8,7 +8,7 @@ namespace GameScripts.RunTime.Magic.Command
     public class PlayAction:CommandData
     {
         [Argument("动作")]
-        [SelectHandler(typeof(SelectorHandler_Animation))]
+        [SelectHandler(typeof(SelectorHandler_AnimationClip))]
         public string action_name;
         
         [Argument("执行人")]
@@ -25,7 +25,7 @@ namespace GameScripts.RunTime.Magic.Command
         public float action_time;
         
         [Argument("备用动作(?)")]
-        [SelectHandler(typeof(SelectorHandler_Animation))]
+        [SelectHandler(typeof(SelectorHandler_AnimationClip))]
         public string bak_action_name;
     }
 }

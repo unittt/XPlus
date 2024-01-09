@@ -24,6 +24,16 @@ namespace GameScripts.RunTime.Utility.Selector
         /// <summary>
         /// 获取条目
         /// </summary>
+        /// <param name="terms"></param>
+        /// <typeparam name="T"></typeparam>
+        public static void GetTerms<T>(List<string> terms) where  T : SelectorHandler
+        {
+            GetHandler(typeof(T)).GetTerms(terms);
+        }
+        
+        /// <summary>
+        /// 获取条目
+        /// </summary>
         /// <param name="type"></param>
         /// <param name="terms"></param>
         public static void GetTerms(Type type, List<string> terms)
