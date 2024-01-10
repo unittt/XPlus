@@ -28,10 +28,17 @@ namespace GameScript.RunTime.Config
         public const string WALK = "walk";
         public const string DANCE = "dance";
 
+        public const string WEAPON_ROLE_CREATE1 = "weapon_rolecreate1";
+        public const string WEAPON_ROLE_CREATE2 = "weapon_rolecreate2";
+        public const string WEAPON_ROLE_CREATE3 = "weapon_rolecreate3";
+        public const string WEAPON_ROLE_CREATE4 = "weapon_rolecreate4";
+        public const string WEAPON_ROLE_CREATE5 = "weapon_rolecreate5";
+
         public static readonly string[] Clips = 
         {
-            ATTACK1, ATTACK2, ATTACK3, ATTACK4, ATTACK5, ATTACK6, ATTACK7, ATTACK8, ATTACK9, DEFEND, DIE, HIT1, HIT2,
-            HIT_CRIT, IDLE_CITY, IDLE_RIDE, IDLE_WAR, MAGIC, RUN, RUN_BACK, RUN_WAR, SHOW, SHOW2, WALK, DANCE
+            ATTACK1, ATTACK2, ATTACK3, ATTACK4, ATTACK5, ATTACK6, ATTACK7, ATTACK8, ATTACK9, 
+            DEFEND, DIE, HIT1, HIT2,HIT_CRIT, IDLE_CITY, IDLE_RIDE, IDLE_WAR, MAGIC, RUN, RUN_BACK, RUN_WAR, SHOW, SHOW2, WALK, 
+            DANCE,WEAPON_ROLE_CREATE1,WEAPON_ROLE_CREATE2,WEAPON_ROLE_CREATE3,WEAPON_ROLE_CREATE4,WEAPON_ROLE_CREATE5
         };
     }
 }

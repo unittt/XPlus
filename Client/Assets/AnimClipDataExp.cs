@@ -24,16 +24,16 @@ public  class AnimClipDataExp : MonoBehaviour
         {
             foreach (var action in entry.Value)
             {
-                Log.Info($" ID: {entry.Key} Action: {action.key}, Frame: {action.frame}, Length: {action.length}");
+                Log.Info($" ID: {entry.Key} Action: {action.Name}, Frame: {action.Frame}, Length: {action.Length}");
             }
         }
     }
 
 
-    private Dictionary<int, List<ActionData>> ParseLuaData(string content)
+    private Dictionary<int, List<ClipInfo>> ParseLuaData(string content)
     {
         
-        var data = new Dictionary<int, List<ActionData>>();
+        var data = new Dictionary<int, List<ClipInfo>>();
         
         using (StringReader reader = new StringReader(content))
         {
@@ -48,7 +48,7 @@ public  class AnimClipDataExp : MonoBehaviour
                 if (matches.Count > 0)
                 {
                     id = int.Parse(matches[0].Groups[1].Value);
-                    data.Add(id, new List<ActionData>());
+                    data.Add(id, new List<ClipInfo>());
                 }
 
                 if (id <= 0) continue;
@@ -61,11 +61,11 @@ public  class AnimClipDataExp : MonoBehaviour
                 
                 foreach (Match actionMatch in actionMatches)
                 {
-                    var actionData = new ActionData
+                    var actionData = new ClipInfo
                     {
-                        key = actionMatch.Groups[1].Value,
-                        frame = int.Parse(actionMatch.Groups[2].Value),
-                        length = (float)Math.Round(float.Parse(actionMatch.Groups[3].Value), 2)
+                        Name = actionMatch.Groups[1].Value,
+                        Frame = int.Parse(actionMatch.Groups[2].Value),
+                        Length = (float)Math.Round(float.Parse(actionMatch.Groups[3].Value), 2)
                     };
                     actionDatas.Add(actionData);
                 }

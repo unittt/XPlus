@@ -1,0 +1,48 @@
+using System.Collections.Generic;
+
+namespace GameScripts.RunTime.DataUser
+{
+    public struct ClipInfo
+    {
+        public string key;
+        public int frame;
+        public float length;
+    }
+    
+	/// <summary>
+    /// 动画片段数据
+	/// </summary>
+    public static class AnimClipData
+    {
+        public static readonly Dictionary<int, ClipInfo[]> Data = new()
+        {
+          #CODE#
+        };
+    }
+	
+	
+	/// <summary>
+	///  获得动画片段信息
+	/// </summary>
+	/// <param name="id"></param>
+	/// <param name="clipName"></param>
+	/// <param name="clipInfo"></param>
+	/// <returns></returns>
+	public static bool TryGetAnimClipInfo(int id, string clipName, out ClipInfo clipInfo)
+	{
+		var result = false;
+		clipInfo = default;
+		if (Data.TryGetValue(id, out var clipInfos))
+		{
+			foreach (var info in clipInfos)
+			{
+				if (info.key != clipName) continue;
+				clipInfo = info;
+				result = true;
+				break;
+			}
+		}
+		
+		return result;
+	}
+}
