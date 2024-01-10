@@ -8,9 +8,13 @@ namespace GameScripts.Editor
     {
         #region Editor PrefsKey
         /// <summary>
-        /// 新建StepHelper脚本的文件夹
+        /// 新建AnimClipData脚本模板的路径
         /// </summary>
-        public static readonly string Script_StepHelper_Folder = "HT.Framework.Script.StepHelper";
+        public static readonly string Script_AnimClipData_TemplatePath = "Assets/GameScripts/Editor/Utility/Template/AnimClipDataTemplate.txt";
+        /// <summary>
+        /// 新建AnimClipData脚本的路径
+        /// </summary>
+        public static readonly string Script_AnimClipData_Path = "Assets/GameScripts/RunTime/DataUser/AnimClipData.cs";
         #endregion
     }
 }

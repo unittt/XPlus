@@ -16,6 +16,7 @@ namespace GameScripts.RunTime.DataUser
     {
         public static readonly Dictionary<int, ClipInfo[]> Data = new()
         {
+		
           #CODE#
         };
     }
