@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using GameScripts.RunTime.DataUser;
 using HT.Framework;
 using Pb.Mmo.Common;
 using UnityEngine;
@@ -27,6 +28,16 @@ namespace GameScripts.RunTime.Model
         public Transform ModelContainer { get; private set; }
 
 
+        #region 组合动作
+        private event Action _comboHitEvent;
+        private ComboActionInfo[]  _comboActionInfos;
+        private int _comboIndex;
+
+        private int _shape;
+
+        #endregion
+        
+        
         /// <summary>
         /// 实体层级
         /// </summary>
@@ -179,8 +190,9 @@ namespace GameScripts.RunTime.Model
                 model.CrossFade(code,iDuration, normalizedTime);
             }
         }
-        
-        
+
+
+        #region 组合动画
         /// <summary>
         /// 连续动画的播放
         /// </summary>
@@ -188,17 +200,62 @@ namespace GameScripts.RunTime.Model
         /// <returns></returns>
         public bool PlayCombo(string actionName)
         {
-            return false;
+            var list = ComboActionData.GetComboActionInfos(0, actionName);
+            if (list is null)
+            {
+                return false;
+            }
+
+            _comboActionInfos = list;
+            _comboIndex = 0;
+            ComboStep();
+            return true;
+        }
+        
+        /// <summary>
+        /// 组合动作步骤
+        /// </summary>
+        private void ComboStep()
+        {
+            if (_comboActionInfos is null || _comboIndex >= _comboActionInfos.Length)
+            {
+                return;
+            }
+
+            var act = _comboActionInfos[_comboIndex];
+            _comboIndex++;
+            var speed = act.speed;
+            if (act.action == "pause")
+            {
+                //触发暂停 暂时没有这个
+            }
+            else
+            {
+                PlayInFrame(act.action, act.start_frame/ speed, act.end_frame/speed, ComboStep);
+                if (act.hit_frame > 0)
+                {
+                    FrameEvent((act.hit_frame-act.start_frame)/speed, NotifyComboHit);
+                }
+            }
         }
 
         /// <summary>
-        /// 连击击中发生时触发这些回调函数
+        /// 设置组合动画打击事件
         /// </summary>
         /// <param name="callBack"></param>
         public void SetComboHitEvent(Action callBack)
         {
-            
+            _comboHitEvent += callBack;
         }
+        
+        private void NotifyComboHit()
+        {
+            _comboHitEvent.Invoke();
+            _comboHitEvent = null;
+        }
+        #endregion
+
+     
         
         
         public virtual string GetName()
@@ -218,8 +275,18 @@ namespace GameScripts.RunTime.Model
             
         }
         
-        public void PlayInFrame(string sState, int startFrame, int endFrame)
+        public void PlayInFrame(string sState, int startFrame, int endFrame, Action callBack)
         {
+            if (AnimClipData.TryGetAnimClipInfo(_shape, sState, out var dClipInfo))
+            {
+                var startNormalized = startFrame / dClipInfo.Frame;
+                Play(sState, startNormalized);
+                if (endFrame > 0)
+                {
+                    // local fixedTime = ModelTools.FrameToTime(endFrame-startFrame)
+                    // self:FixedEvent(sState, fixedTime, func)
+                }
+            }
             
         }
 
@@ -245,6 +312,27 @@ namespace GameScripts.RunTime.Model
             
         }
         #endregion
-       
+
+        #region 事件
+
+        private void FrameEvent(int frame, Action callBack)
+        {
+            var fixedTime = ModelTools.FrameToTime(frame);
+            FixedEvent(fixedTime,callBack);
+        }
+
+        private void NormalizedEvent(string sState, float normalizedTime, Action callBack)
+        {
+            if (!AnimClipData.TryGetAnimClipInfo(_shape, sState, out var dClipInfo)) return;
+            var fixedTime = dClipInfo.Length * normalizedTime;
+            FixedEvent(fixedTime,callBack);
+        }
+        
+        private void FixedEvent(float fixedTime, Action callBack)
+        {
+            // fixedTime = Mathf.Max((fixedTime == 0 ? 0.01f : fixedTime), 0);
+            // Main.Current.DelayExecute(callBack, fixedTime);
+        }
+        #endregion
     }
 }

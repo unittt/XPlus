@@ -50,7 +50,7 @@ namespace GameScripts.RunTime.Magic.Command.Handler
             {
                 if (startFrame > 0)
                 {
-                    actor.PlayInFrame(sState, startFrame, endFrame);
+                    actor.PlayInFrame(sState, startFrame, endFrame, null);
                 }
                 else
                 {

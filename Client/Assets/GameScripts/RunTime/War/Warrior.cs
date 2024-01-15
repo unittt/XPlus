@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using GameScript.RunTime.Config;
+using GameScripts.RunTime.DataUser;
 using GameScripts.RunTime.Model;
 using HT.Framework;
 using UnityEngine;
