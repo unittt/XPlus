@@ -1,7 +1,6 @@
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using GameScripts.Editor.AnimatorTools;
 using HT.Framework;
 using UnityEditor;
 using UnityEngine;
@@ -66,7 +65,7 @@ namespace GameScripts.Editor
                             var assetPath = AssetDatabase.GUIDToAssetPath(guid);
                             var animationClip  = AssetDatabase.LoadAssetAtPath<AnimationClip>(assetPath);
                             var frame = Mathf.FloorToInt(animationClip.length / (1 / animationClip.frameRate));
-                            var context = $"new ClipInfo(){{Key = {animationClip.name}, Frame = {frame}, Length = {animationClip.length.ToString("F2")}f}}";
+                            var context = $"new(){{Key = \"{animationClip.name}\", Frame = {frame}, Length = {animationClip.length.ToString("F2")}f}},";
                             sb.AppendLine(context);
                         }
                         sb.AppendLine("}");

@@ -974,25 +974,24 @@ namespace HT.Framework
         /// 从模板创建脚本(不会打开FilePanel)
         /// </summary>
         /// <param name="templatePath">模板路径</param>
-        /// <param name="path">脚本保存路径</param>
+        /// <param name="savePath">脚本保存路径</param>
         /// <param name="handler">自定义处理者</param>
         /// <param name="replace">脚本替换字段</param>
         /// <returns></returns>
-        public static string CreateScriptFormTemplate(string templatePath,string path, HTFFunc<string, string> handler, params string[] replace)
+        public static string CreateScriptFormTemplate(string templatePath,string savePath, HTFFunc<string, string> handler, params string[] replace)
         {
 
-            if (!string.IsNullOrEmpty(path))
+            if (!string.IsNullOrEmpty(savePath))
             {
-                string className = path.Substring(path.LastIndexOf("/") + 1).Replace(".cs", "");
+                var className = savePath.Substring(savePath.LastIndexOf("/") + 1).Replace(".cs", "");
                 // if (!path.Contains(Application.dataPath))
                 // {
                 //     Log.Error($"新建 {className} 失败：创建路径必须在当前项目的 Assets 路径下！");
                 //     return "<None>";
                 // }
-
-                Log.Info(templatePath);
-                TextAsset asset = AssetDatabase.LoadAssetAtPath<TextAsset>(templatePath);
-                if (asset is null)
+                
+                var asset = AssetDatabase.LoadAssetAtPath<TextAsset>(templatePath);
+                if (asset != null)
                 {
                     string code = asset.text;
                     code = code.Replace("#SCRIPTNAME#", className);
@@ -1008,22 +1007,20 @@ namespace HT.Framework
                     {
                         code = handler(code);
                     }
-
-                    File.AppendAllText(path, code, Encoding.UTF8);
-                    asset = null;
+                    
+                    File.Delete(savePath);
+                    File.AppendAllText(savePath, code, Encoding.UTF8);
                     AssetDatabase.Refresh();
 
-                    string assetPath = path.Substring(path.LastIndexOf("Assets"));
-                    TextAsset csFile = AssetDatabase.LoadAssetAtPath(assetPath, typeof(TextAsset)) as TextAsset;
+                    var assetPath = savePath[savePath.LastIndexOf("Assets")..];
+                    var csFile = AssetDatabase.LoadAssetAtPath(assetPath, typeof(TextAsset)) as TextAsset;
                     EditorGUIUtility.PingObject(csFile);
                     Selection.activeObject = csFile;
                     AssetDatabase.OpenAsset(csFile);
                     return className;
                 }
-                else
-                {
-                    Log.Error($"新建 {className} 失败：丢失脚本模板文件！");
-                }
+                
+                Log.Error($"新建 {className} 失败：丢失脚本模板文件！");
             }
             return "<None>";
         }

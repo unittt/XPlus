@@ -4,9 +4,9 @@ namespace GameScripts.RunTime.DataUser
 {
     public struct ClipInfo
     {
-        public string key;
-        public int frame;
-        public float length;
+        public string Key;
+        public int Frame;
+        public float Length;
     }
     
 	/// <summary>
@@ -16,34 +16,33 @@ namespace GameScripts.RunTime.DataUser
     {
         public static readonly Dictionary<int, ClipInfo[]> Data = new()
         {
-		
           #CODE#
         };
-    }
+    
 	
-	
-	/// <summary>
-	///  获得动画片段信息
-	/// </summary>
-	/// <param name="id"></param>
-	/// <param name="clipName"></param>
-	/// <param name="clipInfo"></param>
-	/// <returns></returns>
-	public static bool TryGetAnimClipInfo(int id, string clipName, out ClipInfo clipInfo)
-	{
-		var result = false;
-		clipInfo = default;
-		if (Data.TryGetValue(id, out var clipInfos))
+		/// <summary>
+		///  获得动画片段信息
+		/// </summary>
+		/// <param name="id"></param>
+		/// <param name="clipName"></param>
+		/// <param name="clipInfo"></param>
+		/// <returns></returns>
+		public static bool TryGetAnimClipInfo(int id, string clipName, out ClipInfo clipInfo)
 		{
-			foreach (var info in clipInfos)
+			var result = false;
+			clipInfo = default;
+			if (Data.TryGetValue(id, out var clipInfos))
 			{
-				if (info.key != clipName) continue;
-				clipInfo = info;
-				result = true;
-				break;
+				foreach (var info in clipInfos)
+				{
+					if (info.Key != clipName) continue;
+					clipInfo = info;
+					result = true;
+					break;
+				}
 			}
+			
+			return result;
 		}
-		
-		return result;
 	}
 }
