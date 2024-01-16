@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using GameScripts.RunTime.DataUser;
 using GameScripts.RunTime.Define;
 using UnityEngine;
 
@@ -58,6 +59,24 @@ namespace GameScripts.RunTime.Model
         public static int TimeToFrame(float iTime)
         {
             return Mathf.Max(0, Mathf.FloorToInt(iTime / g_FrameDelta + 0.5f));
+        }
+
+        /// <summary>
+        /// 规格化转固定时间
+        /// </summary>
+        /// <param name="shape"></param>
+        /// <param name="state"></param>
+        /// <param name="normalized"></param>
+        /// <returns></returns>
+        public static float NormalizedToFixed(int shape, string state, float normalized)
+        {
+            float length = 0;
+            if (AnimClipData.TryGetAnimClipInfo(shape, state, out var dClipInfo))
+            {
+                length = dClipInfo.Length * normalized;
+            }
+
+            return length;
         }
 
         /// <summary>

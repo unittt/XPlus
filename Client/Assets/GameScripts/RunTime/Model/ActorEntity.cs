@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using GameScripts.RunTime.DataUser;
+using GameScripts.RunTime.Utility.Timer;
 using HT.Framework;
 using Pb.Mmo.Common;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace GameScripts.RunTime.Model
        
         private readonly List<ModelBase> _models = new();
         private readonly Dictionary<Type, ModelBase> _modelInstance = new();
+        private readonly List<int> _timeKeys = new();
 
         protected VariableArray VbArray { get; private set; }
         /// <summary>
@@ -183,14 +185,138 @@ namespace GameScripts.RunTime.Model
         #endregion
 
         
-        public void CrossFade(string code, float iDuration = 0, float normalizedTime = 0)
+        public virtual string GetName()
         {
-            foreach (var model in _models)
-            {
-                model.CrossFade(code,iDuration, normalizedTime);
-            }
+            return String.Empty;
         }
 
+
+        #region 动画
+        
+        public void Play(string state,float startNormalized = 0, float endNormalized = 0, HTFAction callBack = null)
+        {
+            //1.清理动画时间事件
+            ClearAnimTimeEvent();
+            //2.播放动画
+            foreach (var model in _models)
+            {
+                model.Play(state, startNormalized);
+            }
+            //3.注册结束事件
+            if (endNormalized <= 0 || callBack is null) return;
+            var fixedTime = ModelTools.NormalizedToFixed(_shape, state, endNormalized - startNormalized);
+            FixedEvent(fixedTime, callBack);
+        }
+
+        public void PlayInFixedTime(string state, float startFixed, float endFixed,HTFAction callBack = null)
+        {
+            //1.清理动画时间事件
+            ClearAnimTimeEvent();
+            //2.播放动画
+            foreach (var model in _models)
+            {
+                model.PlayInFixedTime(state, startFixed);
+            }
+            //3.注册结束事件
+            if (endFixed >startFixed && endFixed > 0)
+            {
+                FixedEvent(startFixed - endFixed, callBack);
+            }
+        }
+        
+        /// <summary>
+        /// 帧播放动画
+        /// </summary>
+        /// <param name="state"></param>
+        /// <param name="startFrame"></param>
+        /// <param name="endFrame"></param>
+        /// <param name="callBack"></param>
+        public void PlayInFrame(string state, int startFrame, int endFrame, HTFAction callBack = null)
+        {
+            //1.如果不存在帧动画 跳出
+            if (!AnimClipData.TryGetAnimClipInfo(_shape, state, out var dClipInfo)) return;
+            //2.播放动画
+            var startNormalized = startFrame / dClipInfo.Frame;
+            Play(state, startNormalized);
+            //3.注册结束事件
+            if (endFrame <= 0 || endFrame <= startFrame) return;
+            var fixedTime = ModelTools.FrameToTime(endFrame - startFrame);
+            FixedEvent(fixedTime, callBack);
+        }
+        
+      
+        /// <summary>
+        /// 渐入动画
+        /// </summary>
+        /// <param name="state"></param>
+        /// <param name="duration"></param>
+        /// <param name="startNormalized"></param>
+        /// <param name="endNormalized"></param>
+        /// <param name="callBack"></param>
+        public void CrossFade(string state, float duration, float startNormalized, float endNormalized, HTFAction callBack = null)
+        {
+            //1.清理动画时间事件
+            ClearAnimTimeEvent();
+            //2.播放动画
+            foreach (var model in _models)
+            {
+                model.CrossFade(state, duration, startNormalized);
+            }
+            //3.注册结束事件
+            if (endNormalized <= 0|| endNormalized < startNormalized) return;
+            var fixedTime = ModelTools.NormalizedToFixed(_shape, state, endNormalized - startNormalized);
+            FixedEvent(fixedTime, callBack);
+        }
+
+        public void CrossFadeInFixedTime(string state, float duration, float startFixed, float endFixed, HTFAction callBack = null)
+        {
+            //1.清理动画时间事件
+            ClearAnimTimeEvent();
+            //2.播放动画
+            foreach (var model in _models)
+            {
+                model.CrossFadeInFixedTime(state, duration, startFixed);
+            }
+            //3.注册结束事件
+            if (endFixed <= 0|| endFixed < startFixed) return;
+            FixedEvent(endFixed - startFixed, callBack);
+        }
+        
+        public void AdjustSpeedPlay(string state, float adjustTime)
+        {
+            PlayInFixedTime(state,0,0);
+            if (AnimClipData.TryGetAnimClipInfo(_shape, state, out var dClipInfo))
+            {
+                // SetSpeed(dClipInfo.Length / adjustTime);
+            }
+        }
+        
+        public void AdjustSpeedPlayInFrame(string state, float adjustTime, int startFrame, int endFrame)
+        {
+            if (endFrame == 0)
+            {
+                if (AnimClipData.TryGetAnimClipInfo(_shape, state, out var dClipInfo))
+                {
+                    endFrame = dClipInfo.Frame;
+                    // SetSpeed(dClipInfo.Length / adjustTime);
+                }
+            }
+
+            var time = ModelTools.FrameToTime(endFrame - startFrame);
+            var speed = time / adjustTime;
+            //callback = SetSpeed(0);
+            PlayInFrame(state, startFrame, startFrame + (int)((endFrame - startFrame) / speed));
+            // SetSpeed(speed);
+        }
+
+        public void Pause(int frame, HTFAction callBack)
+        {
+            //1.清理所有事件
+            ClearAnimTimeEvent();
+            // SetSpeed(0)
+            //触发暂停事件
+            FrameEvent(frame, callBack);
+        }
 
         #region 组合动画
         /// <summary>
@@ -234,13 +360,13 @@ namespace GameScripts.RunTime.Model
                 PlayInFrame(act.action, act.start_frame/ speed, act.end_frame/speed, ComboStep);
                 if (act.hit_frame > 0)
                 {
-                    FrameEvent((act.hit_frame-act.start_frame)/speed, NotifyComboHit);
+                    FrameEvent((act.hit_frame - act.start_frame)/speed, NotifyComboHit);
                 }
             }
         }
 
         /// <summary>
-        /// 设置组合动画打击事件
+        /// 设置组合动作命中事件
         /// </summary>
         /// <param name="callBack"></param>
         public void SetComboHitEvent(Action callBack)
@@ -248,91 +374,50 @@ namespace GameScripts.RunTime.Model
             _comboHitEvent += callBack;
         }
         
+        /// <summary>
+        /// 触发组合动作命中
+        /// </summary>
         private void NotifyComboHit()
         {
             _comboHitEvent.Invoke();
             _comboHitEvent = null;
         }
         #endregion
-
-     
         
-        
-        public virtual string GetName()
-        {
-            return String.Empty;
-        }
-
-
-        #region 播放动画
-        public void AdjustSpeedPlayInFrame(string sState, float actionTime, int startFrame, int endFrame)
-        {
-           
-        }
-
-        public void AdjustSpeedPlay(string run, float f)
-        {
-            
-        }
-        
-        public void PlayInFrame(string sState, int startFrame, int endFrame, Action callBack)
-        {
-            if (AnimClipData.TryGetAnimClipInfo(_shape, sState, out var dClipInfo))
-            {
-                var startNormalized = startFrame / dClipInfo.Frame;
-                Play(sState, startNormalized);
-                if (endFrame > 0)
-                {
-                    // local fixedTime = ModelTools.FrameToTime(endFrame-startFrame)
-                    // self:FixedEvent(sState, fixedTime, func)
-                }
-            }
-            
-        }
-
-        public void Play(string sState,float startNormalized = 0, float endNormalized = 0)
-        {
-
-            if (endNormalized > 0)
-            {
-                
-            }
-            
-            
-        }
-
-
-        public void AllModelAnim()
-        {
-            foreach (var model in _models)
-            {
-                
-            }
-            
-            
-        }
-        #endregion
-
-        #region 事件
-
-        private void FrameEvent(int frame, Action callBack)
+        #region 动画事件
+        private void FrameEvent(int frame, HTFAction callBack)
         {
             var fixedTime = ModelTools.FrameToTime(frame);
             FixedEvent(fixedTime,callBack);
         }
 
-        private void NormalizedEvent(string sState, float normalizedTime, Action callBack)
+        private void NormalizedEvent(string sState, float normalizedTime, HTFAction callBack)
         {
             if (!AnimClipData.TryGetAnimClipInfo(_shape, sState, out var dClipInfo)) return;
             var fixedTime = dClipInfo.Length * normalizedTime;
             FixedEvent(fixedTime,callBack);
         }
         
-        private void FixedEvent(float fixedTime, Action callBack)
+        private void FixedEvent(float fixedTime, HTFAction callBack)
         {
-            // fixedTime = Mathf.Max((fixedTime == 0 ? 0.01f : fixedTime), 0);
-            // Main.Current.DelayExecute(callBack, fixedTime);
+            if (callBack is null) return;
+            fixedTime = Mathf.Max((fixedTime == 0 ? 0.01f : fixedTime), 0);
+            var key = TimerManager.RegisterTimer(fixedTime, callBack);
+            _timeKeys.Add(key);
         }
+        
+        /// <summary>
+        /// 清理动画事件
+        /// </summary>
+        private void ClearAnimTimeEvent()
+        {
+            foreach (var key in _timeKeys)
+            {
+                TimerManager.StopTimer(key);
+            }
+            _timeKeys.Clear();
+        }
+        #endregion
         #endregion
     }
 }

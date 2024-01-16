@@ -54,7 +54,7 @@ namespace GameScripts.RunTime.Model
         #region 移动
         private void OnStartMove()
         {
-            CrossFade(AnimationClipCode.RUN);
+            CrossFade(AnimationClipCode.RUN,0,0,0);
         }
         
         private void OnUpdateMove(Vector3 arg1, NodeTag nodeTag)
@@ -66,7 +66,7 @@ namespace GameScripts.RunTime.Model
 
         private void OnEndMove()
         {
-            CrossFade(AnimationClipCode.IDLE_CITY);
+            CrossFade(AnimationClipCode.IDLE_CITY,0,0,0);
         }
         #endregion
         

@@ -66,7 +66,7 @@ namespace GameScripts.RunTime.War
                 // self:FaceDefault()
                 
                 //播放动画
-                _actor.CrossFade(AnimationClipCode.IDLE_WAR ,0.1f);
+                _actor.CrossFade(AnimationClipCode.IDLE_WAR ,0.1f,0,0);
                 
                 //如果需要回到原地
                 if (isRunBack)

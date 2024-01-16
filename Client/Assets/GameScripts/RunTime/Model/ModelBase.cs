@@ -37,7 +37,6 @@ namespace GameScripts.RunTime.Model
         public bool IsLoading { get; private set; }
 
         private Animator _animator;
-        private float _fixedTime;
 
 
         public virtual void OnInit(ActorEntity actorEntity)
@@ -62,7 +61,7 @@ namespace GameScripts.RunTime.Model
             Entity.SetLayerIncludeChildren(ActorEntity.Layer);
             _animator = Entity.GetComponent<Animator>();
             OnEntityCreationCompleted();
-            CrossFade(AnimationClipCode.IDLE_CITY);
+            CrossFade(AnimationClipCode.IDLE_CITY,0, 0);
             IsLoading = false;
         }
 
@@ -159,27 +158,36 @@ namespace GameScripts.RunTime.Model
         }
 
         #region 动画
+        /// <summary>
+        /// 设置动画速度
+        /// </summary>
+        /// <param name="speed"></param>
         public void SetAnimationSpeed(float speed)
         {
-            
+            _animator.speed = speed;
         }
-
         
         /// <summary>
-        /// 播放动画
+        /// 播放某个状态(normalizedTime)
+        /// </summary>
+        /// <param name="state"></param>
+        /// <param name="normalizedTime"></param>
+        public virtual void Play(string state, float normalizedTime)
+        { 
+            normalizedTime = Mathf.Max(normalizedTime, 0);
+            var iHash = ModelTools.StateToHash(state);
+            _animator?.Play(iHash,0, normalizedTime);
+        }
+
+        /// <summary>
+        /// 播放某个状态(fixedTime)
         /// </summary>
         /// <param name="sState"></param>
-        /// <param name="normalizedTime"></param>
-        // public virtual void Play(string sState, float normalizedTime)
-        // {
-        //     var iHash = ModelTools.StateToHash(sState);
-        //     _animator?.Play(iHash,0);
-        // }
-
-        public void PlayInFixedTime(string sState, float fixedTime)
+        /// <param name="fixedTime"></param>
+        public void PlayInFixedTime(string state, float fixedTime)
         {
-            _fixedTime = fixedTime;
-            var iHash = ModelTools.StateToHash(sState);
+            fixedTime = Mathf.Max(fixedTime, 0);
+            var iHash = ModelTools.StateToHash(state);
             _animator?.PlayInFixedTime(iHash,0,fixedTime);
         }
 
@@ -189,18 +197,25 @@ namespace GameScripts.RunTime.Model
         /// <param name="sState"></param>
         /// <param name="iDuration"></param>
         /// <param name="normalizedTime"></param>
-        public void CrossFade(string sState, float iDuration = 0, float normalizedTime = 0)
+        public void CrossFade(string state, float iDuration, float normalizedTime)
         {
             if (_animator is null) return;
-            sState = CheckClickState(sState);
-            var iHash = ModelTools.StateToHash(sState);
+            iDuration = Mathf.Max(iDuration, 0);
+            state = CheckClickState(state);
+            var iHash = ModelTools.StateToHash(state);
             _animator.CrossFade(iHash, iDuration, 0, normalizedTime);
         }
 
-        public void CrossFadeInFixedTime(string sState,float iDuration, float fixedTime)
+        /// <summary>
+        /// 渐变某状态(fixedTime)
+        /// </summary>
+        /// <param name="sState"></param>
+        /// <param name="duration"></param>
+        /// <param name="fixedTime"></param>
+        public void CrossFadeInFixedTime(string sState,float duration, float fixedTime)
         {
             var iHash = ModelTools.StateToHash(sState);
-            _animator.CrossFadeInFixedTime(iHash, iDuration, 0, fixedTime);
+            _animator.CrossFadeInFixedTime(iHash, duration, 0, fixedTime);
         }
 
         /// <summary>
