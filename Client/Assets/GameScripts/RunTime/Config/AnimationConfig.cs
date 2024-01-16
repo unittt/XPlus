@@ -40,5 +40,34 @@ namespace GameScript.RunTime.Config
             DEFEND, DIE, HIT1, HIT2,HIT_CRIT, IDLE_CITY, IDLE_RIDE, IDLE_WAR, MAGIC, RUN, RUN_BACK, RUN_WAR, SHOW, SHOW2, WALK, 
             DANCE,WEAPON_ROLE_CREATE1,WEAPON_ROLE_CREATE2,WEAPON_ROLE_CREATE3,WEAPON_ROLE_CREATE4,WEAPON_ROLE_CREATE5
         };
+        
+        public static readonly string[] COMMON_STATE = new string[]
+        {
+            ATTACK1,
+            ATTACK2,
+            ATTACK3,
+            ATTACK4,
+            ATTACK5,
+            ATTACK6,
+            ATTACK7,
+            ATTACK8,
+            ATTACK9,
+            DEFEND,
+            DIE,
+            HIT1,
+            HIT2,
+            HIT_CRIT,
+            IDLE_CITY,
+            IDLE_RIDE,
+            IDLE_WAR,
+            MAGIC,
+            RUN,
+            RUN_BACK,
+            RUN_WAR,
+            SHOW,
+            SHOW2,
+            WALK,
+            DANCE,
+        };
     }
 }

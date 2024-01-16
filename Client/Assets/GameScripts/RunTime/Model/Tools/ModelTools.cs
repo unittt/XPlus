@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using GameScript.RunTime.Config;
 using GameScripts.RunTime.DataUser;
 using GameScripts.RunTime.Define;
 using UnityEngine;
@@ -80,13 +81,13 @@ namespace GameScripts.RunTime.Model
         }
 
         /// <summary>
-        /// 检查一个状态是否是通用状态
+        /// 检查状态是否是通用状态
         /// </summary>
         /// <param name="sState"></param>
         /// <returns></returns>
         public static bool IsCommonState(string sState)
         {
-            return Array.IndexOf(GameDefines.Model.COMMON_STATE, sState) >= 0;
+            return Array.IndexOf(AnimationConfig.COMMON_STATE, sState) >= 0;
         }
     }
 }

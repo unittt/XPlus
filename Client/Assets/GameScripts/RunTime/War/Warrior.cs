@@ -27,6 +27,31 @@ namespace GameScripts.RunTime.War
 
         private int m_arge_5703 = 0;
         private int m_arge_5704 = 0;
+
+
+        /// <summary>
+        /// 阵营编号
+        /// </summary>
+        public int CampID { get; private set; }
+
+        /// <summary>
+        /// 阵营中的坐标
+        /// </summary>
+        public int CampPos { get; private set; }
+
+        /// <summary>
+        /// 是否为盟友
+        /// </summary>
+        public bool IsAlly
+        {
+            get
+            {
+                return true;
+            }
+        }
+
+        public Vector3 OriginPos { get; private set; }
+
         #region 行为
         public void GoBack()
         {
@@ -309,6 +334,61 @@ namespace GameScripts.RunTime.War
             // m_FloatHitInfo.record = false;
             // m_FloatHitInfo.laset_atk_id = 0;
             //5.检查错误
+        }
+
+        public void SetLocalEulerAngles(Vector3 eulerAngles)
+        {
+            
+        }
+
+        private bool IsSameCamp(Warrior warrior)
+        {
+            return CampID == warrior.CampID;
+        }
+        
+
+        /// <summary>
+        /// 是否相邻
+        /// </summary>
+        /// <param name="warrior"></param>
+        private bool IsNeighbor(Warrior warrior)
+        {
+            if (IsSameCamp(warrior))
+            {
+                return false;
+            }
+
+            var iCampPos = warrior.CampPos;
+            //判断是否为邻居
+            //暂时不做处理
+            
+            return false;
+        }
+        
+        public Vector3 GetNormalAttackPos(Warrior warrior)
+        {
+            var isNearOriPos = warrior.IsNearOriPos(warrior.Pos);
+            var isBossCamp = WarManager.Current.IsBossWarType && !warrior.IsAlly;
+            var isNeighbor = IsNeighbor(warrior);
+            //不属于boss阵营 并且不属于邻居 并且目标在目标原点附近
+            if (!isBossCamp && ! isNeighbor && isNearOriPos)
+            {
+                return warrior.GetOriginPos();
+            }
+
+            return Vector3.zero;
+        }
+
+   
+
+        /// <summary>
+        /// 在原始坐标附近
+        /// </summary>
+        /// <param name="pos"></param>
+        /// <returns></returns>
+        private bool IsNearOriPos(Vector3 pos)
+        {
+            return WarManager.Current.GetHorizontalDis(pos, OriginPos) < 0.05f;
         }
     }
 }

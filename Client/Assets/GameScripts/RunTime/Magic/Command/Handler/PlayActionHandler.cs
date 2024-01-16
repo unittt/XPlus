@@ -9,13 +9,15 @@ namespace GameScripts.RunTime.Magic.Command.Handler
     /// </summary>
     public class PlayActionHandler: CmdHandlerBase<PlayAction>
     {
+
+        private List<Warrior> _warriors = new();
+
         protected override void OnFill(PlayAction commandData)
         {
             //1. 获取执行者
-            List<Warrior> warriors = new List<Warrior>();
-            GetExecutors(commandData.executor,warriors);
+            GetExecutors(commandData.executor,_warriors);
 
-            foreach (var warrior in warriors)
+            foreach (var warrior in _warriors)
             {
                 if (ModelTools.IsCommonState(commandData.action_name))
                 {
@@ -24,7 +26,7 @@ namespace GameScripts.RunTime.Magic.Command.Handler
                 }
                 else if (warrior.PlayCombo(commandData.action_name))
                 {
-                    warrior.SetComboHitEvent(null);
+                    warrior.SetComboHitEvent(MagicUnit.CombHit);
                 }
                 else if (string.IsNullOrEmpty(commandData.bak_action_name))
                 {
@@ -32,29 +34,29 @@ namespace GameScripts.RunTime.Magic.Command.Handler
                 }
             }
         }
-
-        private void ActorPlay(ActorEntity actor, string sState,float actionTime = 0, int startFrame = 0, int endFrame = 0)
+        
+        private void ActorPlay(ActorEntity actor, string state,float actionTime = 0, int startFrame = 0, int endFrame = 0)
         {
             if (actionTime > 0)
             {
                 if (startFrame > 0)
                 {
-                    actor.AdjustSpeedPlayInFrame(sState, actionTime, startFrame, endFrame);
+                    actor.AdjustSpeedPlayInFrame(state, actionTime, startFrame, endFrame);
                 }
                 else
                 {
-                    actor.AdjustSpeedPlay(sState, actionTime);
+                    actor.AdjustSpeedPlay(state, actionTime);
                 }
             }
             else
             {
                 if (startFrame > 0)
                 {
-                    actor.PlayInFrame(sState, startFrame, endFrame, null);
+                    actor.PlayInFrame(state, startFrame, endFrame, null);
                 }
                 else
                 {
-                    actor.Play(sState);
+                    actor.Play(state);
                 }
             }
         }

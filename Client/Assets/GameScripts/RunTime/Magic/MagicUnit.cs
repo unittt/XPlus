@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading;
+using GameScript.RunTime.Config;
 using GameScripts.RunTime.Magic.Command;
 using GameScripts.RunTime.Magic.Command.Handler;
 using GameScripts.RunTime.War;
@@ -18,7 +19,10 @@ namespace GameScripts.RunTime.Magic
         public int Shape { get; private set; }
         public int MagicID { get; private set; }
         public int MagicIdx { get; private set; }
-        public bool IsPursued { get; set; }
+        /// <summary>
+        /// 是否正在追击状态
+        /// </summary>
+        public bool IsPursued { get; private set; }
 
         private Dictionary<string, object> data = new(); // 用于存储攻击对象、受害对象等数据
         private List<CmdHandler> _handlerList = new(); // 执行播放技能指令列表
@@ -32,11 +36,19 @@ namespace GameScripts.RunTime.Magic
 
         public string m_RunEnv;
 
-      
-        public Warrior AtkObj;
+
+        /// <summary>
+        /// 获得攻击对象
+        /// </summary>
+        public Warrior AtkObj { get; private set; }
 
 
         private int m_CurCmdIdx;
+
+        /// <summary>
+        /// 受击的对象
+        /// </summary>
+        public List<Warrior> VicObjs { get; private set; }
 
         public void Fill(int magicID, int shape, int magicIndex,bool isPursued, Warrior atkObj, List<Warrior> refVicObjs, List<CommandData> dataList)
         {
@@ -65,9 +77,8 @@ namespace GameScripts.RunTime.Magic
                 MagicIdx.ToString(), ID.ToString()));
 
             m_Running = true;
-
-            var oAtkObj = GetAtkObj();
-            oAtkObj?.SetPlayMagicID(MagicID);
+            
+            AtkObj?.SetPlayMagicID(MagicID);
 
             // if (oCmd is not  null && m_LastHitInfoIndex.HasValue)
             // {
@@ -143,23 +154,14 @@ namespace GameScripts.RunTime.Magic
         
 
         /// <summary>
-        /// 获得攻击对象
-        /// </summary>
-        /// <returns></returns>
-        public Warrior GetAtkObj()
-        {
-            return null;
-        }
-
-        /// <summary>
         /// 获取受影响的战士列表
         /// </summary>
         /// <param name="vicObjs"></param>
-        public void GetVicObjs(List<Warrior> vicObjs)
-        {
-            vicObjs.Clear();
-            
-        }
+        // public List<Warrior> GetVicObjs(List<Warrior> vicObjs)
+        // {
+        //     vicObjs.Clear();
+        //     
+        // }
 
         /// <summary>
         /// 获得第一个受击者
@@ -173,6 +175,14 @@ namespace GameScripts.RunTime.Magic
         public void GetTargets(bool isAlly, bool isAtk, bool isVic, bool isAlive, List<Warrior> warriors)
         {
            
+        }
+
+        public void CombHit()
+        {
+            foreach (var warrior in VicObjs)
+            {
+                warrior?.Play(AnimationConfig.HIT1);
+            }
         }
 
      

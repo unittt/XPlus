@@ -7,7 +7,7 @@ namespace GameScripts.RunTime.Magic.Command.Handler
     {
         protected override void OnFill(ShoutCmd commandData)
         {
-            var excutor = MagicUnit.GetAtkObj();
+            var excutor = MagicUnit.AtkObj;
             // commandData.
 
             //显示文字

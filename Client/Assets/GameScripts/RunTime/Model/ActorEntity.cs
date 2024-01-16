@@ -45,6 +45,8 @@ namespace GameScripts.RunTime.Model
         /// </summary>
         public abstract int Layer { get; }
 
+        public Vector3 Pos => Entity is null ? Vector3.zero : Entity.transform.position;
+
         public override void OnInit()
         {
             VbArray = Entity.GetComponent<VariableBehaviour>().Container;

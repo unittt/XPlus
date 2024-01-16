@@ -45,12 +45,12 @@ namespace GameScripts.RunTime.Utility.Timer
                
                 foreach (var timer in _ruingInstances)
                 {
-                    if (timer.State == TimerState.Running)
+                    if (timer.State is TimerState.Running)
                     {
                         timer.OnUpdate();
                     }
                     
-                    if (timer.State == TimerState.Done)
+                    if (timer.State is TimerState.Done)
                     {
                         UnRegister(timer);
                     }

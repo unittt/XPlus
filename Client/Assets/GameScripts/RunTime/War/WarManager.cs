@@ -82,6 +82,22 @@ namespace GameScripts.RunTime.War
         public int m_EnemyPlayerCnt;
 
 
+
+        #region 标识
+
+        /// <summary>
+        /// 是否为Boss战斗
+        /// </summary>
+        public bool IsBossWarType { get; private set; } = true;
+
+
+        /// <summary>
+        /// 是否为空战
+        /// </summary>
+        public bool IsWarSky { get; private set; }
+
+        #endregion
+        
         /// <summary>
         /// 启动战斗
         /// </summary>
@@ -459,6 +475,19 @@ namespace GameScripts.RunTime.War
         public Warrior GetWarrior(int wid)
         {
             return null;
+        }
+
+        /// <summary>
+        /// 计算两个位置之间的水平距离
+        /// </summary>
+        /// <param name="pos1"></param>
+        /// <param name="pos2"></param>
+        /// <returns></returns>
+        public float GetHorizontalDis(Vector3 pos1, Vector3 pos2)
+        {
+            var deltaX = pos1.x - pos2.x;
+            var deltaZ = pos1.z - pos2.z;
+            return Mathf.Sqrt(deltaX * deltaX + deltaZ * deltaZ);
         }
     }
 }

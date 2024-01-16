@@ -61,35 +61,7 @@ namespace GameScripts.RunTime.Define
             public const int Defalut_Figure = 1110;
             public const int Defalut_Shape = 1110;
 
-            public static readonly string[] COMMON_STATE = new string[]
-            {
-                "attack1",
-                "attack2",
-                "attack3",
-                "attack4",
-                "attack5",
-                "attack6",
-                "attack7",
-                "attack8",
-                "attack9",
-                "defend",
-                "die",
-                "hit1",
-                "hit2",
-                "hitCrit",
-                "idleCity",
-                "idleRide",
-                "idleWar",
-                "magic",
-                "run",
-                "runBack",
-                "runWar",
-                "show",
-                "show2",
-                "walk",
-                "dance",
-            };
-
+            
             public static readonly Dictionary<int, WeaponInfo> WEAPON = new Dictionary<int, WeaponInfo>
             {
                 {1110, new WeaponInfo(new Dictionary<int, string>{{1, "right_hand"}})},

@@ -20,6 +20,8 @@ namespace GameScripts.RunTime.Magic
         private Dictionary<string, MagicData> _magicDataInstance;
         private List<MagicUnit> _units;
 
+        public Transform CalcPosTransform { get; private set; }
+
         public MagicManager()
         {
             
@@ -35,12 +37,15 @@ namespace GameScripts.RunTime.Magic
                 var argumentType = baseType.GetGenericArguments()[0];
                 _d2HInstances.Add(argumentType, type);
             }
+
+            CalcPosTransform = new GameObject("CalcPosObject").transform;
         }
 
         
         public void ResetCalcPosObject()
         {
-           
+            CalcPosTransform.SetParent(null);
+            CalcPosTransform.SetPositionAndRotation(Vector3.zero, Quaternion.identity);
         }
 
         public async UniTaskVoid NewMagicUnit(int magicID, int magicIndex, Warrior atkObj, List<Warrior> refVicObjs, bool isPursued)

@@ -40,13 +40,13 @@ namespace GameScripts.RunTime.Magic.Command.Handler
             switch (executorType)
             {
                 case ExecutorType.Attacker:
-                    warriors.Add(MagicUnit.GetAtkObj());
+                    warriors.Add(MagicUnit.AtkObj);
                     return;
                 case ExecutorType.Victim:
                     warriors.Add(MagicUnit.GetVicObjFirst());
                     return;
                 case ExecutorType.AllVictims:
-                    MagicUnit.GetVicObjs(warriors);
+                    warriors.AddRange(MagicUnit.VicObjs);
                     return;
                 case ExecutorType.Camera:
                     break;
