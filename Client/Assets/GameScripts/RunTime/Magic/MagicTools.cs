@@ -1,4 +1,3 @@
-using System;
 using GameScripts.RunTime.War;
 using UnityEngine;
 
@@ -42,56 +41,60 @@ namespace GameScripts.RunTime.Magic
 
         public static Transform GetCalcPosObj(Transform tm, Transform faceTm, Vector3 prePos = default)
         {
-            MagicManager.Current.CalcPosTransform.SetParent(tm);
+            var calcPosTransform = MagicManager.Current.GetCalcPosTransform();
+            calcPosTransform.SetParent(tm);
             var pos = tm.position;
             pos.y = 0;
-            MagicManager.Current.CalcPosTransform.position = pos;
+            calcPosTransform.position = pos;
 
-            if (faceTm == null) return MagicManager.Current.CalcPosTransform;
+            if (faceTm == null) return calcPosTransform;
             
             var facePos = prePos == default ? faceTm.position : prePos;
             facePos.y = 0;
-            MagicManager.Current.CalcPosTransform.LookAt(facePos,tm.up);
-            return MagicManager.Current.CalcPosTransform;
+            calcPosTransform.LookAt(facePos,tm.up);
+            return calcPosTransform;
         }
         
         
         public static Transform GetRelativeObj(PositionType positionType, Warrior atkObj, Warrior vicObj, bool faceDir)
         {
-            switch (positionType)
+            Transform relativeObj;
+            
+            if (positionType == PositionType.AttackerPosition)
             {
-                case PositionType.None:
-                    break;
-                case PositionType.AttackerPosition:
-                    
-                    var faceTm = (faceDir && vicObj != null) ? vicObj.Entity.transform : null;
-                    return GetCalcPosObj(atkObj._actor.Entity.transform, faceTm);
-                
-                case PositionType.VictimPosition:
-
-                    var faceTm2 = (faceDir && vicObj != null) ? atkObj.Entity.transform : null;
-                    var prePos = Vector3.zero;
-                    if (atkObj != null && vicObj != null)
-                    {
-                        prePos = atkObj.GetNormalAttackPos(vicObj);
-                    }
-                    return GetCalcPosObj(atkObj._actor.Entity.transform, faceTm2,prePos);
-                 
-                case PositionType.AttackerLineup:
-                    break;
-                case PositionType.VictimLineup:
-                    break;
-                case PositionType.BattlefieldCenter:
-                    break;
-                case PositionType.AttackerTeamCenter:
-                    break;
-                case PositionType.VictimTeamCenter:
-                    break;
-                case PositionType.CameraPosition:
-                    return  Camera.main.transform;
-                default:
-                    return null;
+                var faceTm = (faceDir && vicObj != null) ? vicObj.Entity.transform : null;
+                relativeObj =  GetCalcPosObj(atkObj._actor.Entity.transform, faceTm);
             }
+            else if (positionType == PositionType.VictimPosition)
+            {
+                var faceTm = (faceDir && vicObj != null) ? atkObj.Entity.transform : null;
+                var prePos = Vector3.zero;
+                if (atkObj != null && vicObj != null)
+                {
+                    prePos = atkObj.GetNormalAttackPos(vicObj);
+                }
+                relativeObj =  GetCalcPosObj(atkObj._actor.Entity.transform, faceTm,prePos);
+            }
+            else if (positionType == PositionType.CameraPosition)
+            {
+                relativeObj = Camera.main.transform;
+            }
+            else if (positionType is PositionType.AttackerTeamCenter or PositionType.BattlefieldCenter)
+            {
+                relativeObj = GetCalcPosObj(WarManager.Current.Root, null);
+                relativeObj.localEulerAngles = atkObj.GetDefaultRotateAngle();
+            }
+            else if (positionType == PositionType.VictimTeamCenter)
+            {
+                relativeObj = GetCalcPosObj(WarManager.Current.Root, null);
+                relativeObj.localEulerAngles = vicObj.GetDefaultRotateAngle();
+            }
+            else
+            {
+                relativeObj = WarManager.Current.Root;
+            }
+            
+            return relativeObj;
         }
 
         public static Vector3 CalcRelativePos(Transform relative, float angle, float dis)
@@ -109,9 +112,10 @@ namespace GameScripts.RunTime.Magic
             return relative.TransformVector(pos);
         }
 
-        public static Vector3 CalcDepth(Vector3 vPos, float posInfoDepth)
+        public static Vector3 CalcDepth(Vector3 pos, float posInfoDepth)
         {
-            return Vector3.zero;
+            pos.y += posInfoDepth;
+            return pos;
         }
     }
 }

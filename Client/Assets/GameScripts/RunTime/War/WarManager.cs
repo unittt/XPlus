@@ -5,6 +5,7 @@ using GridMap;
 using HT.Framework;
 using Pb.Mmo.Common;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace GameScripts.RunTime.War
 {
@@ -14,9 +15,8 @@ namespace GameScripts.RunTime.War
     public sealed class WarManager : SingletonBehaviourBase<WarManager>,IUpdateFrame
     {
 
-
-        [SerializeField]
-        private Transform _root;
+        
+        public Transform Root;
         
         private Dictionary<int, Warrior> _warriors = new Dictionary<int, Warrior>();
 
@@ -129,7 +129,7 @@ namespace GameScripts.RunTime.War
             MapManager.Current.SetMapData(mapData);
             MapManager.Current.ShowByPosition(new Vector2(gs2CShowWar.x, gs2CShowWar.y));
             
-            _root.gameObject.SetActive(true);
+            Root.gameObject.SetActive(true);
             //触发战斗开始事件
             m_WaitTime = false;
         }
@@ -154,7 +154,7 @@ namespace GameScripts.RunTime.War
         public void Clear()
         {
             //1.隐藏节点
-            _root.gameObject.SetActive(false);
+            Root.gameObject.SetActive(false);
             //2.删除战士
             foreach (var pair in _warriors)
             {
