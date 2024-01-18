@@ -45,9 +45,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30f1a1865a2c4d7f9e84a45aab1dab15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _root: {fileID: 6274480825794254361}
-  CmdIndex: 0
-  m_IsClientRecord: 0
+  Root: {fileID: 6274480825794254361}
+  m_AllyCamp: 0
+  m_HeroWid: 0
+  m_AllyPlayerCnt: 0
+  m_EnemyPlayerCnt: 0
 --- !u!1 &305634024726386298
 GameObject:
   m_ObjectHideFlags: 0

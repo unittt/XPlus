@@ -147,6 +147,11 @@ namespace GameScripts.RunTime.Magic
             m_IsEndIdx = isEnd;
         }
 
+        public void End()
+        {
+            
+        }
+
         public void ControlNextObject(string name)
         {
             m_NextObjectName = name;
