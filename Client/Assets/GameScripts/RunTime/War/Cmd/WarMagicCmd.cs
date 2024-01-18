@@ -6,7 +6,7 @@ namespace GameScripts.RunTime.War
     /// <summary>
     /// 施法指令
     /// </summary>
-    public class MagicCmd : WarCmd
+    public class WarMagicCmd : WarCmd
     {
         /// <summary>
         /// 攻击
@@ -35,8 +35,7 @@ namespace GameScripts.RunTime.War
             //11.处理保护机制：对每个受害者检查是否有保护机制（如一个战士跑去保护另一个），并执行相关动作。
             
             //1.获取攻击者对象
-            var atkObj = WarManager.Current.GetWarrior(atkid);
-            if (atkObj is null)
+            if (!WarManager.Current.TryGetWarrior(atkid,out  var atkObj))
             {
                 return;
             }

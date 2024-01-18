@@ -75,6 +75,7 @@ namespace GameScripts.RunTime.War
             if (Status != WarCmdStatus.Idle || !IsCanExecute()) return false;
             Status = WarCmdStatus.Running;
             OnExecute();
+            Log.Info("执行指令：" + this.GetType());
             return true;
         }
         

@@ -48,12 +48,13 @@ namespace GameScripts.RunTime.War
                 left_time = 30
             };
             NetWar.Current.GS2CWarBoutStart(gs2CWarBoutStart);
-
             
             //4.回合1
             Bout0();
             //5.回合2
+            Bout1();
             //6.回合3
+            // Bout2();
         }
         
         void ApplyFormula(string formula)
@@ -273,7 +274,10 @@ namespace GameScripts.RunTime.War
                 war_id = war_id
             };
             NetWar.Current.GS2CWarBoutEnd(boutEnd);
-            
+        }
+
+        private void Bout1()
+        {
             
             //3.回合开始
             var gs2CWarBoutStart = new GS2CWarBoutStart
@@ -285,10 +289,7 @@ namespace GameScripts.RunTime.War
             
             //回合开始
             NetWar.Current.GS2CWarBoutStart(gs2CWarBoutStart);
-        }
-
-        private void Bout1()
-        {
+            
             //boss
             // 技能攻击
             var skillID = 101;
@@ -340,7 +341,12 @@ namespace GameScripts.RunTime.War
 
             if (meleeMagic.Contains(skillID))
             {
-                NetWar.Current.GS2CWarGoback(new GS2CWarGoback{war_id = war_id, action_wid = { 1}});
+                var gs2CWarGoBack = new GS2CWarGoback
+                {
+                    war_id = war_id,
+                    action_wid = new List<int>(){1}
+                };
+                NetWar.Current.GS2CWarGoback(gs2CWarGoBack);
             }
             
             //许仙三魂攻击
@@ -403,16 +409,6 @@ namespace GameScripts.RunTime.War
                 war_id = war_id
             };
             NetWar.Current.GS2CWarBoutEnd(boutEnd);
-            
-            
-            //回合开始
-            var gs2CWarBoutStart = new GS2CWarBoutStart
-            {
-                war_id = war_id,
-                bout_id = 2,
-                left_time = 30
-            };
-            NetWar.Current.GS2CWarBoutStart(gs2CWarBoutStart);
         }
         
         

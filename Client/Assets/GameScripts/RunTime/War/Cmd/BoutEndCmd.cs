@@ -5,6 +5,7 @@ namespace GameScripts.RunTime.War
         protected override void OnExecute()
         {
             WarManager.Current.BoutEnd();
+            SetCompleted();
         }
     }
 }

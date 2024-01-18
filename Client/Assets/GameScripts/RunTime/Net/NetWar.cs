@@ -156,7 +156,7 @@ namespace GameScripts.RunTime.Net
                 return;
             }
 
-            var cmd = Main.m_ReferencePool.Spawn<MagicCmd>();
+            var cmd = Main.m_ReferencePool.Spawn<WarMagicCmd>();
             cmd.atkid = bossMagic.action_wlist[0];
             cmd.vicid_list = bossMagic.select_wlist;
             //无视服务端的变量名skill_id， magic_id

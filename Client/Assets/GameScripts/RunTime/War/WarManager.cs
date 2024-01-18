@@ -471,12 +471,7 @@ namespace GameScripts.RunTime.War
         {
             
         }
-
-        public Warrior GetWarrior(int wid)
-        {
-            return null;
-        }
-
+        
         /// <summary>
         /// 计算两个位置之间的水平距离
         /// </summary>

@@ -41,16 +41,20 @@ namespace GameScripts.RunTime.Magic
         /// 获得攻击对象
         /// </summary>
         public Warrior AtkObj { get; private set; }
-
-
-        private int m_CurCmdIdx;
-
         /// <summary>
         /// 受击的对象
         /// </summary>
-        public List<Warrior> VicObjs { get; private set; }
+        public List<Warrior> VicObjs { get; }
 
-        public void Fill(int magicID, int shape, int magicIndex,bool isPursued, Warrior atkObj, List<Warrior> refVicObjs, List<CommandData> dataList)
+        private int m_CurCmdIdx;
+
+
+        public MagicUnit()
+        {
+            VicObjs = new List<Warrior>();
+        }
+
+        public void Fill(int magicID, int shape, int magicIndex,bool isPursued, Warrior atkObj, IEnumerable<Warrior> refVicObjs, List<CommandData> dataList)
         {
             //设置法术单元编号
             ID = Interlocked.Increment(ref MagicManager.CurUnitIdx);
@@ -58,6 +62,8 @@ namespace GameScripts.RunTime.Magic
             Shape = shape;
             MagicIdx = magicIndex;
             IsPursued = isPursued;
+            AtkObj = atkObj;
+            VicObjs.AddRange(refVicObjs);
             
             foreach (var cmdData in dataList)
             {
@@ -107,7 +113,7 @@ namespace GameScripts.RunTime.Magic
             // m_StartCallback?.Invoke();
         }
 
-        public void Update()
+        internal void OnUpdate()
         {
             // if (!_isRunning)
             // {
@@ -118,7 +124,7 @@ namespace GameScripts.RunTime.Magic
 
             for (var i = m_CurCmdIdx; i < _handlerList.Count; i++)
             {
-                if (!(_handlerList[i].StartTime >= _elapsedTime)) continue;
+                if (_handlerList[i].StartTime < _elapsedTime) continue;
                 //开始执行
                 _handlerList[i].Execute();
                 m_CurCmdIdx++;
@@ -139,6 +145,9 @@ namespace GameScripts.RunTime.Magic
             {
                 Main.m_ReferencePool.Despawn(handler);
             }
+
+            AtkObj = null;
+            VicObjs.Clear();
             data.Clear();
         }
 
