@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using HT.Framework;
@@ -6,27 +5,31 @@ using UnityEngine;
 
 namespace GameScripts.RunTime.Base
 {
-    public abstract class EffectEntity : EntityLogicBase
+    public abstract class EffectEntityLogic : EntityLogicBase
     {
 
         private static int EffectIndex;
         public Transform RotateNode { get; private set; }
-
-        private Action _callBack;
+        
         private int _index;
-        private GameObject _effectObj;
+        private GameObject _effectGO;
 
-        public void Fill(int layer, string path, Action callBack)
+        /// <summary>
+        /// 填充
+        /// </summary>
+        /// <param name="location">定位</param>
+        /// <param name="layer">层级</param>
+        /// <param name="isCached">是否缓存</param>
+        public virtual void Fill(string location,int layer, bool isCached)
         {
             _index = Interlocked.Increment(ref EffectIndex);
-            _callBack = callBack;
-            LoadCloneAsync(path).Forget();
+            LoadCloneAsync(location).Forget();
         }
 
         private async UniTaskVoid LoadCloneAsync(string location)
         {
             var index = _index;
-            var obj = await Main.m_Resource.LoadPrefab(location, Entity.transform);
+            var obj = await Main.m_Resource.LoadPrefab(location, null);
             //如果当前已经回池了 删除这个
             if (index != _index)
             {
@@ -34,8 +37,7 @@ namespace GameScripts.RunTime.Base
                 return;
             }
 
-            _effectObj = obj;
-            _callBack?.Invoke();
+            _effectGO = obj;
         }
         
         public void SetRotateNode(Transform node)
@@ -74,5 +76,24 @@ namespace GameScripts.RunTime.Base
         {
             
         }
+        
+        public void SetLocalEulerAngles(Vector3 localEulerAngles)
+        {
+            if (Entity != null)
+            {
+                Entity.transform.localEulerAngles = localEulerAngles;
+            }
+        }
+        
+        public void SetLocalPos(Vector3 pos)
+        {
+            if (Entity != null)
+            {
+                Entity.transform.localPosition = pos;
+            }
+        }
+        
+        public Transform Parent => Entity?.transform.parent;
+        
     }
 }

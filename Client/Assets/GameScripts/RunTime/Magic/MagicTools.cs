@@ -148,5 +148,54 @@ namespace GameScripts.RunTime.Magic
             pos = CalcDepth(pos, complexPosition.Depth);
             return pos;
         }
+
+        public static Vector3 GetExecutorLocalAngle(Warrior warrior, ExecutorDirection commandDataEffectDirType)
+        {
+            var rotateObj = warrior.RotateObj;
+            var localEulerAngles = rotateObj.localEulerAngles;
+            if (commandDataEffectDirType == ExecutorDirection.Backward)
+            {
+                localEulerAngles.y += 180;
+            }
+            else if (commandDataEffectDirType == ExecutorDirection.Right)
+            {
+                localEulerAngles.y += 90;
+            }
+            else if (commandDataEffectDirType == ExecutorDirection.Left)
+            {
+                localEulerAngles.y -= 90;
+            }
+
+            return localEulerAngles;
+        }
+
+        public static Vector3 GetExecutorDirPos(Warrior warrior, ExecutorDirection effectDirType, Vector3 pos)
+        {
+            var dirPos = Vector3.zero;
+            switch (effectDirType)
+            {
+                case ExecutorDirection.Forward:
+                    dirPos = pos + warrior.RotateObj.forward;
+                    break;
+                case ExecutorDirection.Backward:
+                    dirPos = pos + -warrior.RotateObj.forward;
+                    break;
+                case ExecutorDirection.Left:
+                    dirPos = pos + -warrior.RotateObj.right;
+                    break;
+                case ExecutorDirection.Right:
+                    dirPos = pos + warrior.RotateObj.right;
+                    break;
+                case ExecutorDirection.Up:
+                    
+                    dirPos = pos +warrior.RotateObj.up;
+                    break;
+                case ExecutorDirection.Down:
+                    dirPos = pos + -warrior.RotateObj.up;
+                    break;
+            }
+
+            return dirPos;
+        }
     }
 }

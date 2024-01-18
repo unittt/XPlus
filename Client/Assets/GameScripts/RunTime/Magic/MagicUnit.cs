@@ -190,6 +190,10 @@ namespace GameScripts.RunTime.Magic
             }
         }
 
-     
+
+        public void AddHitInfo()
+        {
+           
+        }
     }
 }

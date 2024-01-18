@@ -1,3 +1,5 @@
+using GameScripts.RunTime.Audio;
+
 namespace GameScripts.RunTime.Magic.Command.Handler
 {
     /// <summary>
@@ -7,7 +9,7 @@ namespace GameScripts.RunTime.Magic.Command.Handler
     {
         protected override void OnFill(PlaySound commandData)
         {
-            
+            AudioManager.Current.PlayEffect(commandData.sound.SoundPath);
         }
     }
 }

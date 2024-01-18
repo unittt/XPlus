@@ -7,6 +7,7 @@ using GameScripts.RunTime.DataUser;
 using GameScripts.RunTime.Model;
 using HT.Framework;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace GameScripts.RunTime.War
 {
@@ -216,6 +217,7 @@ namespace GameScripts.RunTime.War
 
         public override int Layer => LayerConfig.War;
         public Transform RotateObj { get; set; }
+      
 
         public int MagicID;
 
