@@ -40,6 +40,9 @@ namespace GameScripts.RunTime.Magic.Command
         [Argument("计算朝向")] [SelectHandler(typeof(SelectorHandler_Bool))]
         public bool calc_face = true;
 
+        /// <summary>
+        /// 面向终点
+        /// </summary>
         [Argument("面对终点")] [SelectHandler(typeof(SelectorHandler_Bool))]
         public bool look_at_pos = true;
 

@@ -6,7 +6,7 @@ using UnityEngine;
 namespace GameScripts.RunTime.Magic.Command.Handler
 {
     /// <summary>
-    /// 调整正面方法
+    /// 调整正面方向
     /// </summary>
     public class FaceToHandler:CmdHandlerBase<FaceTo>
     {
@@ -36,7 +36,7 @@ namespace GameScripts.RunTime.Magic.Command.Handler
                      
                      if (commandData.face_to == FaceType.Fixed_pos)
                      {
-                         var endPos = CalcPos(commandData.pos, atkObj, vicObj, false);
+                         var endPos = MagicTools.CalcPos(commandData.pos, atkObj, vicObj, false);
                          var calcPosTransform = MagicManager.Current.GetCalcPosTransform();
                          calcPosTransform.SetParent(rotateObj, false);
                          calcPosTransform.LookAt(endPos, rotateObj.up);
@@ -55,31 +55,24 @@ namespace GameScripts.RunTime.Magic.Command.Handler
                      }
                      else if (commandData.face_to == FaceType.Look_at)
                      {
-                         var endPos = CalcPos(commandData.pos, atkObj, vicObj, false);
+                         var endPos = MagicTools.CalcPos(commandData.pos, atkObj, vicObj, false);
                          var root = WarManager.Current.Root;
                          var vUp = root.up;
-                         local oAction = CLookAt.New(oRotateObj, args.time, vEndPos, vUp);
+                         // local oAction = CLookAt.New(oRotateObj, args.time, vEndPos, vUp);
+                         rotateObj.DOLookAt(endPos, commandData.time, AxisConstraint.None, vUp);
                      }
                      else if (commandData.face_to == FaceType.Random)
                      {
-                         
+                         var endValue = new Vector3
+                                        (
+                                         Random.Range(commandData.randomPosition.x_min, commandData.randomPosition.x_max), 
+                                         Random.Range(commandData.randomPosition.y_min, commandData.randomPosition.y_max),
+                                         Random.Range(commandData.randomPosition.z_min, commandData.randomPosition.z_max)
+                                         );
+                         rotateObj.DOLocalRotate(endValue, commandData.time);
                      }
                  }
              }
-        }
-
-        private Vector3 CalcPos(ComplexPosition complexPosition,Warrior atkObj, Warrior vicObj, bool faceDir)
-        {
-            var pos = MagicTools.WarGetLocalPosByType(complexPosition.BasePosition, atkObj, vicObj);
-         
-            var oRelative = MagicTools.GetRelativeObj(complexPosition.BasePosition, atkObj, vicObj, faceDir);
-            if (oRelative)
-            {
-                pos += MagicTools.CalcRelativePos(oRelative, complexPosition.RelativeAngle, complexPosition.RelativeDistance);
-            }
-
-            pos = MagicTools.CalcDepth(pos, complexPosition.Depth);
-            return pos;
         }
     }
 }

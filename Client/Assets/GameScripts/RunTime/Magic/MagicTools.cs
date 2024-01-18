@@ -1,3 +1,5 @@
+using System;
+using GameScripts.RunTime.Magic.Command;
 using GameScripts.RunTime.War;
 using UnityEngine;
 
@@ -115,6 +117,35 @@ namespace GameScripts.RunTime.Magic
         public static Vector3 CalcDepth(Vector3 pos, float posInfoDepth)
         {
             pos.y += posInfoDepth;
+            return pos;
+        }
+
+        public static Vector3 GetDir(Warrior warrior, MoveDirection commandDataDir)
+        {
+            return commandDataDir switch
+            {
+                MoveDirection.LocalUp => warrior.LocalUp,
+                MoveDirection.LocalRight => warrior.LocalRight,
+                MoveDirection.LocalForward => warrior.LocalForward,
+                MoveDirection.WorldUp => Vector3.up,
+                MoveDirection.WorldRight => Vector3.right,
+                MoveDirection.WorldForward => Vector3.forward,
+                _ => Vector3.zero
+            };
+        }
+        
+        
+        public static Vector3 CalcPos(ComplexPosition complexPosition,Warrior atkObj, Warrior vicObj, bool faceDir)
+        {
+            var pos = WarGetLocalPosByType(complexPosition.BasePosition, atkObj, vicObj);
+         
+            var oRelative = GetRelativeObj(complexPosition.BasePosition, atkObj, vicObj, faceDir);
+            if (oRelative)
+            {
+                pos += CalcRelativePos(oRelative, complexPosition.RelativeAngle, complexPosition.RelativeDistance);
+            }
+
+            pos = CalcDepth(pos, complexPosition.Depth);
             return pos;
         }
     }

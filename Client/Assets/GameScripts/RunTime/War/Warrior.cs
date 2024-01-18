@@ -52,6 +52,14 @@ namespace GameScripts.RunTime.War
 
         public Vector3 OriginPos { get; private set; }
 
+
+
+        #region 方向
+        public Vector3 LocalUp => WarManager.Current.Root.InverseTransformDirection(RotateObj.up);
+        public Vector3 LocalForward => WarManager.Current.Root.InverseTransformDirection(RotateObj.forward);
+        public Vector3 LocalRight => WarManager.Current.Root.InverseTransformDirection(RotateObj.right);
+        #endregion
+
         #region 行为
         public void GoBack()
         {
@@ -122,12 +130,12 @@ namespace GameScripts.RunTime.War
             
         }
 
-        private void LookAtPos(Vector3 localPos)
+        public void LookAtPos(Vector3 localPos)
         {
             
         }
         
-        private void LookAtPos(Vector3 localPos, float time)
+        public void LookAtPos(Vector3 localPos, float time)
         {
             var position = LocalPosition;
             var dir = WarTools.GetRootDir(null, position, localPos);
