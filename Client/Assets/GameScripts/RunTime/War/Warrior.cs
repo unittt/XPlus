@@ -323,13 +323,7 @@ namespace GameScripts.RunTime.War
         {
            
         }
-
-        public void ShowWarAnim()
-        {
-            
-        }
-
-
+        
         /// <summary>
         /// 用于存储与战斗相关的一些浮动（动态变化的）信息。具体来说，m_FloatHitInfo 似乎用于追踪和管理角色在战斗中的某些特定状态或事件
         /// down_timer、restore_timer：这些可能是与计时相关的字段，用于追踪某些状态或效果的持续时间。

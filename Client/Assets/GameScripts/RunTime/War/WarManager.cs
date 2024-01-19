@@ -465,9 +465,9 @@ namespace GameScripts.RunTime.War
             
         }
 
-        public void AddWarrior(Warrior warrior)
+        public void AddWarrior(int wid, Warrior warrior)
         {
-            
+            _warriors.Add(wid,warrior);
         }
         
         /// <summary>

@@ -35,7 +35,7 @@ namespace GameScripts.RunTime.War
             var camp = (ECamp)camp_id;
             warrior.Entity.transform.position = WarTools.GetPositionByCampAndIndex(camp, BaseWarrior.pos);
             warrior.Entity.transform.localEulerAngles = WarTools.GetDefalutRotateAngle(camp);
-            WarManager.Current.AddWarrior(warrior);
+            WarManager.Current.AddWarrior(BaseWarrior.wid, warrior);
             //装载模型
             await warrior.InitAssembleModelWait;
             //设置坐标
@@ -61,8 +61,7 @@ namespace GameScripts.RunTime.War
             }
             else
             {
-                //播放动画
-                warrior.ShowWarAnim();
+         
             }
             SetCompleted();
         }

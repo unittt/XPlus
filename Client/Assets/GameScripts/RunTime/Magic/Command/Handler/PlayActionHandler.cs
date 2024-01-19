@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using GameScripts.RunTime.Model;
 using GameScripts.RunTime.War;
+using HT.Framework;
 
 namespace GameScripts.RunTime.Magic.Command.Handler
 {
@@ -37,6 +38,7 @@ namespace GameScripts.RunTime.Magic.Command.Handler
         
         private void ActorPlay(ActorEntity actor, string state,float actionTime = 0, int startFrame = 0, int endFrame = 0)
         {
+            Log.Info("播放动作啊" + state);
             if (actionTime > 0)
             {
                 if (startFrame > 0)
