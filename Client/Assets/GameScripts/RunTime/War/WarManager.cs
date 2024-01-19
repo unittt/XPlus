@@ -272,8 +272,7 @@ namespace GameScripts.RunTime.War
 
         public bool TryGetWarrior(int wid,out Warrior warrior)
         {
-            warrior = null;
-            return true;
+            return _warriors.TryGetValue(wid, out warrior);
         }
 
         #endregion

@@ -4,9 +4,10 @@ namespace GameScripts.RunTime.Magic.Command.Handler
 {
     public abstract class CmdHandlerBase<T> : CmdHandler where T: CommandData
     {
-        public override void Fill(CommandData commandData)
+        public override void Fill(CommandData commandData, MagicUnit unit)
         {
-            var data = commandData.Cast<T>();
+            base.Fill(commandData,unit);
+            var data = Data.Cast<T>();
             OnFill(data);
         }
 

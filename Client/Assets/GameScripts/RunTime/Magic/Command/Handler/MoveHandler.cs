@@ -16,8 +16,8 @@ namespace GameScripts.RunTime.Magic.Command.Handler
         {
             GetExecutors(commandData.executor,_warriors);
 
-            var atkObj = MagicUnit.AtkObj;
-            var vicObj = MagicUnit.GetVicObjFirst();
+            var atkObj = Unit.AtkObj;
+            var vicObj = Unit.GetVicObjFirst();
             
             foreach (var warrior in _warriors)
             {

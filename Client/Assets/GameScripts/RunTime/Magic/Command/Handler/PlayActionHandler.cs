@@ -26,7 +26,7 @@ namespace GameScripts.RunTime.Magic.Command.Handler
                 }
                 else if (warrior.PlayCombo(commandData.action_name))
                 {
-                    warrior.SetComboHitEvent(MagicUnit.CombHit);
+                    warrior.SetComboHitEvent(Unit.CombHit);
                 }
                 else if (string.IsNullOrEmpty(commandData.bak_action_name))
                 {

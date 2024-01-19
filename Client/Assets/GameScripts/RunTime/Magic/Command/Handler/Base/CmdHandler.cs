@@ -6,17 +6,20 @@ namespace GameScripts.RunTime.Magic.Command.Handler
 {
     public abstract class CmdHandler: IReference
     {
-        
-        public MagicUnit MagicUnit { get; private set; }
 
-        public float StartTime { get; private set; }
+        public MagicUnit Unit { get; private set; }
+
+        public CommandData Data { get; private set; }
+
+        public float StartTime => Data.StartTime;
     
 
-        public virtual void Fill(CommandData commandData)
+        public virtual void Fill(CommandData commandData, MagicUnit unit)
         {
-            StartTime = commandData.StartTime;
+            Data = commandData;
+            Unit = unit;
         }
-        
+
         public virtual void Reset()
         {
            
@@ -40,13 +43,13 @@ namespace GameScripts.RunTime.Magic.Command.Handler
             switch (executorType)
             {
                 case ExecutorType.Attacker:
-                    warriors.Add(MagicUnit.AtkObj);
+                    warriors.Add(Unit.AtkObj);
                     return;
                 case ExecutorType.Victim:
-                    warriors.Add(MagicUnit.GetVicObjFirst());
+                    warriors.Add(Unit.GetVicObjFirst());
                     return;
                 case ExecutorType.AllVictims:
-                    warriors.AddRange(MagicUnit.VicObjs);
+                    warriors.AddRange(Unit.VicObjs);
                     return;
                 case ExecutorType.Camera:
                     break;
@@ -67,7 +70,7 @@ namespace GameScripts.RunTime.Magic.Command.Handler
                     break;
             }
 
-            MagicUnit.GetTargets(isAlly, isAtk, isVic, isAlive, warriors);
+            Unit.GetTargets(isAlly, isAtk, isVic, isAlive, warriors);
         }
 
       

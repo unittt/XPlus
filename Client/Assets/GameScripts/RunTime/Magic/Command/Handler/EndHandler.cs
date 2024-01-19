@@ -7,7 +7,7 @@ namespace GameScripts.RunTime.Magic.Command.Handler
     {
         protected override void OnFill(End commandData)
         {
-            MagicUnit.End();
+            Unit.End();
         }
     }
 }

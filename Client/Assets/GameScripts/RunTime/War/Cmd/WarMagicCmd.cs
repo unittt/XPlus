@@ -41,24 +41,33 @@ namespace GameScripts.RunTime.War
             }
 
             //2.处理被动技能 检查攻击者是否有由魔法命令触发的被动技能（trigger_passive）。如果有，就执行这些被动命令。
-            var dAtkVary = GetWarriorVary(atkid);
-            var passiveMaxIndex = dAtkVary.trigger_passive.Count - 1;
-            for (var i = passiveMaxIndex; i >= 0; i--)
-            {
-                var oCmd = dAtkVary.trigger_passive[i];
-                //获得被动技能数据
-                oCmd.TryExecute();
-                //移除技能
-                dAtkVary.trigger_passive.Remove(oCmd);
-            }
+            // var dAtkVary = GetWarriorVary(atkid);
+            // var passiveMaxIndex = dAtkVary.trigger_passive.Count - 1;
+            // for (var i = passiveMaxIndex; i >= 0; i--)
+            // {
+            //     var oCmd = dAtkVary.trigger_passive[i];
+            //     //获得被动技能数据
+            //     oCmd.TryExecute();
+            //     //移除技能
+            //     dAtkVary.trigger_passive.Remove(oCmd);
+            // }
             
             //3.检查并通知命令：调用 oCmd:CheckNotifyCmds 可能基于攻击者的状态或条件处理命令的其他方面。
             // oCmd:CheckNotifyCmds(dAtkVary, 0)
 
             
             var refVicObjs = new List<Warrior>();
+            foreach (var vicId in vicid_list)
+            {
+                if (WarManager.Current.TryGetWarrior(vicId,out  var warrior))
+                {
+                    refVicObjs.Add(warrior);
+                }
+            }
+            
             //7.准备魔法单元和数据：准备一个新的魔法单元（oMagicUnit）并附上相关数据，如攻击者和受害者的引用。这部分涉及设置魔法单元以执行法术或能力
-            MagicManager.Current.NewMagicUnit(magic_id, magic_index, atkObj,refVicObjs, IsPursued).Forget();
+            //magic_index
+            MagicManager.Current.NewMagicUnit(magic_id, 0, atkObj,refVicObjs, IsPursued).Forget();
 
 
         }

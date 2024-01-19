@@ -10,7 +10,8 @@ using UnityEngine;
 
 namespace GameScripts.RunTime.Magic
 {
-    public class MagicManager: SingletonBase<MagicManager>
+    [CustomModule("施法模块",true)]
+    public class MagicManager: CustomModuleBase
     {
 
         internal static int CurUnitIdx;
@@ -19,14 +20,19 @@ namespace GameScripts.RunTime.Magic
         private Dictionary<Type, Type> _d2HInstances;
         private Dictionary<string, MagicData> _magicDataInstance;
         private List<MagicUnit> _units;
-
+     
 
 
         private Transform _calcPosTransform;
 
-        public MagicManager()
+
+        public static MagicManager Current { get; private set; }
+        
+     
+        public override void OnInit()
         {
-            
+            base.OnInit();
+            _sb = new StringBuilder();
             _d2HInstances = new Dictionary<Type, Type>();
             _magicDataInstance = new Dictionary<string, MagicData>();
             _units = new List<MagicUnit>();
@@ -41,6 +47,8 @@ namespace GameScripts.RunTime.Magic
             }
 
             _calcPosTransform = new GameObject("CalcPosObject").transform;
+            Current = this;
+            IsRunning = true;
         }
 
 
@@ -56,7 +64,7 @@ namespace GameScripts.RunTime.Magic
         public async UniTaskVoid NewMagicUnit(int magicID, int magicIndex, Warrior atkObj, List<Warrior> refVicObjs, bool isPursued)
         {
             var shape = 1110;
-            var oWarriorName = atkObj.GetName();
+            // var oWarriorName = atkObj.GetName();
             // Log.Info(string.Format("<color=#F75000> >>> .%s | %s </color>", "NewMagicUnit", "加载技能"), string.Format("Name：%s | ID：%s | Shape：%s | Index：%s", oWarriorName, magicID, shape, magicIndex));
             
             // var dFileData = self:GetFileData(id, shape, index);
@@ -64,6 +72,7 @@ namespace GameScripts.RunTime.Magic
             var magicData = await GetMagicData(magicID, shape, magicIndex);
             var magicUnit = Main.m_ReferencePool.Spawn<MagicUnit>();
             magicUnit.Fill(magicID, shape,magicIndex,isPursued,atkObj,refVicObjs,magicData.Commands);
+            _units.Add(magicUnit);
         }
 
         public Type GetHandlerType(CommandData commandData)
@@ -105,5 +114,13 @@ namespace GameScripts.RunTime.Magic
         }
 
 
+        public override void OnUpdate()
+        {
+            base.OnUpdate();
+            foreach (var magicUnit in _units)
+            {
+                magicUnit.OnUpdate();
+            }
+        }
     }
 }

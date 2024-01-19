@@ -7,7 +7,7 @@ namespace GameScripts.RunTime.Magic.Command.Handler
     {
         protected override void OnFill(VicHitInfo commandData)
         {
-            MagicUnit.AddHitInfo();
+            Unit.AddHitInfo();
         }
     }
 }

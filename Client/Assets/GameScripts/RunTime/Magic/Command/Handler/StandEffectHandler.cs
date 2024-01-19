@@ -21,8 +21,8 @@ namespace GameScripts.RunTime.Magic.Command.Handler
                 return;
             }
             
-            var atkObj = MagicUnit.AtkObj;
-            var vicObjs = MagicUnit.VicObjs;
+            var atkObj = Unit.AtkObj;
+            var vicObjs = Unit.VicObjs;
 
             for (var i = 0; i < _warriors.Count; i++)
             {

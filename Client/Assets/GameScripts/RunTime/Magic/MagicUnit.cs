@@ -69,6 +69,7 @@ namespace GameScripts.RunTime.Magic
             {
                 var handlerType = MagicManager.Current.GetHandlerType(cmdData);
                 var cmdHandler = Main.m_ReferencePool.Spawn(handlerType).Cast<CmdHandler>();
+                cmdHandler.Fill(cmdData, this);
                 _handlerList.Add(cmdHandler);
             }
         }
@@ -124,9 +125,10 @@ namespace GameScripts.RunTime.Magic
 
             for (var i = m_CurCmdIdx; i < _handlerList.Count; i++)
             {
-                if (_handlerList[i].StartTime < _elapsedTime) continue;
+                if (_handlerList[i].StartTime > _elapsedTime) continue;
                 //开始执行
                 _handlerList[i].Execute();
+                Log.Info($"{Time.realtimeSinceStartup}  执行{i}  {_handlerList[i].GetType()}");
                 m_CurCmdIdx++;
             }
         }

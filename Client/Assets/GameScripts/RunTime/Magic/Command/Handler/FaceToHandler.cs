@@ -31,8 +31,8 @@ namespace GameScripts.RunTime.Magic.Command.Handler
                          return;
                      }
 
-                     var atkObj = MagicUnit.AtkObj;
-                     var vicObj = MagicUnit.GetVicObjFirst();
+                     var atkObj = Unit.AtkObj;
+                     var vicObj = Unit.GetVicObjFirst();
                      
                      if (commandData.face_to == FaceType.Fixed_pos)
                      {
