@@ -47,6 +47,8 @@ namespace GameScripts.RunTime.Model
 
         
         #region Entity 基础属性
+
+        public Transform Transform => Entity?.transform;
         public Transform Parent => Entity?.transform.parent;
 
         /// <summary>
@@ -57,7 +59,7 @@ namespace GameScripts.RunTime.Model
             get => Entity is null ? Vector3.zero : Entity.transform.position;
             set
             {
-                if ( Entity is null)
+                if (Entity)
                 {
                     Entity.transform.position = value;
                 }
@@ -72,7 +74,7 @@ namespace GameScripts.RunTime.Model
             get => Entity is null ? Vector3.zero : Entity.transform.localPosition;
             set
             {
-                if ( Entity is null)
+                if (Entity)
                 {
                     Entity.transform.localPosition = value;
                 }
@@ -87,7 +89,7 @@ namespace GameScripts.RunTime.Model
             get => Entity is null ? Vector3.zero : Entity.transform.localEulerAngles;
             set
             {
-                if ( Entity is null)
+                if (Entity)
                 {
                     Entity.transform.localEulerAngles = value;
                 }

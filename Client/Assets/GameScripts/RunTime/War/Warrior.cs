@@ -5,6 +5,7 @@ using DG.Tweening;
 using GameScript.RunTime.Config;
 using GameScripts.RunTime.Model;
 using HT.Framework;
+using Pb.Mmo.Common;
 using UnityEngine;
 
 namespace GameScripts.RunTime.War
@@ -17,7 +18,6 @@ namespace GameScripts.RunTime.War
     {
 
         private const float DIS_THRESHOLD = 0.01f;
-        public ActorEntity _actor;
         private Busy _busy;
         private Busy currentStatus;
 
@@ -54,12 +54,19 @@ namespace GameScripts.RunTime.War
         /// </summary>
         public Vector3 OriginPos;
 
-        
+        public Transform RotateTransform { get; set; }
         #region 方向
-        public Vector3 LocalUp => WarManager.Current.Root.InverseTransformDirection(RotateObj.up);
-        public Vector3 LocalForward => WarManager.Current.Root.InverseTransformDirection(RotateObj.forward);
-        public Vector3 LocalRight => WarManager.Current.Root.InverseTransformDirection(RotateObj.right);
+        public Vector3 LocalUp => WarManager.Current.Root.InverseTransformDirection(RotateTransform.up);
+        public Vector3 LocalForward => WarManager.Current.Root.InverseTransformDirection(RotateTransform.forward);
+        public Vector3 LocalRight => WarManager.Current.Root.InverseTransformDirection(RotateTransform.right);
         #endregion
+
+        
+        public override void OnInit()
+        {
+            base.OnInit();
+            RotateTransform = VbArray.Get<Transform>("rotateNode");
+        }
 
         #region 行为
         public void GoBack()
@@ -89,7 +96,7 @@ namespace GameScripts.RunTime.War
                 LookAtPos(endPos);
 
                 //播放移动动画
-                _actor.AdjustSpeedPlay(AnimationClipCode.RUN, 0.4f);
+                AdjustSpeedPlay(AnimationClipCode.RUN, 0.4f);
                 //等待移动结束
                 await Entity.transform.DOLocalMove(endPos, t).AsyncWaitForCompletion();
                 
@@ -100,7 +107,7 @@ namespace GameScripts.RunTime.War
                 // self:FaceDefault()
                 
                 //播放动画
-                _actor.CrossFade(AnimationClipCode.IDLE_WAR ,0.1f,0,0);
+                CrossFade(AnimationClipCode.IDLE_WAR ,0.1f,0,0);
                 
                 //如果需要回到原地
                 if (isRunBack)
@@ -215,8 +222,6 @@ namespace GameScripts.RunTime.War
         #endregion
 
         public override int Layer => LayerConfig.War;
-        public Transform RotateObj { get; set; }
-      
 
         public int MagicID;
 

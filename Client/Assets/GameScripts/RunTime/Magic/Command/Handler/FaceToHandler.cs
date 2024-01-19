@@ -17,7 +17,7 @@ namespace GameScripts.RunTime.Magic.Command.Handler
              GetExecutors(commandData.executor,_warriors);
              foreach (var warrior in _warriors)
              {
-                 var rotateObj = warrior.RotateObj;
+                 var rotateObj = warrior.RotateTransform;
                  if (rotateObj)
                  {
                      if (commandData.face_to == FaceType.Default)

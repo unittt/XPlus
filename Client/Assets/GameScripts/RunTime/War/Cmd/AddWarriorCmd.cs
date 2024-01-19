@@ -35,23 +35,21 @@ namespace GameScripts.RunTime.War
             WarManager.Current.AddWarrior(BaseWarrior.wid, warrior);
             //填充战士数据
             warrior.Fill(BaseWarrior.status.model_info);
-            //设置父级
-            warrior.SetParent(WarManager.Current.Root);
             //设置战士的坐标 和 欧拉角
             var camp = (ECamp)camp_id;
             warrior.OriginPos = WarTools.GetPositionByCampAndIndex(camp, BaseWarrior.pos);
-            warrior.Position =   warrior.OriginPos;
+            warrior.Position = warrior.OriginPos;
             warrior.LocalEulerAngles = WarTools.GetDefalutRotateAngle(camp);
             // 等待模型装载完毕
             await warrior.IsBusyWait;
-            
+
             //如果是玩家 或者召唤物
             if (BaseWarrior is PlayerWarrior or SumWarrior)
             {
                 //更新自动施法
                 warrior.UpdateAutoMagic();
             }
-            
+
             //如果是玩家 并且拥有特殊技能
             if (warrior.m_ID == WarManager.Current.m_HeroWid) //&& warrior.GetSpecialSkillList() > 0)
             {
@@ -65,8 +63,9 @@ namespace GameScripts.RunTime.War
             }
             else
             {
-         
+
             }
+
             SetCompleted();
         }
     }

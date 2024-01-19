@@ -467,7 +467,14 @@ namespace GameScripts.RunTime.War
 
         public void AddWarrior(int wid, Warrior warrior)
         {
-            _warriors.TryAdd(wid, warrior);
+            if (_warriors.TryAdd(wid, warrior))
+            {
+                warrior.SetParent(Root);
+            }
+            else
+            {
+                Log.Error($"重复添加Warrior ID :{wid}");
+            }
         }
         
         /// <summary>

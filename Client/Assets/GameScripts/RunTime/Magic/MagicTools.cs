@@ -65,7 +65,7 @@ namespace GameScripts.RunTime.Magic
             if (positionType == PositionType.AttackerPosition)
             {
                 var faceTm = (faceDir && vicObj != null) ? vicObj.Entity.transform : null;
-                relativeObj =  GetCalcPosObj(atkObj._actor.Entity.transform, faceTm);
+                relativeObj =  GetCalcPosObj(atkObj.Transform, faceTm);
             }
             else if (positionType == PositionType.VictimPosition)
             {
@@ -75,7 +75,7 @@ namespace GameScripts.RunTime.Magic
                 {
                     prePos = atkObj.GetNormalAttackPos(vicObj);
                 }
-                relativeObj =  GetCalcPosObj(atkObj._actor.Entity.transform, faceTm,prePos);
+                relativeObj =  GetCalcPosObj(atkObj.Transform, faceTm,prePos);
             }
             else if (positionType == PositionType.CameraPosition)
             {
@@ -151,7 +151,7 @@ namespace GameScripts.RunTime.Magic
 
         public static Vector3 GetExecutorLocalAngle(Warrior warrior, ExecutorDirection commandDataEffectDirType)
         {
-            var rotateObj = warrior.RotateObj;
+            var rotateObj = warrior.RotateTransform;
             var localEulerAngles = rotateObj.localEulerAngles;
             if (commandDataEffectDirType == ExecutorDirection.Backward)
             {
@@ -175,23 +175,23 @@ namespace GameScripts.RunTime.Magic
             switch (effectDirType)
             {
                 case ExecutorDirection.Forward:
-                    dirPos = pos + warrior.RotateObj.forward;
+                    dirPos = pos + warrior.RotateTransform.forward;
                     break;
                 case ExecutorDirection.Backward:
-                    dirPos = pos + -warrior.RotateObj.forward;
+                    dirPos = pos + -warrior.RotateTransform.forward;
                     break;
                 case ExecutorDirection.Left:
-                    dirPos = pos + -warrior.RotateObj.right;
+                    dirPos = pos + -warrior.RotateTransform.right;
                     break;
                 case ExecutorDirection.Right:
-                    dirPos = pos + warrior.RotateObj.right;
+                    dirPos = pos + warrior.RotateTransform.right;
                     break;
                 case ExecutorDirection.Up:
                     
-                    dirPos = pos +warrior.RotateObj.up;
+                    dirPos = pos +warrior.RotateTransform.up;
                     break;
                 case ExecutorDirection.Down:
-                    dirPos = pos + -warrior.RotateObj.up;
+                    dirPos = pos + -warrior.RotateTransform.up;
                     break;
             }
 
