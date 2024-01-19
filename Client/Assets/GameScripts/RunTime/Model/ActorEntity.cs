@@ -24,6 +24,8 @@ namespace GameScripts.RunTime.Model
         /// 模型信息
         /// </summary>
         public ModelInfo ModelInfo { get; private set; }
+
+        public int Shape => ModelInfo.shape;
         /// <summary>
         /// 模型容器
         /// </summary>
@@ -34,27 +36,38 @@ namespace GameScripts.RunTime.Model
         private event Action _comboHitEvent;
         private ComboActionInfo[]  _comboActionInfos;
         private int _comboIndex;
-
-        public int Shape { get; private set; }
-
         #endregion
 
         /// <summary>
         /// 是否忙碌的 (主要在于模型加载)
         /// </summary>
-        public bool IsBusy { get; private set; }
+        public bool IsBusy { get; protected set; }
 
         public WaitUntil IsBusyWait { get; private set; }
 
+        
+        #region Entity 基础属性
+        public Transform Parent => Entity?.transform.parent;
+        /// <summary>
+        /// 世界坐标
+        /// </summary>
+        public Vector3 Pos => Entity is null ? Vector3.zero : Entity.transform.position;
+        /// <summary>
+        /// 本地坐标
+        /// </summary>
+        public Vector3 LocalPos => Entity is null ? Vector3.zero : Entity.transform.localPosition;
+        /// <summary>
+        /// 欧拉角
+        /// </summary>
+        public Vector3 LocalEulerAngles =>Entity is null ? Vector3.zero : Entity.transform.localEulerAngles;
+        
         /// <summary>
         /// 实体层级
         /// </summary>
         public abstract int Layer { get; }
-
-        public Transform Parent => Entity?.transform.parent;
-        public Vector3 Pos => Entity is null ? Vector3.zero : Entity.transform.position;
-
-
+        #endregion
+       
+        
         #region 初始化
         public override void OnInit()
         {
@@ -84,7 +97,6 @@ namespace GameScripts.RunTime.Model
         /// <param name="modelInfo"></param>
         public virtual void Fill(ModelInfo modelInfo)
         {
-            Shape = modelInfo.shape;
             ModelInfo = modelInfo;
             LoadAllModel().Forget();
         }
@@ -106,10 +118,7 @@ namespace GameScripts.RunTime.Model
         /// <summary>
         /// 当所有模型都加载完成
         /// </summary>
-        protected virtual async UniTask OnAllModelLoadDone()
-        {
-           
-        }
+        protected abstract UniTask OnAllModelLoadDone();
         #endregion
 
 
@@ -198,8 +207,7 @@ namespace GameScripts.RunTime.Model
             IsBusy = false;
         }
         #endregion
-
-
+        
         #region 切换翅膀
         /// <summary>
         /// 切换翅膀

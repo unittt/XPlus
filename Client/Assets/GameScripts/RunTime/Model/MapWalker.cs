@@ -82,6 +82,11 @@ namespace GameScripts.RunTime.Model
         
         private async UniTaskVoid InternalSwitchRide()
         {
+            if (IsBusy)
+            {
+                await IsBusyWait;
+            }
+            IsBusy = true;
             //1.释放坐骑
             var rideModel = GetModel<RideModel>();
             rideModel.ReleaseEntity();
@@ -92,6 +97,7 @@ namespace GameScripts.RunTime.Model
             //3.切换主模型的父物体
             var mainModel = GetModel<MainModel>();
             mainModel.SetParent(mainModel.GetParent());
+            IsBusy = false;
         }
     }
 }

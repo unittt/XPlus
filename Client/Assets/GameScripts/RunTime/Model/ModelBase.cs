@@ -12,7 +12,6 @@ namespace GameScripts.RunTime.Model
     /// </summary>
     public abstract class ModelBase : IReference
     {
-        
         /// <summary>
         /// 角色实体
         /// </summary>
@@ -25,16 +24,11 @@ namespace GameScripts.RunTime.Model
         /// <summary>
         /// 模型实体
         /// </summary>
-        public GameObject Entity { get; protected set; }
+        public GameObject Entity { get; private set; }
         /// <summary>
         /// 模型实体是否加载完成
         /// </summary>
         public bool IsLoadDone => Entity is not null;
-
-        /// <summary>
-        /// 是否正在加载中
-        /// </summary>
-        public bool IsLoading { get; private set; }
 
         private Animator _animator;
 
@@ -55,23 +49,14 @@ namespace GameScripts.RunTime.Model
             {
                 return;
             }
-
-            IsLoading = true;
+            
             Entity = await Main.m_Resource.LoadPrefab(location,GetParent());
+            //设置层级
             Entity.SetLayerIncludeChildren(ActorEntity.Layer);
-            
-            //加载对应的动画控制器
+            //获取动画控制器
             Entity.TryGetComponent(out _animator);
-            // var animatorControllerLocation = GetAnimatorControllerLocation();
-            // if (_animator && !string.IsNullOrEmpty(animatorControllerLocation))
-            // {
-            //     var animatorOverrideController = await Main.m_Resource.LoadAsset<AnimatorOverrideController>(animatorControllerLocation);
-            //     _animator.runtimeAnimatorController = animatorOverrideController;
-            // }
-            
             OnEntityCreationCompleted();
-            CrossFade(AnimationClipCode.IDLE_CITY,0, 0);
-            IsLoading = false;
+            // CrossFade(AnimationClipCode.IDLE_CITY,0, 0);
         }
         
         
@@ -121,11 +106,6 @@ namespace GameScripts.RunTime.Model
         }
         #endregion
         
-        public void SetAnimatorCullModel(AnimatorCullingMode animatorCullingMode)
-        {
-            _animator.cullingMode = animatorCullingMode;
-        }
-
         /// <summary>
         ///  加载新的动作控制器(场景：1 战斗:2 创角 3 4: 结婚)
         /// </summary>
@@ -133,21 +113,7 @@ namespace GameScripts.RunTime.Model
         {
             _animator.runtimeAnimatorController = controller;
         }
-
-   
         
-        /// <summary>
-        /// 显示或者隐藏模型
-        /// </summary>
-        /// <param name="active"></param>
-        public virtual void SetActive(bool value)
-        {
-            if (IsLoadDone)
-            {
-                Entity.SetActive(value);
-            }
-        }
-
         /// <summary>
         /// 设置模型透明度(0 ~ 1)
         /// </summary>
@@ -174,6 +140,7 @@ namespace GameScripts.RunTime.Model
         /// <param name="speed"></param>
         public void SetAnimationSpeed(float speed)
         {
+            if (_animator is null) return;
             _animator.speed = speed;
         }
         
@@ -183,10 +150,11 @@ namespace GameScripts.RunTime.Model
         /// <param name="state"></param>
         /// <param name="normalizedTime"></param>
         public virtual void Play(string state, float normalizedTime)
-        { 
+        {
+            if (_animator is null) return;
             normalizedTime = Mathf.Max(normalizedTime, 0);
             var iHash = ModelTools.StateToHash(state);
-            _animator?.Play(iHash,0, normalizedTime);
+            _animator.Play(iHash,0, normalizedTime);
         }
 
         /// <summary>
@@ -196,9 +164,10 @@ namespace GameScripts.RunTime.Model
         /// <param name="fixedTime"></param>
         public void PlayInFixedTime(string state, float fixedTime)
         {
+            if (_animator is null) return;
             fixedTime = Mathf.Max(fixedTime, 0);
             var iHash = ModelTools.StateToHash(state);
-            _animator?.PlayInFixedTime(iHash,0,fixedTime);
+            _animator.PlayInFixedTime(iHash,0,fixedTime);
         }
 
         /// <summary>
@@ -224,6 +193,7 @@ namespace GameScripts.RunTime.Model
         /// <param name="fixedTime"></param>
         public void CrossFadeInFixedTime(string sState,float duration, float fixedTime)
         {
+            if (_animator is null) return;
             var iHash = ModelTools.StateToHash(sState);
             _animator.CrossFadeInFixedTime(iHash, duration, 0, fixedTime);
         }
@@ -247,7 +217,7 @@ namespace GameScripts.RunTime.Model
         {
             ReleaseEntity();
             ActorEntity = null;
-            IsLoading = false;
+            _animator = null;
         }
     }
 }
