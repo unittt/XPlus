@@ -120,6 +120,14 @@ MonoBehaviour:
         FilterRuleName: CollectPrefab
         AssetTags: 
         UserData: 
+      - CollectPath: Assets/GameRes/Model/Character
+        CollectorGUID: 9fdee06b39e0ff3439f852ee8cc2b8ce
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAnimatorOverrideController
+        AssetTags: 
+        UserData: 
     - GroupName: WarSound
       GroupDesc: "\u6218\u6597\u97F3\u6548"
       AssetTags: warsound

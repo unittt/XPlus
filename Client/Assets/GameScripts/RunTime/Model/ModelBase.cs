@@ -59,12 +59,22 @@ namespace GameScripts.RunTime.Model
             IsLoading = true;
             Entity = await Main.m_Resource.LoadPrefab(location,GetParent());
             Entity.SetLayerIncludeChildren(ActorEntity.Layer);
-            _animator = Entity.GetComponent<Animator>();
+            
+            //加载对应的动画控制器
+            Entity.TryGetComponent(out _animator);
+            // var animatorControllerLocation = GetAnimatorControllerLocation();
+            // if (_animator && !string.IsNullOrEmpty(animatorControllerLocation))
+            // {
+            //     var animatorOverrideController = await Main.m_Resource.LoadAsset<AnimatorOverrideController>(animatorControllerLocation);
+            //     _animator.runtimeAnimatorController = animatorOverrideController;
+            // }
+            
             OnEntityCreationCompleted();
             CrossFade(AnimationClipCode.IDLE_CITY,0, 0);
             IsLoading = false;
         }
-
+        
+        
         /// <summary>
         /// 实体创建完成
         /// </summary>
@@ -119,7 +129,7 @@ namespace GameScripts.RunTime.Model
         /// <summary>
         ///  加载新的动作控制器(场景：1 战斗:2 创角 3 4: 结婚)
         /// </summary>
-        public void ReloadAnimator(RuntimeAnimatorController controller)
+        public void SetAnimatorController(RuntimeAnimatorController controller)
         {
             _animator.runtimeAnimatorController = controller;
         }

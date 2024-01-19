@@ -54,7 +54,7 @@ namespace GameScript.RunTime.Procedure
             modelInfo.shape = 1110;
             modelInfo.horse = 4004;
             modelInfo.weapon = 9;
-            _mapWalkerEntity.AssembleModel(modelInfo);
+            _mapWalkerEntity.Fill(modelInfo);
             var mapTouchController = GameObject.Find("Touch").GetComponent<MapTouchController>();
             mapTouchController._walker = _mapWalkerEntity.Agent;
             MapManager.Current.SetFollow(_mapWalkerEntity.Entity.transform);

@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using GameScript.RunTime.Config;
-using GameScripts.RunTime.DataUser;
 using GameScripts.RunTime.Model;
 using HT.Framework;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace GameScripts.RunTime.War
 {
@@ -53,6 +51,11 @@ namespace GameScripts.RunTime.War
 
         public Vector3 OriginPos { get; private set; }
 
+        
+        
+        
+        
+        
 
 
         #region 方向
@@ -187,6 +190,13 @@ namespace GameScripts.RunTime.War
 
         public Transform ActorContainer { get; private set; }
 
+
+        protected override async UniTask OnAssembleModelFinish()
+        {
+            var animatorControllerLocation = $"Animator{Shape}_2";
+            var animatorOverrideController = await Main.m_Resource.LoadAsset<AnimatorOverrideController>(animatorControllerLocation);
+            GetModel<MainModel>().SetAnimatorController(animatorOverrideController);
+        }
 
         #region Busy
         

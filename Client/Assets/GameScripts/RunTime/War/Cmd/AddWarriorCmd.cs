@@ -31,14 +31,16 @@ namespace GameScripts.RunTime.War
         {
             //加载战士
             var warrior = await Main.m_Entity.CreateEntity<Warrior>();
-            WarManager.Current.AddWarrior(warrior);
-            //装载模型
-            await warrior.AssembleModel(BaseWarrior.status.model_info);
-            //设置坐标
-            // warrior.SetOriginPos(WarTools.GetPositionByCampAndIndex(ECamp.A,  BaseWarrior.pos));
+            warrior.Fill(BaseWarrior.status.model_info);
             var camp = (ECamp)camp_id;
             warrior.Entity.transform.position = WarTools.GetPositionByCampAndIndex(camp, BaseWarrior.pos);
             warrior.Entity.transform.localEulerAngles = WarTools.GetDefalutRotateAngle(camp);
+            WarManager.Current.AddWarrior(warrior);
+            //装载模型
+            await warrior.InitAssembleModelWait;
+            //设置坐标
+            // warrior.SetOriginPos(WarTools.GetPositionByCampAndIndex(ECamp.A,  BaseWarrior.pos));
+      
             //如果是玩家 或者召唤物
             if (BaseWarrior is PlayerWarrior or SumWarrior)
             {

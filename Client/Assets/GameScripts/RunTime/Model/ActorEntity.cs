@@ -35,11 +35,14 @@ namespace GameScripts.RunTime.Model
         private ComboActionInfo[]  _comboActionInfos;
         private int _comboIndex;
 
-        private int _shape;
+        public int Shape { get; private set; }
 
         #endregion
-        
-        
+
+        public bool IsInitAssembleModel { get; private set; }
+
+        public WaitUntil InitAssembleModelWait { get; private set; }
+
         /// <summary>
         /// 实体层级
         /// </summary>
@@ -50,8 +53,12 @@ namespace GameScripts.RunTime.Model
 
         public override void OnInit()
         {
+            IsInitAssembleModel = false;
+            InitAssembleModelWait ??= new(() => IsInitAssembleModel);
+            
             VbArray = Entity.GetComponent<VariableBehaviour>().Container;
             ModelContainer = VbArray.Get<Transform>("modelNode");
+            
             //坐骑
             RegisterModel<RideModel>();
             //主模型
@@ -65,11 +72,19 @@ namespace GameScripts.RunTime.Model
             {
                 model.OnInit(this);
             }
-            
         }
+
+        public virtual void Fill(ModelInfo modelInfo)
+        {
+            Shape = modelInfo.shape;
+            ModelInfo = modelInfo;
+            AssembleModel();
+        }
+        
         
         public override void OnDestroy()
         {
+            IsInitAssembleModel = false;
             var maxIndex = _models.Count -1;
             for (var i = maxIndex; i >= 0; i--)
             {
@@ -104,18 +119,18 @@ namespace GameScripts.RunTime.Model
         /// <summary>
         /// 装配演员
         /// </summary>
-        /// <param name="modelInfo"></param>
-        public async UniTask AssembleModel(ModelInfo modelInfo)
+        protected async UniTask AssembleModel()
         {
-            ModelInfo = modelInfo;
             foreach (var model in _models)
             {
                 await model.CreateEntity();
             }
-            OnAssembleModelFinish();
+            await OnAssembleModelFinish();
+            //初始化完成
+            IsInitAssembleModel = true;
         }
         
-        protected virtual void OnAssembleModelFinish()
+        protected virtual async UniTask OnAssembleModelFinish()
         {
             
         }
@@ -207,7 +222,7 @@ namespace GameScripts.RunTime.Model
             }
             //3.注册结束事件
             if (endNormalized <= 0 || callBack is null) return;
-            var fixedTime = ModelTools.NormalizedToFixed(_shape, state, endNormalized - startNormalized);
+            var fixedTime = ModelTools.NormalizedToFixed(Shape, state, endNormalized - startNormalized);
             FixedEvent(fixedTime, callBack);
         }
 
@@ -237,7 +252,7 @@ namespace GameScripts.RunTime.Model
         public void PlayInFrame(string state, int startFrame, int endFrame, HTFAction callBack = null)
         {
             //1.如果不存在帧动画 跳出
-            if (!AnimClipData.TryGetAnimClipInfo(_shape, state, out var dClipInfo)) return;
+            if (!AnimClipData.TryGetAnimClipInfo(Shape, state, out var dClipInfo)) return;
             //2.播放动画
             var startNormalized = startFrame / dClipInfo.Frame;
             Play(state, startNormalized);
@@ -267,7 +282,7 @@ namespace GameScripts.RunTime.Model
             }
             //3.注册结束事件
             if (endNormalized <= 0|| endNormalized < startNormalized) return;
-            var fixedTime = ModelTools.NormalizedToFixed(_shape, state, endNormalized - startNormalized);
+            var fixedTime = ModelTools.NormalizedToFixed(Shape, state, endNormalized - startNormalized);
             FixedEvent(fixedTime, callBack);
         }
 
@@ -288,7 +303,7 @@ namespace GameScripts.RunTime.Model
         public void AdjustSpeedPlay(string state, float adjustTime)
         {
             PlayInFixedTime(state,0,0);
-            if (AnimClipData.TryGetAnimClipInfo(_shape, state, out var dClipInfo))
+            if (AnimClipData.TryGetAnimClipInfo(Shape, state, out var dClipInfo))
             {
                 // SetSpeed(dClipInfo.Length / adjustTime);
             }
@@ -298,7 +313,7 @@ namespace GameScripts.RunTime.Model
         {
             if (endFrame == 0)
             {
-                if (AnimClipData.TryGetAnimClipInfo(_shape, state, out var dClipInfo))
+                if (AnimClipData.TryGetAnimClipInfo(Shape, state, out var dClipInfo))
                 {
                     endFrame = dClipInfo.Frame;
                     // SetSpeed(dClipInfo.Length / adjustTime);
@@ -396,7 +411,7 @@ namespace GameScripts.RunTime.Model
 
         private void NormalizedEvent(string sState, float normalizedTime, HTFAction callBack)
         {
-            if (!AnimClipData.TryGetAnimClipInfo(_shape, sState, out var dClipInfo)) return;
+            if (!AnimClipData.TryGetAnimClipInfo(Shape, sState, out var dClipInfo)) return;
             var fixedTime = dClipInfo.Length * normalizedTime;
             FixedEvent(fixedTime,callBack);
         }
