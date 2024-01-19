@@ -34,12 +34,10 @@ namespace GameScripts.RunTime.War
             //加入战士
             WarManager.Current.AddWarrior(BaseWarrior.wid, warrior);
             //填充战士数据
-            warrior.Fill(BaseWarrior.status.model_info);
+            warrior.Fill(BaseWarrior.status.model_info, (ECamp)camp_id, BaseWarrior.pos);
             //设置战士的坐标 和 欧拉角
             var camp = (ECamp)camp_id;
-            warrior.OriginPos = WarTools.GetPositionByCampAndIndex(camp, BaseWarrior.pos);
-            warrior.Position = warrior.OriginPos;
-            warrior.LocalEulerAngles = WarTools.GetDefalutRotateAngle(camp);
+
             // 等待模型装载完毕
             await warrior.IsBusyWait;
 

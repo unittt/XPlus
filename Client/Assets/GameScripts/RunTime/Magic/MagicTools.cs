@@ -65,7 +65,7 @@ namespace GameScripts.RunTime.Magic
             if (positionType == PositionType.AttackerPosition)
             {
                 var faceTm = (faceDir && vicObj != null) ? vicObj.Entity.transform : null;
-                relativeObj =  GetCalcPosObj(atkObj.Transform, faceTm);
+                relativeObj =  GetCalcPosObj(atkObj.transform, faceTm);
             }
             else if (positionType == PositionType.VictimPosition)
             {
@@ -75,7 +75,7 @@ namespace GameScripts.RunTime.Magic
                 {
                     prePos = atkObj.GetNormalAttackPos(vicObj);
                 }
-                relativeObj =  GetCalcPosObj(atkObj.Transform, faceTm,prePos);
+                relativeObj =  GetCalcPosObj(atkObj.transform, faceTm,prePos);
             }
             else if (positionType == PositionType.CameraPosition)
             {

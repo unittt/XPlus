@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using cfg.WarModule;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using GameScript.RunTime.Config;
@@ -29,6 +30,11 @@ namespace GameScripts.RunTime.War
 
 
         /// <summary>
+        /// 阵营
+        /// </summary>
+        public ECamp Camp { get; private set; }
+
+        /// <summary>
         /// 阵营编号
         /// </summary>
         public int CampID { get; private set; }
@@ -52,7 +58,7 @@ namespace GameScripts.RunTime.War
         /// <summary>
         /// 在战场中的初始坐标
         /// </summary>
-        public Vector3 OriginPos;
+        public Vector3 OriginPos { get; private set; }
 
         public Transform RotateTransform { get; private set; }
         #region 方向
@@ -68,23 +74,38 @@ namespace GameScripts.RunTime.War
             RotateTransform = VbArray.Get<Transform>("rotateNode");
         }
 
+        public void Fill(ModelInfo modelInfo, ECamp camp, int campPos)
+        {
+            Fill(modelInfo);
+            Camp = camp;
+            OriginPos = WarTools.GetPositionByCampAndIndex(camp, campPos);
+            Position = OriginPos;
+            LocalEulerAngles = WarTools.GetDefalutRotateAngle(camp);
+        }
+
         #region 移动
         public void GoBack(float speed)
         {
             var angle = GetDefaultRotateAngle();
-            RunTo(OriginPos, angle,speed, null);
+            RunTo(OriginPos, angle,speed);
         }
 
 
+        public void RunTo(Vector3 endPos,float speed,Action callBack = null)
+        {
+            
+        }
         
-        public async UniTaskVoid RunTo(Vector3 endPos,Vector3 endAngle,float speed,Action callBack)
+        /// <summary>
+        /// 移动
+        /// </summary>
+        /// <param name="endPos">目标点</param>
+        /// <param name="endAngle">结束点</param>
+        /// <param name="speed">速度</param>
+        /// <param name="callBack"></param>
+        public void RunTo(Vector3 endPos,Vector3 endAngle,float speed,Action callBack = null)
         {
             if(!Entity)return;
-            
-            //如果对象死亡 不处理
-            //添加标签
-            // AddBusy(Busy.RunTo);
-            
             
             //获得距离
             var dis = WarTools.GetHorizontalDis(LocalPosition, endPos);
@@ -93,11 +114,13 @@ namespace GameScripts.RunTime.War
             {
                 //时间
                 var t = dis / speed;
-                LookAtPos(endPos, t);
+                //朝向坐标
+                LookAtPos(endPos);
                 //播放移动动画
                 AdjustSpeedPlay(AnimationClipCode.RUN, 0.4f);
+                transform.DOLocalMove(endPos, t);
                 //等待移动结束
-                await Entity.transform.DOLocalMove(endPos, t).AsyncWaitForCompletion();
+                // await Entity.transform.DOLocalMove(endPos, t).AsyncWaitForCompletion();
                 
                 //设置角度
                 // if endAngle then
@@ -116,13 +139,13 @@ namespace GameScripts.RunTime.War
                 
                 callBack?.Invoke();
                 //等待一会
-                await UniTask.Delay(200);
+                // await UniTask.Delay(200);
               
             }
             else
             {
                 //1.设置旋转角度
-                RotateTransform.localEulerAngles = GetDefaultRotateAngle();
+                RotateTransform.localEulerAngles = endAngle;
                 //2.直接回调
                 callBack?.Invoke();
             }
@@ -137,6 +160,11 @@ namespace GameScripts.RunTime.War
             
         }
         
+        /// <summary>
+        /// 朝向目标
+        /// </summary>
+        /// <param name="localPos"></param>
+        /// <param name="time"></param>
         public void LookAtPos(Vector3 localPos, float time = 0)
         {
             var position = LocalPosition;
@@ -146,8 +174,8 @@ namespace GameScripts.RunTime.War
                 return;
             }
 
-            var dirForward = Entity.transform.InverseTransformDirection(dir);
-            var dirUp = Entity.transform.InverseTransformDirection(Entity.transform.up);
+            var dirForward = transform.InverseTransformDirection(dir);
+            var dirUp = transform.InverseTransformDirection(transform.up);
             var r = Quaternion.LookRotation(dirForward, dirUp);
 
             if (time > 0)
@@ -177,7 +205,7 @@ namespace GameScripts.RunTime.War
         /// <returns></returns>
         public Vector3 GetDefaultRotateAngle()
         {
-            return Vector3.zero;
+             return Camp == ECamp.A ? new Vector3(0, -50, 0) : new Vector3(0, 130, 0);
         }
         #endregion
         

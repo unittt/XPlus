@@ -48,7 +48,7 @@ namespace GameScripts.RunTime.Model
         
         #region Entity 基础属性
 
-        public Transform Transform => Entity?.transform;
+        public Transform transform => Entity?.transform;
         public Transform Parent => Entity?.transform.parent;
 
         /// <summary>
