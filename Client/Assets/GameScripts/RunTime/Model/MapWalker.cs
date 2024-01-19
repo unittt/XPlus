@@ -41,8 +41,8 @@ namespace GameScripts.RunTime.Model
             Agent = null;
             base.Reset();
         }
-
-        protected override async UniTask OnAssembleModelFinish()
+        
+        protected override async UniTask OnAllModelLoadDone()
         {
             //注册监听
             Agent.OnStartMove += OnStartMove;
@@ -50,8 +50,8 @@ namespace GameScripts.RunTime.Model
             Agent.OnUpdateMove += OnUpdateMove;
             Agent.IsMoveable = true;
         }
-        
-        
+
+
         #region 移动
         private void OnStartMove()
         {

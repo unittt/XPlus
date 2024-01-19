@@ -39,9 +39,12 @@ namespace GameScripts.RunTime.Model
 
         #endregion
 
-        public bool IsInitAssembleModel { get; private set; }
+        /// <summary>
+        /// 是否忙碌的 (主要在于模型加载)
+        /// </summary>
+        public bool IsBusy { get; private set; }
 
-        public WaitUntil InitAssembleModelWait { get; private set; }
+        public WaitUntil IsBusyWait { get; private set; }
 
         /// <summary>
         /// 实体层级
@@ -51,10 +54,11 @@ namespace GameScripts.RunTime.Model
         public Transform Parent => Entity?.transform.parent;
         public Vector3 Pos => Entity is null ? Vector3.zero : Entity.transform.position;
 
+
+        #region 初始化
         public override void OnInit()
         {
-            IsInitAssembleModel = false;
-            InitAssembleModelWait ??= new(() => IsInitAssembleModel);
+            IsBusyWait ??= new(() => !IsBusy);
             
             VbArray = Entity.GetComponent<VariableBehaviour>().Container;
             ModelContainer = VbArray.Get<Transform>("modelNode");
@@ -74,26 +78,42 @@ namespace GameScripts.RunTime.Model
             }
         }
 
+        /// <summary>
+        /// 填充数据
+        /// </summary>
+        /// <param name="modelInfo"></param>
         public virtual void Fill(ModelInfo modelInfo)
         {
             Shape = modelInfo.shape;
             ModelInfo = modelInfo;
-            AssembleModel();
+            LoadAllModel().Forget();
         }
         
-        
-        public override void OnDestroy()
+        /// <summary>
+        /// 初始化时加载所有模型
+        /// </summary>
+        private async UniTaskVoid LoadAllModel()
         {
-            IsInitAssembleModel = false;
-            var maxIndex = _models.Count -1;
-            for (var i = maxIndex; i >= 0; i--)
+            IsBusy = true;
+            foreach (var model in _models)
             {
-                Main.m_ReferencePool.Despawn(_models[i]);
+                await model.CreateEntity();
             }
-            _models.Clear();
-            _modelInstance.Clear();
+            await OnAllModelLoadDone();
+            IsBusy = false;
         }
-        
+
+        /// <summary>
+        /// 当所有模型都加载完成
+        /// </summary>
+        protected virtual async UniTask OnAllModelLoadDone()
+        {
+           
+        }
+        #endregion
+
+
+        #region 模型
         /// <summary>
         /// 注册模型逻辑
         /// </summary>
@@ -115,25 +135,110 @@ namespace GameScripts.RunTime.Model
             var type = typeof(T);
             return _modelInstance.ContainsKey(type) ? _modelInstance[type].Cast<T>() : null;
         }
-        
+
+
+        #region 切换主模型
         /// <summary>
-        /// 装配演员
+        /// 切换主模型
         /// </summary>
-        protected async UniTask AssembleModel()
+        public void SwitchMainModel()
         {
-            foreach (var model in _models)
-            {
-                await model.CreateEntity();
-            }
-            await OnAssembleModelFinish();
-            //初始化完成
-            IsInitAssembleModel = true;
+            InternalSwitchMainModel().Forget();
         }
         
-        protected virtual async UniTask OnAssembleModelFinish()
+        private async UniTaskVoid InternalSwitchMainModel()
         {
+            if (IsBusy)
+            {
+                await IsBusyWait;
+            }
+
+            IsBusy = true;
+            //1.移除主模型
+            var mainModel = GetModel<MainModel>();
+            mainModel.ReleaseEntity();
             
+            //2.加载新的主模型
+            await mainModel.CreateEntity();
+            
+            //3.设置武器父物体
+            var weaponModel = GetModel<WeaponModel>();
+            weaponModel.SetParent(weaponModel.GetParent());
+            
+            //4.设置翅膀的父物体
+            var wingModel = GetModel<WingModel>();
+            wingModel.SetParent(wingModel.GetParent());
+
+            IsBusy = false;
         }
+        #endregion
+
+        #region 切换武器
+        /// <summary>
+        /// 切换武器
+        /// </summary>
+        public void SwitchWeapon()
+        {
+            InternalSwitchWeapon().Forget();
+        }
+
+        private async UniTaskVoid InternalSwitchWeapon()
+        {
+            if (IsBusy)
+            {
+                await IsBusyWait;
+            }
+
+            IsBusy = true;
+            //1.移除武器
+            var weaponModel = GetModel<WeaponModel>();
+            weaponModel.ReleaseEntity();
+            //2.加载新武器
+            await weaponModel.CreateEntity();
+            IsBusy = false;
+        }
+        #endregion
+
+
+        #region 切换翅膀
+        /// <summary>
+        /// 切换翅膀
+        /// </summary>
+        public virtual void SwitchWing()
+        {
+            InternalSwitchWing().Forget();
+        }
+
+        private async UniTaskVoid InternalSwitchWing()
+        {
+            if (IsBusy)
+            {
+                await IsBusyWait;
+            }
+            IsBusy = true;
+            //1.移除翅膀
+            var wingModel = GetModel<WingModel>();
+            wingModel.ReleaseEntity();
+            //2.加载新翅膀
+            await wingModel.CreateEntity();
+            IsBusy = false;
+        }
+        #endregion
+        
+        #endregion
+        
+        public override void OnDestroy()
+        {
+            var maxIndex = _models.Count -1;
+            for (var i = maxIndex; i >= 0; i--)
+            {
+                Main.m_ReferencePool.Despawn(_models[i]);
+            }
+            _models.Clear();
+            _modelInstance.Clear();
+        }
+        
+       
         
         /// <summary>
         /// 设置模型的透明度
@@ -149,58 +254,7 @@ namespace GameScripts.RunTime.Model
                 }
             }
         }
-
-
-        #region 模型切换
-        /// <summary>
-        /// 切换主模型
-        /// </summary>
-        public void SwitchMainModel()
-        {
-            InternalSwitchMainModel().Forget();
-        }
         
-        private async UniTaskVoid InternalSwitchMainModel()
-        {
-            //1.移除主模型
-            var mainModel = GetModel<MainModel>();
-            mainModel.ReleaseEntity();
-            
-            //2.加载新的主模型
-            await mainModel.CreateEntity();
-            
-            //3.设置武器和翅膀的父物体
-            var weaponModel = GetModel<WeaponModel>();
-            weaponModel.SetParent(weaponModel.GetParent());
-            
-            var wingModel = GetModel<WingModel>();
-            wingModel.SetParent(wingModel.GetParent());
-        }
-
-        /// <summary>
-        /// 切换武器
-        /// </summary>
-        public virtual void SwitchWeapon()
-        {
-            //1.移除武器
-            var weaponModel = GetModel<WeaponModel>();
-            weaponModel.ReleaseEntity();
-            //2.加载新武器
-            weaponModel.CreateEntity().Forget();
-        }
-
-        /// <summary>
-        /// 切换翅膀
-        /// </summary>
-        public virtual void SwitchWing()
-        {
-            //1.移除翅膀
-            var wingModel = GetModel<WingModel>();
-            wingModel.ReleaseEntity();
-            //2.加载新翅膀
-            wingModel.CreateEntity().Forget();
-        }
-        #endregion
 
         
         public virtual string GetName()

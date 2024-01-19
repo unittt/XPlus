@@ -175,9 +175,7 @@ namespace GameScripts.RunTime.War
             return Vector3.zero;
         }
         #endregion
-
-
-   
+        
         
         public Vector3 LocalPosition =>  Entity.transform.localPosition;
 
@@ -186,12 +184,12 @@ namespace GameScripts.RunTime.War
             get => Entity.transform.localEulerAngles;
             set => Entity.transform.localEulerAngles = value;
         }
-
-
+        
         public Transform ActorContainer { get; private set; }
 
+        
 
-        protected override async UniTask OnAssembleModelFinish()
+        protected override async UniTask OnAllModelLoadDone()
         {
             var animatorControllerLocation = $"Animator{Shape}_2";
             var animatorOverrideController = await Main.m_Resource.LoadAsset<AnimatorOverrideController>(animatorControllerLocation);
