@@ -42,6 +42,12 @@ namespace GameScripts.RunTime.War
             return new Vector3(0, 130, 0);
         }
 
+        /// <summary>
+        /// 根据阵营和阵营站位获取世界坐标
+        /// </summary>
+        /// <param name="camp"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public static Vector3 GetPositionByCampAndIndex(ECamp camp, int index)
         {
             return TableGlobal.Instance.TbWarPosition.GetPosition(camp, index);

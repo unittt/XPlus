@@ -18,7 +18,7 @@ namespace GameScripts.RunTime.Magic.Command.Handler
             foreach (var warrior in _warriors)
             {
                 var dir = MagicTools.GetDir(warrior, commandData.dir);
-                var beginPos = warrior.Pos;
+                var beginPos = warrior.Position;
                 var endPos = beginPos + commandData.move_time * commandData.speed * dir;
                 warrior.Entity.transform.DOLocalMove(endPos, commandData.move_time);
             }

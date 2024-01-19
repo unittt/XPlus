@@ -38,7 +38,6 @@ namespace GameScripts.RunTime.Magic
         [InspectorName("攻击者")] Attacker,
         [InspectorName("受击者")] Victim,
         [InspectorName("受击者(全部)")] AllVictims,
-        [InspectorName("像机")] Camera,
         [InspectorName("友军(全部)")] Allies,
         [InspectorName("友军(非攻击者)")] AlliesExceptAttacker,
         [InspectorName("友军(存活)")] LivingAllies,

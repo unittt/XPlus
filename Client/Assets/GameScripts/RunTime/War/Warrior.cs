@@ -13,7 +13,7 @@ namespace GameScripts.RunTime.War
     /// 战斗中对象
     /// </summary>
     [EntityResource("Warrior",true)]
-    public class Warrior : ActorEntity
+    public sealed class Warrior : ActorEntity
     {
 
         private const float DIS_THRESHOLD = 0.01f;
@@ -49,15 +49,12 @@ namespace GameScripts.RunTime.War
             }
         }
 
-        public Vector3 OriginPos { get; private set; }
+        /// <summary>
+        /// 在战场中的初始坐标
+        /// </summary>
+        public Vector3 OriginPos;
 
         
-        
-        
-        
-        
-
-
         #region 方向
         public Vector3 LocalUp => WarManager.Current.Root.InverseTransformDirection(RotateObj.up);
         public Vector3 LocalForward => WarManager.Current.Root.InverseTransformDirection(RotateObj.forward);
@@ -177,13 +174,7 @@ namespace GameScripts.RunTime.War
         #endregion
         
         
-        public Vector3 LocalPosition =>  Entity.transform.localPosition;
-
-        public Vector3 LocalEulerAngles
-        {
-            get => Entity.transform.localEulerAngles;
-            set => Entity.transform.localEulerAngles = value;
-        }
+      
         
         public Transform ActorContainer { get; private set; }
 
@@ -239,11 +230,6 @@ namespace GameScripts.RunTime.War
         /// </summary>
         /// <param name="magicID"></param>
         public void SetPlayMagicID(int magicID)
-        {
-            
-        }
-
-        public void SetOriginPos(Vector3 pos)
         {
             
         }
@@ -379,7 +365,7 @@ namespace GameScripts.RunTime.War
         
         public Vector3 GetNormalAttackPos(Warrior warrior)
         {
-            var isNearOriPos = warrior.IsNearOriPos(warrior.Pos);
+            var isNearOriPos = warrior.IsNearOriPos(warrior.Position);
             var isBossCamp = WarManager.Current.IsBossWarType && !warrior.IsAlly;
             var isNeighbor = IsNeighbor(warrior);
             //不属于boss阵营 并且不属于邻居 并且目标在目标原点附近

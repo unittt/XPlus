@@ -48,18 +48,52 @@ namespace GameScripts.RunTime.Model
         
         #region Entity 基础属性
         public Transform Parent => Entity?.transform.parent;
+
         /// <summary>
         /// 世界坐标
         /// </summary>
-        public Vector3 Pos => Entity is null ? Vector3.zero : Entity.transform.position;
+        public Vector3 Position
+        {
+            get => Entity is null ? Vector3.zero : Entity.transform.position;
+            set
+            {
+                if ( Entity is null)
+                {
+                    Entity.transform.position = value;
+                }
+            }
+        }
+
         /// <summary>
         /// 本地坐标
         /// </summary>
-        public Vector3 LocalPos => Entity is null ? Vector3.zero : Entity.transform.localPosition;
+        public Vector3 LocalPosition
+        {
+            get => Entity is null ? Vector3.zero : Entity.transform.localPosition;
+            set
+            {
+                if ( Entity is null)
+                {
+                    Entity.transform.localPosition = value;
+                }
+            }
+        }
+
         /// <summary>
         /// 欧拉角
         /// </summary>
-        public Vector3 LocalEulerAngles =>Entity is null ? Vector3.zero : Entity.transform.localEulerAngles;
+        public Vector3 LocalEulerAngles
+        {
+            get => Entity is null ? Vector3.zero : Entity.transform.localEulerAngles;
+            set
+            {
+                if ( Entity is null)
+                {
+                    Entity.transform.localEulerAngles = value;
+                }
+            }
+        }
+        
         
         /// <summary>
         /// 实体层级
@@ -234,6 +268,12 @@ namespace GameScripts.RunTime.Model
         #endregion
         
         #endregion
+        
+        
+        public void SetParent(Transform parent)
+        {
+            Entity.transform.SetParent(parent);
+        }
         
         public override void OnDestroy()
         {

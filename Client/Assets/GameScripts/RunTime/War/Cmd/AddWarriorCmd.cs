@@ -31,16 +31,20 @@ namespace GameScripts.RunTime.War
         {
             //加载战士
             var warrior = await Main.m_Entity.CreateEntity<Warrior>();
-            warrior.Fill(BaseWarrior.status.model_info);
-            var camp = (ECamp)camp_id;
-            warrior.Entity.transform.position = WarTools.GetPositionByCampAndIndex(camp, BaseWarrior.pos);
-            warrior.Entity.transform.localEulerAngles = WarTools.GetDefalutRotateAngle(camp);
+            //加入战士
             WarManager.Current.AddWarrior(BaseWarrior.wid, warrior);
-            //装载模型
+            //填充战士数据
+            warrior.Fill(BaseWarrior.status.model_info);
+            //设置父级
+            warrior.SetParent(WarManager.Current.Root);
+            //设置战士的坐标 和 欧拉角
+            var camp = (ECamp)camp_id;
+            warrior.OriginPos = WarTools.GetPositionByCampAndIndex(camp, BaseWarrior.pos);
+            warrior.Position =   warrior.OriginPos;
+            warrior.LocalEulerAngles = WarTools.GetDefalutRotateAngle(camp);
+            // 等待模型装载完毕
             await warrior.IsBusyWait;
-            //设置坐标
-            // warrior.SetOriginPos(WarTools.GetPositionByCampAndIndex(ECamp.A,  BaseWarrior.pos));
-      
+            
             //如果是玩家 或者召唤物
             if (BaseWarrior is PlayerWarrior or SumWarrior)
             {

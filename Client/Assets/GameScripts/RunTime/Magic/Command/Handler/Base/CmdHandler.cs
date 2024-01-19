@@ -51,8 +51,6 @@ namespace GameScripts.RunTime.Magic.Command.Handler
                 case ExecutorType.AllVictims:
                     warriors.AddRange(Unit.VicObjs);
                     return;
-                case ExecutorType.Camera:
-                    break;
                 case ExecutorType.Allies:
                     break;
                 case ExecutorType.AlliesExceptAttacker:
