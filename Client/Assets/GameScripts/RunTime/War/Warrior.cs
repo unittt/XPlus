@@ -54,7 +54,7 @@ namespace GameScripts.RunTime.War
         /// </summary>
         public Vector3 OriginPos;
 
-        public Transform RotateTransform { get; set; }
+        public Transform RotateTransform { get; private set; }
         #region 方向
         public Vector3 LocalUp => WarManager.Current.Root.InverseTransformDirection(RotateTransform.up);
         public Vector3 LocalForward => WarManager.Current.Root.InverseTransformDirection(RotateTransform.forward);
@@ -68,33 +68,32 @@ namespace GameScripts.RunTime.War
             RotateTransform = VbArray.Get<Transform>("rotateNode");
         }
 
-        #region 行为
-        public void GoBack()
+        #region 移动
+        public void GoBack(float speed)
         {
-            
+            var angle = GetDefaultRotateAngle();
+            RunTo(OriginPos, angle,speed, null);
         }
 
 
-        public void RunTo(Vector3 endPos,Vector3 endAngle,bool isRunBack,Action callBack)
+        
+        public async UniTaskVoid RunTo(Vector3 endPos,Vector3 endAngle,float speed,Action callBack)
         {
+            if(!Entity)return;
             
-        }
-        
-        
-        public async UniTaskVoid RunTo(Vector3 endPos,Vector3 endAngle,float speed,bool isRunBack,Action callBack)
-        {
             //如果对象死亡 不处理
             //添加标签
-            AddBusy(Busy.RunTo);
-            var curPos = LocalPosition;
+            // AddBusy(Busy.RunTo);
+            
+            
             //获得距离
-            var dis = WarTools.GetHorizontalDis(curPos, endPos);
+            var dis = WarTools.GetHorizontalDis(LocalPosition, endPos);
 
             if (dis > DIS_THRESHOLD)
             {
+                //时间
                 var t = dis / speed;
-                LookAtPos(endPos);
-
+                LookAtPos(endPos, t);
                 //播放移动动画
                 AdjustSpeedPlay(AnimationClipCode.RUN, 0.4f);
                 //等待移动结束
@@ -110,10 +109,10 @@ namespace GameScripts.RunTime.War
                 CrossFade(AnimationClipCode.IDLE_WAR ,0.1f,0,0);
                 
                 //如果需要回到原地
-                if (isRunBack)
-                {
-                    SetLocalPos(/* original position */);
-                }
+                // if (isRunBack)
+                // {
+                //     SetLocalPos(/* original position */);
+                // }
                 
                 callBack?.Invoke();
                 //等待一会
@@ -123,7 +122,7 @@ namespace GameScripts.RunTime.War
             else
             {
                 //1.设置旋转角度
-                
+                RotateTransform.localEulerAngles = GetDefaultRotateAngle();
                 //2.直接回调
                 callBack?.Invoke();
             }
@@ -137,16 +136,11 @@ namespace GameScripts.RunTime.War
         {
             
         }
-
-        public void LookAtPos(Vector3 localPos)
-        {
-            
-        }
         
-        public void LookAtPos(Vector3 localPos, float time)
+        public void LookAtPos(Vector3 localPos, float time = 0)
         {
             var position = LocalPosition;
-            var dir = WarTools.GetRootDir(null, position, localPos);
+            var dir = WarTools.GetRootDir(position, localPos);
             if (dir is { x: 0, z: 0 })
             {
                 return;
@@ -156,9 +150,16 @@ namespace GameScripts.RunTime.War
             var dirUp = Entity.transform.InverseTransformDirection(Entity.transform.up);
             var r = Quaternion.LookRotation(dirForward, dirUp);
 
-            //旋转朝向
-            ActorContainer.DOKill();
-            ActorContainer.DOLocalRotateQuaternion(r, time);
+            if (time > 0)
+            {
+                //旋转朝向
+                RotateTransform.DOKill();
+                RotateTransform.DOLocalRotateQuaternion(r, time);
+            }
+            else
+            {
+                RotateTransform.rotation = r;
+            }
         }
 
         public void FaceDefault()
@@ -179,12 +180,6 @@ namespace GameScripts.RunTime.War
             return Vector3.zero;
         }
         #endregion
-        
-        
-      
-        
-        public Transform ActorContainer { get; private set; }
-
         
 
         protected override async UniTask OnAllModelLoadDone()

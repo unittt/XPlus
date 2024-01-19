@@ -339,7 +339,8 @@ namespace GameScripts.RunTime.War
                 NetWar.Current.GS2CWarWarriorStatus(gs2CWarWarriorStatus);
             }
 
-            if (meleeMagic.Contains(skillID))
+            //meleeMagic.Contains(skillID)
+            if (true)
             {
                 var gs2CWarGoBack = new GS2CWarGoback
                 {

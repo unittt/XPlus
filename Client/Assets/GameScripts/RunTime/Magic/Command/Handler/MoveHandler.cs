@@ -99,7 +99,7 @@ namespace GameScripts.RunTime.Magic.Command.Handler
             //如果面向终点
             if (complexMovementJump.look_at_pos)
             {
-                executor.LookAtPos(endPos);
+                executor.LookAtPos(endPos,commandDataMoveTime);
             }
 
             // if (executor.SetRotateNode)
@@ -145,7 +145,7 @@ namespace GameScripts.RunTime.Magic.Command.Handler
             //如果面向终点
             if (complexMovementLine.look_at_pos)
             {
-                executor.LookAtPos(endPos);
+                executor.LookAtPos(endPos,commandDataMoveTime);
             }
 
             executor.Entity.transform.DOLocalMove(endPos, commandDataMoveTime).SetEase(complexMovementLine.ease_type);

@@ -22,13 +22,12 @@ namespace GameScripts.RunTime.War
         /// <summary>
         /// 获得相对于root中的世界空间
         /// </summary>
-        /// <param name="root"></param>
         /// <param name="startPos"></param>
         /// <param name="endPos"></param>
-        public static Vector3 GetRootDir( Transform root,Vector3 startPos, Vector3 endPos)
+        public static Vector3 GetRootDir(Vector3 startPos, Vector3 endPos)
         {
             var dir = (endPos - startPos).normalized;
-            return root.TransformDirection(dir);
+            return WarManager.Current.Root.TransformDirection(dir);
         }
 
 
