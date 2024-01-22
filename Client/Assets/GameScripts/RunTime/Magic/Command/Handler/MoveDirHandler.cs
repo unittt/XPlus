@@ -10,18 +10,19 @@ namespace GameScripts.RunTime.Magic.Command.Handler
     public class MoveDirHandler : CmdHandlerBase<MoveDir>
     {
         private List<Warrior> _warriors = new();
-        
-        protected override void OnFill(MoveDir commandData)
+
+        protected override void OnExecute()
         {
-            GetExecutors(commandData.executor,_warriors);
+            GetExecutors(Data.executor,_warriors);
 
             foreach (var warrior in _warriors)
             {
-                var dir = MagicTools.GetDir(warrior, commandData.dir);
+                var dir = MagicTools.GetDir(warrior, Data.dir);
                 var beginPos = warrior.Position;
-                var endPos = beginPos + commandData.move_time * commandData.speed * dir;
-                warrior.Entity.transform.DOLocalMove(endPos, commandData.move_time);
+                var endPos = beginPos + Data.move_time * Data.speed * dir;
+                warrior.Entity.transform.DOLocalMove(endPos, Data.move_time);
             }
         }
+        
     }
 }

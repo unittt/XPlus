@@ -94,7 +94,7 @@ namespace GameScripts.RunTime.War
         /// </summary>
         protected virtual void OnExecute()
         {
-            Log.Info("1111");
+          
             // return null;
         }
 

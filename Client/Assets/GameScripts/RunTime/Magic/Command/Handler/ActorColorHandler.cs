@@ -11,20 +11,20 @@ namespace GameScripts.RunTime.Magic.Command.Handler
     {
         private List<Warrior> _warriors;
 
-        protected override void OnFill(ActorColor commandData)
-        {
-            GetExecutors( commandData.executor, _warriors);
-            if (_warriors.Count == 0) return;
-            
-            var color = commandData.color.GetColor();
-            foreach (var warrior in _warriors)
-            {
-                // warrior.m_FootshadowObj.SetActive(false);
-                // if (commandData.fade_time > 0)
-                // {
-                //     
-                // }
-            }
-        }
+        // protected override void OnFill(ActorColor commandData)
+        // {
+        //     GetExecutors( commandData.executor, _warriors);
+        //     if (_warriors.Count == 0) return;
+        //     
+        //     var color = commandData.color.GetColor();
+        //     foreach (var warrior in _warriors)
+        //     {
+        //         // warrior.m_FootshadowObj.SetActive(false);
+        //         // if (commandData.fade_time > 0)
+        //         // {
+        //         //     
+        //         // }
+        //     }
+        // }
     }
 }

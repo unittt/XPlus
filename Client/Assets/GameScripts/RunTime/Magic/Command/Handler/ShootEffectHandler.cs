@@ -5,9 +5,6 @@ namespace GameScripts.RunTime.Magic.Command.Handler
     /// </summary>
     public class ShootEffectHandler: CmdHandlerBase<ShootEffect>
     {
-        protected override void OnFill(ShootEffect commandData)
-        {
-            
-        }
+     
     }
 }

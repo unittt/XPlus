@@ -10,5 +10,11 @@ namespace GameScripts.RunTime.War
     {
         public int wid;
         public WarriorStatus status;
+
+        protected override void OnExecute()
+        {
+            SetCompleted();
+            
+        }
     }
 }

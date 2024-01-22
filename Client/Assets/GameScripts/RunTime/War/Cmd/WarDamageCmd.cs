@@ -9,5 +9,10 @@ namespace GameScripts.RunTime.War
         public int type;
         public int damage;
         public int iscrit;
+
+        protected override void OnExecute()
+        {
+            SetCompleted();
+        }
     }
 }

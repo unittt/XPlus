@@ -10,9 +10,7 @@ namespace GameScripts.RunTime.Magic.Command.Handler
 
         public MagicUnit Unit { get; private set; }
 
-        public CommandData Data { get; private set; }
-
-        public float StartTime => Data.StartTime;
+        public float StartTime { get; private set; }
 
         /// <summary>
         /// 状态
@@ -22,7 +20,7 @@ namespace GameScripts.RunTime.Magic.Command.Handler
 
         public virtual void Fill(CommandData commandData, MagicUnit unit)
         {
-            Data = commandData;
+            StartTime = commandData.StartTime;
             Unit = unit;
         }
 

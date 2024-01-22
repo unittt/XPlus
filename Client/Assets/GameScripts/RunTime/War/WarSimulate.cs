@@ -345,7 +345,7 @@ namespace GameScripts.RunTime.War
                 var gs2CWarGoBack = new GS2CWarGoback
                 {
                     war_id = war_id,
-                    action_wid = new List<int>(){1}
+                    action_wid = new List<int>(){16}
                 };
                 NetWar.Current.GS2CWarGoback(gs2CWarGoBack);
             }

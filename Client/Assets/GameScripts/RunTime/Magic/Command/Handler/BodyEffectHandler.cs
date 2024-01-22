@@ -8,14 +8,6 @@ namespace GameScripts.RunTime.Magic.Command.Handler
     /// </summary>
     public class BodyEffectHandler:CmdHandlerBase<BodyEffect>
     {
-        protected override void OnFill(BodyEffect commandData)
-        {
-            //1. 获取执行者
-            List<Warrior> warriors = new List<Warrior>();
-            
-            //2.加载特效
-            
-            //3.绑定特效
-        }
+       
     }
 }

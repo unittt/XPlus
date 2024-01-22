@@ -12,32 +12,34 @@ namespace GameScripts.RunTime.Magic.Command.Handler
     public class MoveHandler: CmdHandlerBase<Move>
     {
         private List<Warrior> _warriors = new();
-        
-        protected override void OnFill(Move commandData)
+
+   
+
+        protected override void OnExecute()
         {
-            GetExecutors(commandData.executor,_warriors);
+            GetExecutors(Data.executor,_warriors);
 
             var atkObj = Unit.AtkObj;
             var vicObj = Unit.GetVicObjFirst();
             
             foreach (var warrior in _warriors)
             {
-                if (commandData.move_type == MoveType.Circle)
+                if (Data.move_type == MoveType.Circle)
                 {
-                    MoveCircle(atkObj, vicObj, warrior,commandData.circle,commandData.move_time);
+                    MoveCircle(atkObj, vicObj, warrior,Data.circle,Data.move_time);
                 }
-                else if (commandData.move_type == MoveType.Jump)
+                else if (Data.move_type == MoveType.Jump)
                 {
-                    MoveJump(atkObj, vicObj, warrior,commandData.jump,commandData.move_time);
+                    MoveJump(atkObj, vicObj, warrior,Data.jump,Data.move_time);
                 }
                 else
                 {
-                    MoveLine(atkObj, vicObj, warrior, commandData.line,commandData.move_time);
+                    MoveLine(atkObj, vicObj, warrior, Data.line,Data.move_time);
                 }
            
             }
 
-            Main.m_Main.DelayExecute(SetCompleted, commandData.move_time);
+            Main.m_Main.DelayExecute(SetCompleted, Data.move_time);
         }
 
         private void MoveCircle(Warrior atkObj, Warrior vicObj, Warrior executor,ComplexMovementCircle complexMovementCircle, float commandDataMoveTime)

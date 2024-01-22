@@ -7,9 +7,10 @@ namespace GameScripts.RunTime.Magic.Command.Handler
     /// </summary>
     public class PlaySoundHandler : CmdHandlerBase<PlaySound>
     {
-        protected override void OnFill(PlaySound commandData)
+        
+        protected override void OnExecute()
         {
-            AudioManager.Current.PlayEffect(commandData.sound.SoundPath);
+            AudioManager.Current.PlayEffect(Data.sound.SoundPath);
             SetCompleted();
         }
     }

@@ -5,9 +5,8 @@ namespace GameScripts.RunTime.Magic.Command.Handler
     /// </summary>
     public class EndHandler:CmdHandlerBase<End>
     {
-        protected override void OnFill(End commandData)
+        protected override void OnExecute()
         {
-            Unit.End();
             SetCompleted();
         }
     }

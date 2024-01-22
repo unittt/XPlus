@@ -11,10 +11,12 @@ namespace GameScripts.RunTime.Magic.Command.Handler
     public class StandEffectHandler:CmdHandlerBase<StandEffect>
     {
         private List<Warrior> _warriors = new();
+
         
-        protected override void OnFill(StandEffect commandData)
+
+        protected override void OnExecute()
         {
-            GetExecutors(commandData.executor,_warriors);
+            GetExecutors(Data.executor,_warriors);
 
             if (_warriors.Count == 0)
             {
@@ -26,7 +28,7 @@ namespace GameScripts.RunTime.Magic.Command.Handler
 
             for (var i = 0; i < _warriors.Count; i++)
             {
-                NewEffect(commandData,atkObj,vicObjs[i], _warriors[i]).Forget();
+                NewEffect(Data,atkObj,vicObjs[i], _warriors[i]).Forget();
             }
             SetCompleted();
             

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using GameScripts.RunTime.Model;
 using GameScripts.RunTime.War;
+using HT.Framework;
 
 namespace GameScripts.RunTime.Magic.Command.Handler
 {
@@ -11,32 +12,34 @@ namespace GameScripts.RunTime.Magic.Command.Handler
     {
 
         private List<Warrior> _warriors = new();
-
-        protected override void OnFill(PlayAction commandData)
+        
+        
+        protected override void OnExecute()
         {
             //1. 获取执行者
-            GetExecutors(commandData.executor,_warriors);
+            GetExecutors(Data.executor,_warriors);
 
             foreach (var warrior in _warriors)
             {
-                if (ModelTools.IsCommonState(commandData.action_name))
+                if (ModelTools.IsCommonState(Data.action_name))
                 {
                     // warrior.m_Actor
-                    ActorPlay(warrior,commandData.action_name, commandData.action_time, commandData.start_frame, commandData.end_frame);
+                    ActorPlay(warrior,Data.action_name, Data.action_time, Data.start_frame, Data.end_frame);
                 }
-                else if (warrior.PlayCombo(commandData.action_name))
+                else if (warrior.PlayCombo(Data.action_name))
                 {
                     warrior.SetComboHitEvent(Unit.CombHit);
                 }
-                else if (string.IsNullOrEmpty(commandData.bak_action_name))
+                else if (string.IsNullOrEmpty(Data.bak_action_name))
                 {
-                    ActorPlay(warrior, commandData.bak_action_name);
+                    ActorPlay(warrior, Data.bak_action_name);
                 }
             }
         }
-        
+
         private void ActorPlay(ActorEntity actor, string state,float actionTime = 0, int startFrame = 0, int endFrame = 0)
         {
+            Log.Info($"播放动作{state}  {actionTime}    {startFrame}  {endFrame}");
             if (actionTime > 0)
             {
                 if (startFrame > 0)

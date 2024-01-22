@@ -5,7 +5,7 @@ namespace GameScripts.RunTime.Magic.Command.Handler
     /// </summary>
     public class VicHitInfoHandler : CmdHandlerBase<VicHitInfo>
     {
-        protected override void OnFill(VicHitInfo commandData)
+        protected override void OnExecute()
         {
             Unit.AddHitInfo();
             SetCompleted();
