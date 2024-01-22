@@ -407,5 +407,23 @@ namespace GameScripts.RunTime.War
         {
             return WarManager.Current.GetHorizontalDis(pos, OriginPos) < 0.05f;
         }
+
+        /// <summary>
+        /// 显示伤害
+        /// </summary>
+        /// <param name="damage">伤害</param>
+        /// <param name="isCrit">是否暴击</param>
+        public void ShowDamage(int damage, int isCrit, bool hitTrick)
+        {
+            //加血
+            if (damage > 0)
+            {
+                
+            }
+            else if (hitTrick)
+            {
+                //播放被打击音效
+            }
+        }
     }
 }

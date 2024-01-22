@@ -541,5 +541,15 @@ namespace GameScripts.RunTime.Model
         }
         #endregion
         #endregion
+
+        #region Hub
+
+        public void AddHud()
+        {
+            
+        }
+        
+
+        #endregion
     }
 }
