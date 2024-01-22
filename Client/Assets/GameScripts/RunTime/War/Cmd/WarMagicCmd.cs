@@ -67,7 +67,7 @@ namespace GameScripts.RunTime.War
             
             //7.准备魔法单元和数据：准备一个新的魔法单元（oMagicUnit）并附上相关数据，如攻击者和受害者的引用。这部分涉及设置魔法单元以执行法术或能力
             //magic_index
-            MagicManager.Current.NewMagicUnit(magic_id, 0, atkObj,refVicObjs, IsPursued).Forget();
+            MagicManager.Current.NewMagicUnit(magic_id, 0, atkObj,refVicObjs, IsPursued, SetCompleted).Forget();
 
 
         }

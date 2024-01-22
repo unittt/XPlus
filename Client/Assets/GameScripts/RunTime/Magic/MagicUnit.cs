@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
-using GameScript.RunTime.Config;
 using GameScripts.RunTime.Magic.Command;
 using GameScripts.RunTime.Magic.Command.Handler;
+using GameScripts.RunTime.Utility;
 using GameScripts.RunTime.War;
 using HT.Framework;
 using UnityEngine;
@@ -26,15 +28,19 @@ namespace GameScripts.RunTime.Magic
 
         private Dictionary<string, object> data = new(); // 用于存储攻击对象、受害对象等数据
         private List<CmdHandler> _handlerList = new(); // 执行播放技能指令列表
-        private float _elapsedTime; // 已执行时间
+
+        /// <summary>
+        /// 已执行时间
+        /// </summary>
+        public float ElapsedTime { get; private set; }
+
         private bool _isRunning;
         private bool _isActive;
-        private bool m_IsEndIdx = false;
-        private string m_NextObjectName;
         private bool m_Running;
         private int? m_LastHitInfoIndex;
 
-        public string m_RunEnv;
+
+        private Action _completedCallBack;
 
 
         /// <summary>
@@ -46,15 +52,23 @@ namespace GameScripts.RunTime.Magic
         /// </summary>
         public List<Warrior> VicObjs { get; }
 
-        private int m_CurCmdIdx;
-
+        /// <summary>
+        /// 施法指令全部完成完成
+        /// </summary>
+        public bool IsFinish
+        {
+            get
+            {
+                return _handlerList.All(cmdHandler => cmdHandler.Status == CmdStatus.Completed);
+            }
+        }
 
         public MagicUnit()
         {
             VicObjs = new List<Warrior>();
         }
 
-        public void Fill(int magicID, int shape, int magicIndex,bool isPursued, Warrior atkObj, IEnumerable<Warrior> refVicObjs, List<CommandData> dataList)
+        public void Fill(int magicID, int shape, int magicIndex,bool isPursued, Warrior atkObj, IEnumerable<Warrior> refVicObjs, List<CommandData> dataList, Action completedCallBack)
         {
             //设置法术单元编号
             ID = Interlocked.Increment(ref MagicManager.CurUnitIdx);
@@ -64,7 +78,7 @@ namespace GameScripts.RunTime.Magic
             IsPursued = isPursued;
             AtkObj = atkObj;
             VicObjs.AddRange(refVicObjs);
-            
+            _completedCallBack = completedCallBack;
             foreach (var cmdData in dataList)
             {
                 var handlerType = MagicManager.Current.GetHandlerType(cmdData);
@@ -116,24 +130,17 @@ namespace GameScripts.RunTime.Magic
 
         internal void OnUpdate()
         {
-            // if (!_isRunning)
-            // {
-            //     return;
-            // }
+            ElapsedTime += Time.deltaTime;
 
-            _elapsedTime += Time.deltaTime;
-
-            for (var i = m_CurCmdIdx; i < _handlerList.Count; i++)
+            foreach (var cmdHandler in _handlerList)
             {
-                if (_handlerList[i].StartTime > _elapsedTime) continue;
-                //开始执行
-                _handlerList[i].Execute();
-                Log.Info($"{Time.realtimeSinceStartup}  执行{i}  {_handlerList[i].GetType()}");
-                m_CurCmdIdx++;
+                if (cmdHandler.Status == CmdStatus.Idle)
+                {
+                    cmdHandler.TryExecute();
+                }
             }
         }
-
-
+        
         public void Reset()
         {
             ID = 0;
@@ -141,7 +148,7 @@ namespace GameScripts.RunTime.Magic
             Shape = 0;
             MagicIdx = 0;
             IsPursued = false;
-            _elapsedTime = 0;
+            ElapsedTime = 0;
 
             foreach (var handler in _handlerList)
             {
@@ -153,19 +160,11 @@ namespace GameScripts.RunTime.Magic
             data.Clear();
         }
 
-        public void SetIsEndIdx(bool isEnd)
-        {
-            m_IsEndIdx = isEnd;
-        }
+
 
         public void End()
         {
             
-        }
-
-        public void ControlNextObject(string name)
-        {
-            m_NextObjectName = name;
         }
         
 
@@ -195,16 +194,21 @@ namespace GameScripts.RunTime.Magic
 
         public void CombHit()
         {
-            foreach (var warrior in VicObjs)
-            {
-                warrior?.Play(AnimationConfig.HIT1);
-            }
+            // foreach (var warrior in VicObjs)
+            // {
+            //     warrior?.Play(AnimationConfig.HIT1);
+            // }
         }
 
 
         public void AddHitInfo()
         {
            
+        }
+
+        public void OnCompleted()
+        {
+            _completedCallBack?.Invoke();
         }
     }
 }

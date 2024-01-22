@@ -87,14 +87,10 @@ namespace GameScripts.RunTime.War
         public void GoBack(float speed)
         {
             var angle = GetDefaultRotateAngle();
-            RunTo(OriginPos, angle,speed);
+            RunTo(OriginPos, angle,speed, false);
         }
 
-
-        public void RunTo(Vector3 endPos,float speed,Action callBack = null)
-        {
-            
-        }
+        
         
         /// <summary>
         /// 移动
@@ -103,7 +99,7 @@ namespace GameScripts.RunTime.War
         /// <param name="endAngle">结束点</param>
         /// <param name="speed">速度</param>
         /// <param name="callBack"></param>
-        public void RunTo(Vector3 endPos,Vector3 endAngle,float speed,Action callBack = null)
+        public void RunTo(Vector3 endPos,Vector3 endAngle,float speed,bool isRunBack, HTFAction callBack = null)
         {
             if(!Entity)return;
             
@@ -117,47 +113,41 @@ namespace GameScripts.RunTime.War
                 //朝向坐标
                 LookAtPos(endPos);
                 //播放移动动画
-                AdjustSpeedPlay(AnimationClipCode.RUN, 0.4f);
-                transform.DOLocalMove(endPos, t);
-                //等待移动结束
-                // await Entity.transform.DOLocalMove(endPos, t).AsyncWaitForCompletion();
-                
-                //设置角度
-                // if endAngle then
-                // self.m_RotateObj:SetLocalEulerAngles(endAngle)
-                // else
-                // self:FaceDefault()
-                
+                AdjustSpeedPlay(AnimationClipCode.RUN, 0.4f,callBack);
+                transform.DOLocalMove(endPos, t).OnComplete(() =>
+                {
+                    RemoveBusy(Busy.RunTo);
+                    callBack?.Invoke();
+
+                    if (endAngle != Vector3.zero)
+                    {
+                        RotateTransform.localEulerAngles = endAngle;
+                    }
+                    else
+                    {
+                        FaceDefault();
+                    }
+                    
+                    //如果需要回到原地
+                    if (isRunBack)
+                    {
+                        LocalPosition = OriginPos;
+                    }
+                });
                 //播放动画
-                CrossFade(AnimationClipCode.IDLE_WAR ,0.1f,0,0);
-                
-                //如果需要回到原地
-                // if (isRunBack)
-                // {
-                //     SetLocalPos(/* original position */);
-                // }
-                
-                callBack?.Invoke();
-                //等待一会
-                // await UniTask.Delay(200);
-              
+                CrossFade(AnimationClipCode.IDLE_WAR ,0.1f,0,0, null);
             }
             else
             {
+                //移除标签
+                RemoveBusy(Busy.RunTo);
                 //1.设置旋转角度
                 RotateTransform.localEulerAngles = endAngle;
                 //2.直接回调
                 callBack?.Invoke();
             }
             
-            //移除标签
-            RemoveBusy(Busy.RunTo);
-        }
-        
-
-        private void SetLocalPos()
-        {
-            
+           
         }
         
         /// <summary>
@@ -192,10 +182,11 @@ namespace GameScripts.RunTime.War
 
         public void FaceDefault()
         {
-            var angle = GetDefaultRotateAngle();
-            if (LocalEulerAngles != angle)
+            var defaultRotateAngle = GetDefaultRotateAngle();
+            var  angles= RotateTransform.localEulerAngles;
+            if (angles != defaultRotateAngle)
             {
-                Entity.transform.DOLocalRotate(angle, 0.1f);
+                RotateTransform.DOLocalRotate(defaultRotateAngle, 0.1f);
             }
         }
 

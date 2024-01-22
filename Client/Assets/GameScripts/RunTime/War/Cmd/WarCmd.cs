@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using GameScripts.RunTime.Utility;
 using HT.Framework;
 
 namespace GameScripts.RunTime.War
@@ -59,7 +60,7 @@ namespace GameScripts.RunTime.War
         public Action CallBack;
 
         
-        public WarCmdStatus Status { get; private set; }
+        public CmdStatus Status { get; private set; }
 
         public Dictionary<int, Vary> m_VaryInfo = new Dictionary<int, Vary>();
 
@@ -72,8 +73,8 @@ namespace GameScripts.RunTime.War
 
         public bool TryExecute()
         {
-            if (Status != WarCmdStatus.Idle || !IsCanExecute()) return false;
-            Status = WarCmdStatus.Running;
+            if (Status != CmdStatus.Idle || !IsCanExecute()) return false;
+            Status = CmdStatus.Running;
             OnExecute();
             Log.Info("执行指令：" + this.GetType());
             return true;
@@ -103,8 +104,8 @@ namespace GameScripts.RunTime.War
         /// </summary>
         public void SetCompleted()
         {
-            if (Status == WarCmdStatus.Completed) return;
-            Status = WarCmdStatus.Completed;
+            if (Status == CmdStatus.Completed) return;
+            Status = CmdStatus.Completed;
             OnCompleted();
         }
 
@@ -248,7 +249,7 @@ namespace GameScripts.RunTime.War
             ID = 0;
             IsUsed = false;
             m_VaryInfo.Clear();
-            Status = WarCmdStatus.Idle;
+            Status = CmdStatus.Idle;
         }
         
         public void LocakVary(object vary, bool b)
@@ -260,21 +261,5 @@ namespace GameScripts.RunTime.War
         {
         
         }
-    }
-
-    public enum WarCmdStatus
-    {
-        /// <summary>
-        /// 闲置
-        /// </summary>
-        Idle,
-        /// <summary>
-        /// 运行中
-        /// </summary>
-        Running,
-        /// <summary>
-        /// 完成
-        /// </summary>
-        Completed
     }
 }

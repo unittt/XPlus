@@ -28,6 +28,7 @@ namespace GameScripts.RunTime.Magic.Command.Handler
             {
                 NewEffect(commandData,atkObj,vicObjs[i], _warriors[i]).Forget();
             }
+            SetCompleted();
             
         }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using GameScripts.RunTime.Utility;
 using GridMap;
 using HT.Framework;
 using Pb.Mmo.Common;
@@ -406,12 +407,12 @@ namespace GameScripts.RunTime.War
             if (m_WaitTime || _cmdList.Count == 0)return;
 
             var cmd = _cmdList[0];
-            if (cmd.Status == WarCmdStatus.Idle)
+            if (cmd.Status == CmdStatus.Idle)
             {
                 cmd.TryExecute();
             }
 
-            if (cmd.Status != WarCmdStatus.Completed) return;
+            if (cmd.Status != CmdStatus.Completed) return;
             //移除
             _cmdList.Remove(cmd);
             Main.m_ReferencePool.Despawn(cmd);

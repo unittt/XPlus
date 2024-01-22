@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using GameScripts.RunTime.Utility;
 using GameScripts.RunTime.War;
 using HT.Framework;
 
@@ -12,7 +13,12 @@ namespace GameScripts.RunTime.Magic.Command.Handler
         public CommandData Data { get; private set; }
 
         public float StartTime => Data.StartTime;
-    
+
+        /// <summary>
+        /// 状态
+        /// </summary>
+        public CmdStatus Status { get; private set; }
+
 
         public virtual void Fill(CommandData commandData, MagicUnit unit)
         {
@@ -20,15 +26,61 @@ namespace GameScripts.RunTime.Magic.Command.Handler
             Unit = unit;
         }
 
-        public virtual void Reset()
+        /// <summary>
+        /// 尝试执行
+        /// </summary>
+        /// <returns></returns>
+        public bool TryExecute()
+        {
+            if (StartTime > Unit.ElapsedTime || Status != CmdStatus.Idle || !IsCanExecute()) return false;
+            Status = CmdStatus.Running;
+            Log.Info($"执行施法指令：{GetType()}");
+            OnExecute();
+            return true;
+        }
+        
+        /// <summary>
+        /// 是否能够执行
+        /// </summary>
+        /// <returns></returns>
+        protected virtual bool IsCanExecute()
+        {
+            return true;
+        }
+        
+        /// <summary>
+        /// 当执行
+        /// </summary>
+        protected virtual void OnExecute()
         {
            
         }
         
-        public virtual void Execute()
+        /// <summary>
+        /// 设置为完成
+        /// </summary>
+        public void SetCompleted()
         {
-           
+            if (Status == CmdStatus.Completed) return;
+            Status = CmdStatus.Completed;
+            OnCompleted();
         }
+
+
+        /// <summary>
+        /// 当完成时
+        /// </summary>
+        protected virtual void OnCompleted()
+        {
+            
+        }
+        
+        public virtual void Reset()
+        {
+            Status = CmdStatus.Idle;
+        }
+        
+     
 
         public void GetExecutors(ExecutorType executorType, List<Warrior> warriors)
         {
@@ -70,7 +122,5 @@ namespace GameScripts.RunTime.Magic.Command.Handler
 
             Unit.GetTargets(isAlly, isAtk, isVic, isAlive, warriors);
         }
-
-      
     }
 }

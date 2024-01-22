@@ -96,7 +96,7 @@ namespace GameScripts.RunTime.Model
             }
         }
         
-        
+
         /// <summary>
         /// 实体层级
         /// </summary>
@@ -315,7 +315,7 @@ namespace GameScripts.RunTime.Model
 
         #region 动画
         
-        public void Play(string state,float startNormalized = 0, float endNormalized = 0, HTFAction callBack = null)
+        public void Play(string state,float startNormalized, float endNormalized, HTFAction callBack)
         {
             //1.清理动画时间事件
             ClearAnimTimeEvent();
@@ -330,7 +330,7 @@ namespace GameScripts.RunTime.Model
             FixedEvent(fixedTime, callBack);
         }
 
-        public void PlayInFixedTime(string state, float startFixed, float endFixed,HTFAction callBack = null)
+        public void PlayInFixedTime(string state, float startFixed, float endFixed,HTFAction callBack)
         {
             //1.清理动画时间事件
             ClearAnimTimeEvent();
@@ -353,13 +353,13 @@ namespace GameScripts.RunTime.Model
         /// <param name="startFrame"></param>
         /// <param name="endFrame"></param>
         /// <param name="callBack"></param>
-        public void PlayInFrame(string state, int startFrame, int endFrame, HTFAction callBack = null)
+        public void PlayInFrame(string state, int startFrame, int endFrame, HTFAction callBack)
         {
             //1.如果不存在帧动画 跳出
             if (!AnimClipData.TryGetAnimClipInfo(Shape, state, out var dClipInfo)) return;
             //2.播放动画
             var startNormalized = startFrame / dClipInfo.Frame;
-            Play(state, startNormalized);
+            Play(state, startNormalized,0, null);
             //3.注册结束事件
             if (endFrame <= 0 || endFrame <= startFrame) return;
             var fixedTime = ModelTools.FrameToTime(endFrame - startFrame);
@@ -375,7 +375,7 @@ namespace GameScripts.RunTime.Model
         /// <param name="startNormalized"></param>
         /// <param name="endNormalized"></param>
         /// <param name="callBack"></param>
-        public void CrossFade(string state, float duration, float startNormalized, float endNormalized, HTFAction callBack = null)
+        public void CrossFade(string state, float duration, float startNormalized, float endNormalized, HTFAction callBack)
         {
             //1.清理动画时间事件
             ClearAnimTimeEvent();
@@ -404,16 +404,16 @@ namespace GameScripts.RunTime.Model
             FixedEvent(endFixed - startFixed, callBack);
         }
         
-        public void AdjustSpeedPlay(string state, float adjustTime)
+        public void AdjustSpeedPlay(string state, float adjustTime,HTFAction callBack)
         {
-            PlayInFixedTime(state,0,0);
+            PlayInFixedTime(state,0,0,callBack);
             if (AnimClipData.TryGetAnimClipInfo(Shape, state, out var dClipInfo))
             {
                 // SetSpeed(dClipInfo.Length / adjustTime);
             }
         }
         
-        public void AdjustSpeedPlayInFrame(string state, float adjustTime, int startFrame, int endFrame)
+        public void AdjustSpeedPlayInFrame(string state, float adjustTime, int startFrame, int endFrame, HTFAction callBack)
         {
             if (endFrame == 0)
             {
@@ -427,7 +427,7 @@ namespace GameScripts.RunTime.Model
             var time = ModelTools.FrameToTime(endFrame - startFrame);
             var speed = time / adjustTime;
             //callback = SetSpeed(0);
-            PlayInFrame(state, startFrame, startFrame + (int)((endFrame - startFrame) / speed));
+            PlayInFrame(state, startFrame, startFrame + (int)((endFrame - startFrame) / speed),callBack);
             // SetSpeed(speed);
         }
 

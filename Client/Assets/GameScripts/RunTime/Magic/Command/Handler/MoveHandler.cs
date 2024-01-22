@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using DG.Tweening;
 using GameScripts.RunTime.War;
+using HT.Framework;
 using UnityEngine;
 
 namespace GameScripts.RunTime.Magic.Command.Handler
@@ -35,6 +36,8 @@ namespace GameScripts.RunTime.Magic.Command.Handler
                 }
            
             }
+
+            Main.m_Main.DelayExecute(SetCompleted, commandData.move_time);
         }
 
         private void MoveCircle(Warrior atkObj, Warrior vicObj, Warrior executor,ComplexMovementCircle complexMovementCircle, float commandDataMoveTime)

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using HT.Framework;
 
 namespace GameScripts.RunTime.War
 {
@@ -9,11 +10,12 @@ namespace GameScripts.RunTime.War
 
         protected override void OnExecute()
         {
+            Log.Info("go back a ............");
             foreach (var wid in wid_list)
             {
                 if (WarManager.Current.TryGetWarrior(wid, out var warrior))
                 {
-                 
+                    warrior.GoBack(1);
                 }
             }
         }
