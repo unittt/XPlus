@@ -332,7 +332,7 @@ namespace GameScripts.RunTime.War
                   
                     Status =  new WarriorStatus
                     {
-                        hp =allyStatusList[i],
+                        hp = allyStatusList[i],
                         sp = 45
                     }
                 };
