@@ -167,3 +167,16 @@ MonoBehaviour:
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
+    - GroupName: Hud
+      GroupDesc: 
+      AssetTags: 
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/GameRes/Hud
+        CollectorGUID: 0344b4cda8b017e42afbd5f7dfc3f8ce
+        CollectorType: 0
+        AddressRuleName: AddressByFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 

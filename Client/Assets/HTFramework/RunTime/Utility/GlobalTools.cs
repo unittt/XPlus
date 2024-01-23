@@ -782,5 +782,29 @@ namespace HT.Framework
             return location;
         }
         #endregion
+
+        #region 新增
+
+
+        private static StringBuilder _sb = new();
+        /// <summary>
+        ///  数字转化成 数字的图片文本
+        /// </summary>
+        /// <param name="number"></param>
+        /// <returns></returns>
+        public static string ConvertNumberToSpriteString(this int number)
+        {
+            _sb.Clear();
+            var numberString = number.ToString();
+
+            foreach (var c in numberString)
+            {
+                _sb.Append($"<sprite={c.ToString()}>");
+            }
+            return _sb.ToString();
+        }
+        
+
+        #endregion
     }
 }

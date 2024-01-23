@@ -408,6 +408,7 @@ namespace GameScripts.RunTime.War
             return WarManager.Current.GetHorizontalDis(pos, OriginPos) < 0.05f;
         }
 
+        #region Hud
         /// <summary>
         /// 显示伤害
         /// </summary>
@@ -424,6 +425,9 @@ namespace GameScripts.RunTime.War
             {
                 //播放被打击音效
             }
+            
+         
         }
+        #endregion
     }
 }
