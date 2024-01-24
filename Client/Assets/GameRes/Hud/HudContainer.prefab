@@ -72,7 +72,7 @@ GameObject:
   m_Component:
   - component: {fileID: 88568845685197661}
   m_Layer: 13
-  m_Name: HudNode
+  m_Name: HudContainer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

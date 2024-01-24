@@ -1,11 +1,13 @@
+using GameScripts.RunTime.Hud.Attribute;
 using GameScripts.RunTime.Magic;
 using HT.Framework;
 using TMPro;
 
 namespace GameScripts.RunTime.Hud
 {
+    [HudEntity]
     [EntityResource("")]
-    public class WarNameHud : AsyncHud
+    public class WarNameHudEntityLogic : HudEntityLogicBase
     {
         private TextMeshPro _nameTMP;
         

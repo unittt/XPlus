@@ -5,23 +5,35 @@ using UnityEngine;
 
 namespace GameScripts.RunTime.Hud
 {
+    [EntityResource("HudContainer", true)]
     public sealed class HudContainerLogic : EntityLogicBase
     {  
         private Transform _headHudContainer;
         private Transform _waistHudContainer;
         private Transform _footHudContainer;
-        private List<AsyncHud> _huds = new();
+        private List<HudEntityLogicBase> _huds = new();
         public IHudRole Role;
 
 
         public override void OnInit()
         {
-            Entity.name = Role.GetHudName();
             _headHudContainer = Entity.FindChildren("HeadHud").transform;
             _waistHudContainer = Entity.FindChildren("WaistHud").transform;
             _footHudContainer = Entity.FindChildren("FootHud").transform;
         }
 
+        public bool TryGetHud<T>(out T t) where T: HudEntityLogicBase
+        {
+            t = null;
+            foreach (var hud in _huds)
+            {
+                if (hud is not T) continue;
+                t = hud.Cast<T>();
+                return true;
+            }
+            return false;
+        }
+        
         public override void OnDestroy()
         {
             foreach (var hud in _huds)
@@ -31,7 +43,7 @@ namespace GameScripts.RunTime.Hud
             _huds.Clear();
         }
 
-        public void AddHud<T>(T hud) where T : AsyncHud
+        public void AddHud<T>(T hud) where T : HudEntityLogicBase
         {
             var maxIndex = _huds.Count - 1;
             for (var i = maxIndex; i >= 0; i--)

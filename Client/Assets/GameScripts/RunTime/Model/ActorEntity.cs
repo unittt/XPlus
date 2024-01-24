@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using GameScripts.RunTime.DataUser;
+using GameScripts.RunTime.Hud;
+using GameScripts.RunTime.Magic;
 using GameScripts.RunTime.Utility.Timer;
 using HT.Framework;
 using Pb.Mmo.Common;
@@ -12,7 +14,7 @@ namespace GameScripts.RunTime.Model
     /// <summary>
     /// 角色实体
     /// </summary>
-    public abstract class ActorEntity : EntityLogicBase
+    public abstract class ActorEntity : EntityLogicBase, IHudRole
     {
        
         private readonly List<ModelBase> _models = new();
@@ -102,7 +104,9 @@ namespace GameScripts.RunTime.Model
         /// </summary>
         public abstract int Layer { get; }
         #endregion
-       
+
+        private Transform footHudNode;
+        
         
         #region 初始化
         public override void OnInit()
@@ -111,6 +115,7 @@ namespace GameScripts.RunTime.Model
             
             VbArray = Entity.GetComponent<VariableBehaviour>().Container;
             ModelContainer = VbArray.Get<Transform>("modelNode");
+            footHudNode =  VbArray.Get<Transform>("footHudnode");
             
             //坐骑
             RegisterModel<RideModel>();
@@ -551,5 +556,15 @@ namespace GameScripts.RunTime.Model
         
 
         #endregion
+
+        public  string GetHudName()
+        {
+            return Entity.name;
+        }
+
+        public Transform GetBodyNode(BodyPart bodyPart)
+        {
+            return footHudNode;
+        }
     }
 }

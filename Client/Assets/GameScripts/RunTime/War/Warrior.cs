@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using cfg.WarModule;
 using Cysharp.Threading.Tasks;
@@ -427,8 +426,10 @@ namespace GameScripts.RunTime.War
                 //播放被打击音效
             }
             
-         
-            // HudManager.Current.ShowHud<WarriorDamageHud>()
+            HudManager.Current.ShowHud<WarriorDamageHudEntityLogic>(this, (hud) =>
+            {
+                hud.Show(999,false);
+            }).Forget();
         }
         #endregion
     }
