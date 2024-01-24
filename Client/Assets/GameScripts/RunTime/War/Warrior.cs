@@ -4,6 +4,7 @@ using cfg.WarModule;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using GameScript.RunTime.Config;
+using GameScripts.RunTime.Hud;
 using GameScripts.RunTime.Model;
 using HT.Framework;
 using Pb.Mmo.Common;
@@ -427,6 +428,7 @@ namespace GameScripts.RunTime.War
             }
             
          
+            // HudManager.Current.ShowHud<WarriorDamageHud>()
         }
         #endregion
     }

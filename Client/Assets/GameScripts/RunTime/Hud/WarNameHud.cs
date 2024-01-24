@@ -1,3 +1,4 @@
+using GameScripts.RunTime.Magic;
 using HT.Framework;
 using TMPro;
 
@@ -17,5 +18,7 @@ namespace GameScripts.RunTime.Hud
         {
             _nameTMP.text = name;
         }
+
+        public override BodyPart Part { get; }
     }
 }

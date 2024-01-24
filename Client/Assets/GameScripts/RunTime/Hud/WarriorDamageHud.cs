@@ -1,3 +1,4 @@
+using GameScripts.RunTime.Magic;
 using HT.Framework;
 using TMPro;
 using UnityEngine;
@@ -24,5 +25,7 @@ namespace GameScripts.RunTime.Hud
             _numberTMP.text = number.ConvertNumberToSpriteString();
             baoji.SetActive(isCritical);
         }
+
+        public override BodyPart Part { get; }
     }
 }
