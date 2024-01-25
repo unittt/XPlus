@@ -6,7 +6,8 @@ namespace GameScripts.RunTime.Hud
     
     public abstract class HudEntityLogicBase: EntityLogicBase
     {
-        
+
+        public HudContainerLogic Container;
         public abstract BodyPart Part { get; }
         
         /// <summary>

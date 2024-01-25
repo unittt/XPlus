@@ -65,6 +65,7 @@ namespace GameScripts.RunTime.Hud
             if (!isSingle || !hudContainerLogic.TryGetHud(out T hud))
             {
                 hud = await Main.m_Entity.CreateEntity<T>(typeof(T).Name);
+                hud.Container = hudContainerLogic;
                 hudContainerLogic.AddHud(hud);
             }
          

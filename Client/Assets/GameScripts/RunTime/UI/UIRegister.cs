@@ -24,6 +24,7 @@ namespace GameScript.RunTime.UI
 
             UIEntity.GetComponentByChild<Button>("CloseBtn").onClick.AddListener(Close);
             UIEntity.GetComponentByChild<Button>("RegisterBtn").onClick.AddListener(() => _= OnClickRegister());
+            
         }
 
 

@@ -76,5 +76,14 @@ namespace GameScripts.RunTime.Hud
             _waistHudContainer.position = Role.GetBodyNode(BodyPart.Head).position;
             _footHudContainer.position = Role.GetBodyNode(BodyPart.Head).position;
         }
+
+        public void RemoveHud(HudEntityLogicBase hudEntityLogic)
+        {
+            if (_huds.Contains(hudEntityLogic))
+            {
+                _huds.Remove(hudEntityLogic);
+                Main.m_Entity.DestroyEntity(hudEntityLogic);
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 using GameScripts.RunTime.Hud.Attribute;
 using GameScripts.RunTime.Magic;
+using GameScripts.RunTime.Utility.Timer;
 using HT.Framework;
 using TMPro;
 using UnityEngine;
@@ -26,9 +27,21 @@ namespace GameScripts.RunTime.Hud
         {
             _numberTMP.text = number.ConvertNumberToSpriteString();
             baoji.SetActive(isCritical);
+            TimerManager.RegisterTimer(1, OnComplete);
+        }
+
+        private void OnComplete()
+        {
+            Container.RemoveHud(this);
         }
 
         public override BodyPart Part { get; }
-        
+
+
+        public override void OnDestroy()
+        {
+            Container = null;
+            base.OnDestroy();
+        }
     }
 }

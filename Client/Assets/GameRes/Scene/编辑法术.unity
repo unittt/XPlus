@@ -308,11 +308,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6087478092043858739, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: m_Depth
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 6087478092043858739, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: m_ClearFlags
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 6087478092043858739, guid: d09e5ea50d2aa0841ab072ac17fbd207, type: 3}
       propertyPath: orthographic size

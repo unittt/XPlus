@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using GameScript.RunTime.UI;
 using GameScripts.RunTime.Utility;
 using GridMap;
 using HT.Framework;
@@ -132,6 +133,8 @@ namespace GameScripts.RunTime.War
             Root.gameObject.SetActive(true);
             //触发战斗开始事件
             m_WaitTime = false;
+
+            Main.m_UI.OpenUI<UIWarFloat>();
         }
         
 

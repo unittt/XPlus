@@ -86,12 +86,92 @@ MonoBehaviour:
       AssetTags: 
       ActiveRuleName: EnableGroup
       Collectors:
-      - CollectPath: Assets/GameRes/Atlas/DynamicAtlas
-        CollectorGUID: 0f0b8993cb95e6e4b98950baeba28be1
+      - CollectPath: Assets/GameRes/Atlas/DynamicAtlas/AvatarAtlas1
+        CollectorGUID: 01d50cf8b0178a444a6723d944571d60
         CollectorType: 0
-        AddressRuleName: AddressDisable
-        PackRuleName: PackCollector
-        FilterRuleName: CollectSprite
+        AddressRuleName: AddressByFolderAndFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/GameRes/Atlas/DynamicAtlas/BuffAtlas1
+        CollectorGUID: 2c1b70043da23e645b64bed28060adba
+        CollectorType: 0
+        AddressRuleName: AddressByFolderAndFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/GameRes/Atlas/DynamicAtlas/ItemAtlas1
+        CollectorGUID: d8d59bf502b174647a74ae98f3a35882
+        CollectorType: 0
+        AddressRuleName: AddressByFolderAndFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/GameRes/Atlas/DynamicAtlas/ItemAtlas2
+        CollectorGUID: 5005e888c381d2c43b959c4b245a54fe
+        CollectorType: 0
+        AddressRuleName: AddressByFolderAndFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/GameRes/Atlas/DynamicAtlas/ItemAtlas3
+        CollectorGUID: 11b245568072a9348b877ed0fbec05ea
+        CollectorType: 0
+        AddressRuleName: AddressByFolderAndFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/GameRes/Atlas/DynamicAtlas/MagicAtlas1
+        CollectorGUID: 83be38ab642f99e4d8af88ee47f31dfd
+        CollectorType: 0
+        AddressRuleName: AddressByFolderAndFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/GameRes/Atlas/DynamicAtlas/MitamaAtlas1
+        CollectorGUID: 4130225b28b3c89458ab13f4d382b295
+        CollectorType: 0
+        AddressRuleName: AddressByFolderAndFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/GameRes/Atlas/DynamicAtlas/SchoolAtlas1
+        CollectorGUID: 494264aa742c20c46908b8d7db16fbbf
+        CollectorType: 0
+        AddressRuleName: AddressByFolderAndFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/GameRes/Atlas/DynamicAtlas/SkillAtlas1
+        CollectorGUID: 09359bb587e711744b98cfa794ed4ba4
+        CollectorType: 0
+        AddressRuleName: AddressByFolderAndFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/GameRes/Atlas/DynamicAtlas/SkillAtlas2
+        CollectorGUID: b9d54c978ec4b164c949170c078f2f9c
+        CollectorType: 0
+        AddressRuleName: AddressByFolderAndFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+      - CollectPath: Assets/GameRes/Atlas/DynamicAtlas/SkillAtlas3
+        CollectorGUID: 299d61d37c4383b4892539dbc10dd1f3
+        CollectorType: 0
+        AddressRuleName: AddressByFolderAndFileName
+        PackRuleName: PackDirectory
+        FilterRuleName: CollectAll
         AssetTags: 
         UserData: 
     - GroupName: Map2d
