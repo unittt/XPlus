@@ -105,7 +105,9 @@ namespace GameScripts.RunTime.Model
         public abstract int Layer { get; }
         #endregion
 
-        private Transform footHudNode;
+        private Transform _headNode;
+        private Transform _waistNode;
+        private Transform _footHudNode;
         
         
         #region 初始化
@@ -115,7 +117,9 @@ namespace GameScripts.RunTime.Model
             
             VbArray = Entity.GetComponent<VariableBehaviour>().Container;
             ModelContainer = VbArray.Get<Transform>("modelNode");
-            footHudNode =  VbArray.Get<Transform>("footHudnode");
+            _headNode =  VbArray.Get<Transform>("headNode");
+            _waistNode =  VbArray.Get<Transform>("waistNode");
+            _footHudNode =  VbArray.Get<Transform>("footHudnode");
             
             //坐骑
             RegisterModel<RideModel>();
@@ -564,7 +568,12 @@ namespace GameScripts.RunTime.Model
 
         public Transform GetBodyNode(BodyPart bodyPart)
         {
-            return footHudNode;
+            return bodyPart switch
+            {
+                BodyPart.Head => _headNode,
+                BodyPart.Waist => _waistNode,
+                _ => _footHudNode
+            };
         }
     }
 }

@@ -70,6 +70,11 @@ namespace GameScripts.RunTime.Hud
             }
          
             callBack?.Invoke(hud);
+
+            if (!isSingle)
+            {
+                hudContainerLogic.OnAddNewHud(hud);
+            }
             _isLoading = false;
         }
     }

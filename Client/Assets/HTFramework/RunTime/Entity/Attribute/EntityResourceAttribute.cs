@@ -6,7 +6,7 @@ namespace HT.Framework
     /// 实体资源标记
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
-    public sealed class EntityResourceAttribute : Attribute
+    public class EntityResourceAttribute : Attribute
     {
         public string Location { get; private set; }
         public bool IsUseObjectPool { get; private set; }

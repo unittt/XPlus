@@ -10,8 +10,7 @@ namespace GameScripts.RunTime.Hud
     /// <summary>
     /// 战斗伤害
     /// </summary>
-    [HudEntity]
-    [EntityResource("WarriorDamageHud")]
+    [HudEntityAttribute("WarriorDamageHud",true)]
     public class WarriorDamageHudEntityLogic : HudEntityLogicBase
     {
         private TextMeshPro _numberTMP;
@@ -27,13 +26,9 @@ namespace GameScripts.RunTime.Hud
         {
             _numberTMP.text = number.ConvertNumberToSpriteString();
             baoji.SetActive(isCritical);
-            TimerManager.RegisterTimer(1, OnComplete);
+            TimerManager.RegisterTimer(1, Kill);
         }
-
-        private void OnComplete()
-        {
-            Container.RemoveHud(this);
-        }
+        
 
         public override BodyPart Part { get; }
 

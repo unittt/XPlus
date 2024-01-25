@@ -45,18 +45,10 @@ namespace GameScripts.RunTime.Hud
 
         public void AddHud<T>(T hud) where T : HudEntityLogicBase
         {
-            var maxIndex = _huds.Count - 1;
-            for (var i = maxIndex; i >= 0; i--)
-            {
-                var oldHud = _huds[i];
-                if (oldHud.GetType() == typeof(T))
-                {
-                    oldHud.OnCreateNewHud();
-                }
-            }
-            _huds.Add(hud);
             //设置Hud的父物体
-            hud.Entity.transform.SetParent(GetContainer(hud.Part));
+            hud.Entity.transform.SetParent(GetContainer(hud.Part),false);
+            hud.Entity.transform.SetLocalPositionAndRotation(Vector3.zero, Quaternion.identity);
+            _huds.Add(hud);
         }
 
         private Transform GetContainer(BodyPart bodyPart)
@@ -73,8 +65,8 @@ namespace GameScripts.RunTime.Hud
         {
             if (Role == null) return;
             _headHudContainer.position = Role.GetBodyNode(BodyPart.Head).position;
-            _waistHudContainer.position = Role.GetBodyNode(BodyPart.Head).position;
-            _footHudContainer.position = Role.GetBodyNode(BodyPart.Head).position;
+            _waistHudContainer.position = Role.GetBodyNode(BodyPart.Waist).position;
+            _footHudContainer.position = Role.GetBodyNode(BodyPart.Foot).position;
         }
 
         public void RemoveHud(HudEntityLogicBase hudEntityLogic)
@@ -83,6 +75,20 @@ namespace GameScripts.RunTime.Hud
             {
                 _huds.Remove(hudEntityLogic);
                 Main.m_Entity.DestroyEntity(hudEntityLogic);
+            }
+        }
+
+        public void OnAddNewHud(HudEntityLogicBase hud)
+        {
+            var hudType = hud.GetType();
+            var maxIndex = _huds.Count - 1;
+            for (var i = maxIndex; i >= 0; i--)
+            {
+                var oldHud = _huds[i];
+                if (oldHud.GetType() == hudType && oldHud != hud)
+                {
+                    oldHud.OnCreateNewHud(hud);
+                }
             }
         }
     }

@@ -9,13 +9,22 @@ namespace GameScripts.RunTime.Hud
 
         public HudContainerLogic Container;
         public abstract BodyPart Part { get; }
-        
+
         /// <summary>
         /// 当出现了一个相同的Hud
         /// </summary>
-        public virtual void OnCreateNewHud()
+        /// <param name="hudEntityLogicBase"></param>
+        public virtual void OnCreateNewHud(HudEntityLogicBase hud)
         {
             
+        }
+        
+        /// <summary>
+        /// 杀死自己
+        /// </summary>
+        protected void Kill()
+        {
+            Container.RemoveHud(this);
         }
     }
 }

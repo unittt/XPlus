@@ -26,11 +26,11 @@ namespace GameScript.RunTime.UI
 
         public void AddMsg(int icon, string msg, float time)
         {
-            // TimerManager.StopTimer(_hideBossTimeID);
+            TimerManager.StopTimer(_hideBossTimeID);
             _bossIcon.LoadDynamicImage(AssetConfig.AVATAR_ATLAS1, icon);
             _bossShotLabel.text = msg;
             _bossWarShotHud.SetActive(true);
-            // _hideBossTimeID = TimerManager.RegisterTimer(time, HideBossWarShotHud);
+            _hideBossTimeID = TimerManager.RegisterTimer(time, HideBossWarShotHud);
         }
 
         private void HideBossWarShotHud()

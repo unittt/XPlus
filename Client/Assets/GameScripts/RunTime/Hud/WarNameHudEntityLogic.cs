@@ -5,8 +5,8 @@ using TMPro;
 
 namespace GameScripts.RunTime.Hud
 {
-    [HudEntity]
-    [EntityResource("")]
+ 
+    [HudEntityAttribute("",true)]
     public class WarNameHudEntityLogic : HudEntityLogicBase
     {
         private TextMeshPro _nameTMP;
